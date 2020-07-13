@@ -8,3 +8,15 @@ Description: Quality control and analyze SCRS data based on C-D ratio.
 License: MIT
 Encoding: UTF-8
 LazyData: true
+Imports:
+  tools,
+  hyperSpec,
+  RColorBrewer,
+  ggpubr,
+  rstatix,
+  stringr,
+  ggplot2,
+  optparse,
+  permute,
+  reshape2,
+  dplyr
