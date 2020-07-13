@@ -2,17 +2,8 @@
 
 ## filter low quality SCRS
 
+SCRS_filter <- function(input_dir, output_dir) {
 setwd('./')
-
-# Command line argument processing
-args = commandArgs(trailingOnly=TRUE)
-if (length(args) < 2) {
-  stop("Usage: SCRS_filter.R <input_folder> <output_dir>", call.=FALSE)
-}
-
-input_dir <- args[1] # directory containing SCRS txts
-output_dir <- args[2] # directory to store outputs
-
 dir.create(output_dir)
 
 # Load / install packages
@@ -58,8 +49,8 @@ data_baseline_normalization <- sweep(data_baseline,1,factors,"*")
 data_baseline_normalization <- data_baseline_normalization
 plot(data_baseline_normalization)
 data_baseline_normalization_frame  <- cbind(select(as.data.frame(data_baseline_normalization),-spc,-.row),as.data.frame(data_baseline_normalization$spc))
-good_data_baseline_normalization <- filter(data_baseline_normalization_frame, 
-                   apply(abs(data_baseline_normalization_frame[,5:75]),1,mean) < 0.2, 
+good_data_baseline_normalization <- filter(data_baseline_normalization_frame,
+                   apply(abs(data_baseline_normalization_frame[,5:75]),1,mean) < 0.2,
                    apply(abs(data_baseline_normalization_frame[,5:75]),1,sd) < 0.2)
 cat("INFO:",length(good_data_baseline_normalization$filename),"spectra left after C/D filtering!",sep=" ",fill=T)
 }
@@ -74,3 +65,4 @@ for (i in (1:nrow(data_postfilter)))
 }
 
 # Done!
+}

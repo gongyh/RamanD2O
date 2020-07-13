@@ -1,38 +1,29 @@
 #!/usr/bin/env Rscript
 
-###################################################################
-### Please reformat SCRS data to txt format using labspec 6########
-###################################################################
+#' Preprocess SCRS data
+#'
+#' @description Baseline and normalization for SCRS data
+#' @param input_dir A directory
+#' @param output A directory
+#' @param meta_fp A TSV file
+#' @param txt_filename A prefix of file names
+#' @return Results were put into output directory
+SCRS_preprocess <- function(input_dir,output,meta_fp,txt_filename) {
 
-if (!require("tools")) {
-   install.packages("tools", dependencies=TRUE, repos='http://cloud.r-project.org/')
-   library("tools")
-}
-
-# Command line argument processing
-args = commandArgs(trailingOnly=TRUE)
-if (length(args) < 4) {
-  stop("Usage: SCRS_preprocess.R <input_folder> <output_dir> <metadata> <prefix>", call.=FALSE)
-}
-
-filepath <- file_path_as_absolute(args[1]) # directory containing SCRS txts
-output <- args[2] # directory to store outputs
-meta_fp <- file_path_as_absolute(args[3]) # meta TSV file, ID_Cell	Timepoint	Label	CellBg	Cell
-txt_filename <- args[4]
+library("tools")
+filepath <- file_path_as_absolute(input_dir) # directory containing SCRS txts
+meta_fp <- file_path_as_absolute(meta_fp) # meta TSV file, ID_Cell	Timepoint	Label	CellBg	Cell
 
 dir.create(output)
 output <- file_path_as_absolute(output)
 
-# Load / install packages
-if (!require("hyperSpec")) {
-  install.packages("hyperSpec", dependencies=TRUE, repos='http://cloud.r-project.org/')
-  library("hyperSpec")
-}
-if (!require("RColorBrewer")) {
-  install.packages("RColorBrewer", dependencies=TRUE, repos='http://cloud.r-project.org/')
-  library("RColorBrewer")
-}
+# Load packages
+library("hyperSpec")
+library("RColorBrewer")
 
+###################################################################
+### Please reformat SCRS data to txt format using labspec 6########
+###################################################################
 
 ###########################
 # Read meta data          #
@@ -58,7 +49,7 @@ for (filename in files)
   }
 }
 setwd(output)
-write.table(file=paste0(txt_filename,"_rawdata.txt"),t(final_data), sep="\t", 
+write.table(file=paste0(txt_filename,"_rawdata.txt"),t(final_data), sep="\t",
             quote=F, row.names=F, col.names = F)
 
 ## transform to data frame
@@ -131,7 +122,7 @@ for (i in (1:nrow(data_baseline_zero_scale_hyperSpec))){
 ##   mean  ##
 #############
 #mean_pm_sd returns a vector with 3 values: mean - 1 sd, mean, mean + 1 sd
-cluster_means_Group <- aggregate (data_baseline_zero_scale_hyperSpec, 
+cluster_means_Group <- aggregate (data_baseline_zero_scale_hyperSpec,
                                   data_baseline_zero_scale_hyperSpec$Group, mean)
 write.csv(cluster_means_Group,"Cells_bg_baseline_zero_scale_M_Group.csv",quote = F,row.names = F)
 
@@ -148,7 +139,7 @@ for (i in (1:nrow(cluster_means_Group))){
 ## mean_sd ##
 #############
 #mean_pm_sd returns a vector with 3 values: mean - 1 sd, mean, mean + 1 sd
-cluster_meansd_Group <- aggregate (data_baseline_zero_scale_hyperSpec, 
+cluster_meansd_Group <- aggregate (data_baseline_zero_scale_hyperSpec,
                                    data_baseline_zero_scale_hyperSpec$Group, mean_pm_sd)
 write.csv(cluster_meansd_Group,"Cells_bg_baseline_zero_scale_Msd_Group.csv",quote = F,row.names = F)
 ###################################################################
@@ -177,3 +168,4 @@ plot (cluster_means_Group,
 #abline(v = c(1006.48, 1159.15, 1522.86), lty=3,col="grey50")
 dev.off()
 #----------------------------------------------------------------------------------------------------
+}

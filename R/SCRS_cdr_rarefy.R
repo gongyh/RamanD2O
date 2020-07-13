@@ -5,15 +5,9 @@ if (!require("tools")) {
    library("tools")
 }
 
-# Command line argument processing
-args = commandArgs(trailingOnly=TRUE)
-if (length(args) < 2) {
-  stop("Usage: SCRS_cdr_rarefy.R <input_cdr_txt> <output_dir>", call.=FALSE)
-}
+SCRS_cdr_rarefy <- function(input,outpath) {
 
-input <- file_path_as_absolute(args[1]) # SCRS CDR stats file
-outpath <- args[2] # store rarefaction results
-
+input <- file_path_as_absolute(input) # SCRS CDR stats file
 setwd("./")
 
 ######################################
@@ -60,8 +54,9 @@ p1 <- ggplot(raw.data_new, aes(x = cells, y = stdev_mean)) + geom_point(size=0.0
   geom_vline(data=hline.data_all,aes(xintercept=cells), colour="grey10", linetype="dashed")+
   geom_point(data=hline.data_all,aes(x=cells,y=stdev_mean),size=1.5,color="#990000",shape=19)+
   geom_text(data=hline.data_all,aes(x=cells,y=stdev_mean,label=paste(cells,"cells",sep=" ")),colour="#990000",size=5,hjust=-0.5,vjust=-0.5)+
-  theme_bw()+ 
+  theme_bw()+
   facet_wrap(~ Time,scales = "free_y")
 
 ggsave(filename="CD_ratio_cumHI_accum_df_by_Time.pdf", plot=p1, limitsize=FALSE, width=6, height=5)
 
+}

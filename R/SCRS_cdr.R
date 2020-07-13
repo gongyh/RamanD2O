@@ -5,14 +5,7 @@ library(rstatix)
 
 ## calc C-D ratio of SCRS (after preprocess)
 
-# Command line argument processing
-args = commandArgs(trailingOnly=TRUE)
-if (length(args) < 2) {
-  stop("Usage: SCRS_cdr.R <input_csv> <output_dir>", call.=FALSE)
-}
-
-input_csv <- args[1] # SCRS data
-output_dir <- args[2] # store cdr results
+SCRS_cdr <- function(input_csv, output_dir) {
 
 dir.create(output_dir)
 
@@ -47,14 +40,11 @@ ggdotplot(df, x = "Group", y = "CDR", add = c("violin","mean_sd"), size=0.3) +
 
 summary.stats <- df %>% select(c("Group","CDR")) %>% group_by(Group) %>% get_summary_stats(type = "common")
 
-#library(dplyr)
-#df %>% select(Group, CDR) %>% group_by(Group) %>% mutate(cummean=cumsum(CDR)/seq_along(CDR)) %>% 
-#  mutate(cumsd=sqrt((CDR-cummean)^2/seq_along(CDR)))
-
-ggsummarytable( summary.stats, x = "Group", y = c("n", "min", "max", "mean", "median", "iqr", "sd", "se", "ci"), 
+ggsummarytable( summary.stats, x = "Group", y = c("n", "min", "max", "mean", "median", "iqr", "sd", "se", "ci"),
        digits=3, size=6, ggtheme = theme_bw()+
        theme(text=element_text(size=12), panel.grid.major=element_blank(), panel.grid.minor=element_blank(),
        axis.text.x = element_text(color="black"), axis.text.y = element_text(color="black")) )
 
 dev.off()
 
+}

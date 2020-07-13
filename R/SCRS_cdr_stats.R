@@ -15,7 +15,7 @@ getPermuteMatrix <- function(perm, N,  strata = NULL)
     ## 'perm' is either a single number, a how() structure or a
     ## permutation matrix
     if (length(perm) == 1) {
-        perm <- how(nperm = perm) 
+        perm <- how(nperm = perm)
     }
     ## apply 'strata', but only if possible: ignore silently other cases
     if (!missing(strata) && !is.null(strata)) {
@@ -43,7 +43,7 @@ cummean <- function(x) cumsum(x) / seq_along(x)
 #--------------------------------------------------
 Stat_accum <- function (x, permutations = 100, stat="cumcv", raw = FALSE, collector = FALSE, subset, ...) {
 
-    if (!missing(subset)) 
+    if (!missing(subset))
         x <- subset(x, subset)
     x <- as.matrix(x)
     n <- nrow(x)
@@ -54,17 +54,17 @@ Stat_accum <- function (x, permutations = 100, stat="cumcv", raw = FALSE, collec
     dimnames(result) <- list(cells = c(2:n), permutation = c(1:permutations))
     for (k in 1:permutations) {
         if(stat=="cumcv"){
-        result[, k] <- cumcv(x[pmat[k, ]])[-1] 
+        result[, k] <- cumcv(x[pmat[k, ]])[-1]
         }else if (stat=="cummean"){
         result[, k] <- cummean(x[pmat[k, ]])[-1]
         }else if (stat=="cummax"){
         result[, k] <- cummax(x[pmat[k, ]])[-1]
         }
     }
-    if (raw) 
+    if (raw)
         collector <- FALSE
-    if (collector) 
-        ref <- cumcv(x)[-1] 
+    if (collector)
+        ref <- cumcv(x)[-1]
     if (raw) {
             result <- result
     } else {
@@ -77,13 +77,13 @@ Stat_accum <- function (x, permutations = 100, stat="cumcv", raw = FALSE, collec
                 tmp[i, 5] <- max(result[i, 1:permutations])
                 tmp[i, 6] <- quantile(result[i, 1:permutations], 0.025)
                 tmp[i, 7] <- quantile(result[i, 1:permutations], 0.975)
-             if (collector) 
+             if (collector)
                 tmp[i, 8] <- ref[i]
-           
+
         }
         result <- tmp
-        dimnames(result) <- list(cells = c(2:n),  
-            c("mean", "median", "stdev", "min", "max", "Qnt 0.025", "Qnt 0.975", 
+        dimnames(result) <- list(cells = c(2:n),
+            c("mean", "median", "stdev", "min", "max", "Qnt 0.025", "Qnt 0.975",
                 if (collector) "Collector"))
     }
     #attr(result, "control") <- attr(pmat, "control")
@@ -94,14 +94,14 @@ Stat_accum <- function (x, permutations = 100, stat="cumcv", raw = FALSE, collec
 #--------------------------------------------------
 StatAccumCurve<-function(x, stat="cumcv", permutations = 100, Group, Group_name, outdir, width=7, height=7, scales="fixed"){
                  require("ggplot2")
-                 Get_breaks<- function(Min, Max, perc){ int <- (round(Max, -(nchar(Max)-1)))*perc 
+                 Get_breaks<- function(Min, Max, perc){ int <- (round(Max, -(nchar(Max)-1)))*perc
                                                        breaks <- c(Min, seq(from=int, to=Max, by=int))
                                                        return(breaks)
                        }
                  x <- as.matrix(x)
-                 if (missing(Group)) {                       
+                 if (missing(Group)) {
                        ra <- Stat_accum(x, stat=stat, permutations=permutations)
-                       ra_df <- data.frame(cells = 2:(nrow(ra)+1), ra) 
+                       ra_df <- data.frame(cells = 2:(nrow(ra)+1), ra)
                        p <- ggplot(ra_df, aes(x = cells, y = mean)) + geom_point(size=0.1) + geom_line() +
                             xlab("Number of cells pooled") + ylab( stat ) +
                             #geom_ribbon(data = ra_df, aes(ymin=Qnt.0.025,ymax=Qnt.0.975), alpha=0.2)+
@@ -124,7 +124,7 @@ StatAccumCurve<-function(x, stat="cumcv", permutations = 100, Group, Group_name,
                          ra_df<-data.frame(groups, ra_df)
                          sink(paste(outdir, stat, "_accum_df_by_",Group_names,".txt", sep="")); write.table(ra_df, quote=FALSE, sep="\t", row.names=FALSE); sink()
                          }
-                       
+
                        breaks<-Get_breaks(min(ra_df$cells), max(ra_df$cells), 1/6)
                        p <- ggplot(ra_df, aes(x = cells, y = mean)) + geom_point(size=0.2) + geom_line() +
                             xlab("Number of cells pooled") + ylab(stat) +
@@ -142,20 +142,15 @@ StatAccumCurve<-function(x, stat="cumcv", permutations = 100, Group, Group_name,
                             Group_names<-paste(Group_name, collapse="__")
                             ggsave(filename=paste(outdir, stat, "_accum_facets_by_",Group_names,".pdf", sep=""), plot=p, limitsize=FALSE, width=width, height=height)
                        }
-                       
+
                  }
                  invisible(p)
 }
 #--------------------------------------------------
-# Command line argument processing
-args = commandArgs(trailingOnly=TRUE)
-if (length(args) < 2) {
-  stop("Usage: SCRS_cdr_stats.R <input_cdr_txt> <output_dir>", call.=FALSE)
-}
 
-input <- file_path_as_absolute(args[1]) # SCRS CDR results, CDR.txt
-outpath <- args[2] # store rarefaction results
+SCRS_cdr_stats <- function(input,outpath) {
 
+input <- file_path_as_absolute(input) # SCRS CDR results, CDR.txt
 setwd("./")
 
 width=7
@@ -181,18 +176,18 @@ mat1[which(mat1$CD_ratio<0),"CD_ratio"]<-0
 stat="cummean"
 for (pheno in (c("CD_ratio"))){
   x<-mat1[, pheno]; names(x)<-rownames(mat1)
-  StatAccumCurve(x, stat=stat, permutations = 1000, Group=mat[, "Time"], Group_name="Time", 
+  StatAccumCurve(x, stat=stat, permutations = 1000, Group=mat[, "Time"], Group_name="Time",
        outdir=paste0(outpath, "/", pheno,"_"), width=width, height=height, scales=scales)
-  StatAccumCurve(x, stat=stat, permutations = 1000, outdir=paste0(outpath, "/",pheno,"_allcells_"), 
+  StatAccumCurve(x, stat=stat, permutations = 1000, outdir=paste0(outpath, "/",pheno,"_allcells_"),
        width=width, height=height, scales=scales)
 }
 ####stat="cummax"
 stat="cummax"
 for (pheno in (c("CD_ratio"))){
   x<-mat1[, pheno]; names(x)<-rownames(mat1)
-  StatAccumCurve(x, stat=stat, permutations = 1000, Group=mat[, "Time"], Group_name="Time", 
+  StatAccumCurve(x, stat=stat, permutations = 1000, Group=mat[, "Time"], Group_name="Time",
        outdir=paste0(outpath, "/", pheno,"_"), width=width, height=height, scales=scales)
-  StatAccumCurve(x, stat=stat, permutations = 1000, outdir=paste0(outpath, "/", pheno,"_allcells_"), 
+  StatAccumCurve(x, stat=stat, permutations = 1000, outdir=paste0(outpath, "/", pheno,"_allcells_"),
        width=width, height=height, scales=scales)
 }
 ######negtive value to 1e-10 for cumcv#########
@@ -206,10 +201,11 @@ scales="free"
 scales="fixed"
 for (pheno in (c("CD_ratio"))){
   x<-mat1[, pheno]; names(x)<-rownames(mat1)
-  StatAccumCurve(x, stat=stat, permutations = 1000, Group=mat[, "Time"], Group_name="Time", 
+  StatAccumCurve(x, stat=stat, permutations = 1000, Group=mat[, "Time"], Group_name="Time",
        outdir=paste0(outpath, "/", pheno,"_"), width=width, height=height, scales=scales)
-  StatAccumCurve(x, stat=stat, permutations = 1000, outdir=paste0(outpath, "/", pheno,"_allcells_"), 
+  StatAccumCurve(x, stat=stat, permutations = 1000, outdir=paste0(outpath, "/", pheno,"_allcells_"),
        width=width, height=height, scales=scales)
 }
 ###############################################
 
+}
