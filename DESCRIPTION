@@ -19,5 +19,7 @@ Imports:
   optparse,
   permute,
   reshape2,
-  dplyr
+  dplyr,
+  shiny,
+  mongolite
 RoxygenNote: 7.1.0
