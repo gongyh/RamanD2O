@@ -20,5 +20,5 @@ r_check_args: "--no-vignettes"
 
 script:
   - |
-    travis_wait 45 R CMD build --no-build-vignettes .
-    travis_wait 45 R CMD check RamanD2O*tar.gz
+    R CMD build --no-build-vignettes .
+    R CMD check RamanD2O*tar.gz
