@@ -43,13 +43,12 @@ dashboardPage( skin="red",
                    tabItem(tabName = "settings",
                            h2("Load data"),
                            br(),
-                           fluidRow( column(4,fileInput("scrs_file", "Upload Zip file", accept=".zip", placeholder="SCRS.zip")),
-                                     column(1,actionButton("unzip", "Load SCRS"))),
-                           fluidRow( column(4,fileInput("meta_file", "Upload Metadata", accept=".tsv", placeholder="meta.tsv")),
-                                     column(1,actionButton("load_meta", "Load metadata"))),
-                           tableOutput("filedf"),
-                           tableOutput("zipped"),
-                           verbatimTextOutput("runtimeInfo", placeholder=TRUE)
+                           fluidRow( column(3,fileInput("scrs_file", "1. Upload SCRS Zip file", accept=".zip", placeholder="SCRS.zip")),
+                                     column(3,actionButton("unzip", "Load SCRS")),
+                                     column(3,fileInput("meta_file", "2. Upload Metadata", accept=".tsv", placeholder="meta.tsv")),
+                                     column(3,actionButton("load_meta", "Load metadata"))),
+                           verbatimTextOutput("runtimeInfo", placeholder=TRUE),
+                           tableOutput("zipped")
                    ),
 
                    # basic tab

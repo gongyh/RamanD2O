@@ -3,10 +3,8 @@ library(shinyFiles)
 library(shinyjs)
 library(fs)
 library(DT)
-library(htmlwidgets)
-
 library(ggpubr)
-#library(RColorBrewer)
+library(stringr)
 
 options(encoding ="UTF-8")
 
@@ -24,17 +22,17 @@ cols<-c(cols1,cols2)
 
 function(input, output, session) {
 
-  output$filedf <- renderTable({
-    if(is.null(input$scrs_file)){return ()}
-    input$scrs_file
-  })
-
 
   # Unzipping files on click of button
-  observeEvent(input$unzip,
-               output$zipped <- renderTable({
-                 unzip(input$scrs_file$datapath, list = TRUE, exdir = getwd())
-               })
+  observeEvent(input$unzip, {
+                 if(!is.null(input$scrs_file$datapath)) {
+                   files <- unzip(input$scrs_file$datapath, list=FALSE, exdir=tempdir())
+                   txtfiles <- str_subset(files, ".*..txt")
+                   output$zipped <- renderTable({
+                     txtfiles
+                   })
+                 }
+              }
   )
 
 
