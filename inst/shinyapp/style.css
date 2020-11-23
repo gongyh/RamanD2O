@@ -1,0 +1,11 @@
+body.sidebar-collapse .hide_when_sidebar_collapsed {
+  display: none;
+}
+
+#unzip {
+  margin-top: 25px;
+}
+
+#load_meta {
+  margin-top: 25px;
+}

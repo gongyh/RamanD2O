@@ -21,5 +21,9 @@ Imports:
   reshape2,
   dplyr,
   shiny,
-  mongolite
+  mongolite,
+  shinydashboard,
+  shinyjs,
+  shinyFiles,
+  DT
 RoxygenNote: 7.1.1
