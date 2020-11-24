@@ -1,5 +1,3 @@
-#!/usr/bin/env Rscript
-
 ## calc SNR of SCRS (after preprocess)
 
 SCRS_snr <- function(input_csv, output_dir) {

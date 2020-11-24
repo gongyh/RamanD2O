@@ -5,25 +5,19 @@ Version: 0.1.0
 Author: Yanhai Gong
 Maintainer: Yanhai Gong <gongyh@qibebt.ac.cn>
 Description: Quality control and analyze SCRS data based on C-D ratio.
-License: MIT
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-Imports:
-  tools,
-  hyperSpec,
-  RColorBrewer,
-  ggpubr,
-  rstatix,
-  stringr,
-  ggplot2,
-  optparse,
-  permute,
-  reshape2,
-  dplyr,
-  shiny,
-  mongolite,
-  shinydashboard,
-  shinyjs,
-  shinyFiles,
-  DT
+Depends: R (>= 3.1.0), hyperSpec, ggpubr
+Imports: tools, ggplot2, RColorBrewer, rstatix, stringr, optparse, permute, reshape2, 
+         dplyr, shiny, mongolite, shinydashboard, shinyjs, shinyFiles, DT
 RoxygenNote: 7.1.1
+Collate: 
+    'SCRS_cdr.R'
+    'SCRS_cdr_rarefy.R'
+    'SCRS_cdr_stats.R'
+    'SCRS_filter.R'
+    'SCRS_helpers.R'
+    'utils.R'
+    'SCRS_preprocess.R'
+    'SCRS_snr.R'

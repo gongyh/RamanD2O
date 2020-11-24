@@ -1,8 +1,3 @@
-#!/usr/bin/env Rscript
-
-library(ggpubr)
-library(rstatix)
-
 ## calc C-D ratio of SCRS (after preprocess)
 
 SCRS_cdr <- function(input_csv, output_dir) {

@@ -8,7 +8,6 @@ library(stringr)
 library(RColorBrewer)
 library(shinybusy)
 
-library(hyperSpec)
 library(baseline)
 
 options(encoding = "UTF-8")

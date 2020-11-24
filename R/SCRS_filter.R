@@ -1,21 +1,8 @@
-#!/usr/bin/env Rscript
-
 ## filter low quality SCRS
 
 SCRS_filter <- function(input_dir, output_dir) {
   setwd("./")
   dir.create(output_dir)
-
-  # Load / install packages
-  if (!require("hyperSpec")) {
-    install.packages("hyperSpec", dependencies = TRUE, repos = "http://cloud.r-project.org/")
-    library("hyperSpec")
-  }
-
-  if (!require("dplyr")) {
-    install.packages("dplyr", dependencies = TRUE, repos = "http://cloud.r-project.org/")
-    library("dplyr")
-  }
 
   filenames <- list.files(input_dir, pattern = "*.txt")
   cat("INFO:", length(filenames), "spectrum files detected!", sep = " ", fill = T)

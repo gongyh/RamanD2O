@@ -1,3 +1,5 @@
+#' @include utils.R
+NULL
 #' Preprocess SCRS data
 #'
 #' @description Baseline and normalization for SCRS data

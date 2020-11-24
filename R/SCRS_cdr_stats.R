@@ -1,15 +1,3 @@
-#!/usr/bin/env Rscript
-
-# install necessary libraries
-p <- c("optparse", "tools", "RColorBrewer", "permute", "ggplot2", "reshape2", "dplyr")
-usePackage <- function(p) {
-  if (!is.element(p, installed.packages()[, 1])) {
-    install.packages(p, dep = TRUE, repos = "http://mirrors.opencas.cn/cran/")
-  }
-  suppressWarnings(suppressMessages(invisible(require(p, character.only = TRUE))))
-}
-invisible(lapply(p, usePackage))
-
 #--------------------------------------------------
 getPermuteMatrix <- function(perm, N, strata = NULL) {
   ## 'perm' is either a single number, a how() structure or a

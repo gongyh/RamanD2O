@@ -1,10 +1,3 @@
-#!/usr/bin/env Rscript
-
-if (!require("tools")) {
-  install.packages("tools", dependencies = TRUE, repos = "http://cloud.r-project.org/")
-  library("tools")
-}
-
 SCRS_cdr_rarefy <- function(input, outpath) {
   input <- file_path_as_absolute(input) # SCRS CDR stats file
   setwd("./")
@@ -29,17 +22,6 @@ SCRS_cdr_rarefy <- function(input, outpath) {
     n_location <- hline.data_tem[1, "cells"] + 1
     hline.data_tem <- raw.data_new[which(raw.data_new$Time == Time & raw.data_new$cells == n_location), ]
     hline.data_all <- rbind(hline.data_all, hline.data_tem)
-  }
-
-  ################################
-  if (!require("ggplot2")) {
-    install.packages("ggplot2", dependencies = TRUE, repos = "http://cloud.r-project.org/")
-    library("ggplot2")
-  }
-
-  if (!require("stringr")) {
-    install.packages("stringr", dependencies = TRUE, repos = "http://cloud.r-project.org/")
-    library("stringr")
   }
 
   dir.create(outpath)
