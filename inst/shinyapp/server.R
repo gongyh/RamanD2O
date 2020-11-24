@@ -92,6 +92,13 @@ function(input, output, session) {
         return()
       }
       meta$tbl <- df[df$ID_Cell %in% file_ids,]
+      rawdata <- merge(meta$tbl, scrs$spc, by = "ID_Cell")
+      ncol_meta <- ncol(meta$tbl)
+      hs_raw$val <- new("hyperSpec", data = rawdata[ , 1:ncol_meta],
+                        spc = data.matrix(rawdata[ , (ncol_meta + 1):ncol(rawdata)]),
+                        wavelength = as.numeric(colnames(scrs$spc)[2:ncol(scrs$spc)])
+      )
+      hs_cur$val <- hs_raw$val
       showNotification(paste0("Successfully load metadata for ", nrow(meta$tbl), " spectra."), type = "message", duration = 10)
       output$meta_table <- renderDataTable({
         DT::datatable(meta$tbl, escape=FALSE, selection='single', options = list(searchHighlight = TRUE, scrollX = TRUE))

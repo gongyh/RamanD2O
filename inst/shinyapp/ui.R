@@ -21,8 +21,15 @@ dashboardPage(
     sidebarMenu(
       menuItem("Introduction", tabName = "dashboard", icon = icon("dashboard")),
       menuItem("Load Data", tabName = "settings", icon = icon("cogs")),
-      menuItem("Tools", tabName = "tools", icon = icon("toolbox")),
-      sidebarMenuOutput("subs0"), # Basic workflow information
+      menuItem("Preprocess",
+        menuSubItem("Subsample", tabName = "ss", icon = icon("vials")),
+        menuSubItem("Smooth", tabName = "sm", icon = icon("wave-square")),
+        menuSubItem("Baseline", tabName = "bl", icon = icon("chart-line")),
+        menuSubItem("Normalization", tabName = "nl", icon = icon("grip-lines")),
+        menuSubItem("SNR", tabName = "snr", icon = icon("signal")),
+        tabName = "tools", icon = icon("toolbox"), startExpanded = T
+      ),
+
 
       div(
         class = "hide_when_sidebar_collapsed",
