@@ -43,13 +43,12 @@ function(input, output, session) {
       total <- length(txtfiles)
       if (total == 0) {
         remove_modal_progress()
-        output$runtimeInfo <- renderText({
-          msg <- "Error: No spectrum files found!"
-        })
+        showNotification("No spectrum files found!", type = "error", duration = 10)
         return()
       }
       shift <- read.table(txtfiles[1], header = F, sep = "\t")$V1
-      scrs_df <- c("filename", shift)
+      scrs_colnames <- c("ID_Cell", shift)
+      scrs_df <- c()
       for (filename in txtfiles)
       {
         ID_Cell <- sub(".txt", "", basename(filename))
@@ -64,11 +63,41 @@ function(input, output, session) {
         update_modal_progress(i / total, paste0("Reading ", i, " spectrum (", floor(100 * i / total), "%)"))
         i <- i + 1
       }
+      sc <- data.frame(t(scrs_df))
+      colnames(sc) <- scrs_colnames
+      rownames(sc) <- NULL
+      scrs$spc <- sc
+      output$spectra_files <- renderDataTable({
+        DT::datatable(scrs$spc[,1:5], escape=FALSE, selection='single', options = list(searchHighlight = TRUE, scrollX = TRUE))
+      })
       # remove_modal_spinner()
       remove_modal_progress()
-      output$runtimeInfo <- renderText({
-        msg <- paste0("Found ", length(txtfiles), " spectrum files.")
+      showNotification(paste0("Load ", length(txtfiles), " spectrum files."), type = "message", duration = 10)
+    }
+  })
+
+
+  # load metadata table
+  observeEvent(input$load_meta, {
+    if (!is.null(input$meta_file$datapath)) {
+      df <- read.table(input$meta_file$datapath, header = T, sep = "\t")
+      # check whether all spectra file have metadata lines
+      if (is.null(scrs$spc)) {
+        showNotification("Please load spectrum files first!", type = "error", duration = 10)
+        return()
+      }
+      file_ids <- scrs$spc$ID_Cell
+      diffs <- setdiff(file_ids, df$ID_Cell)
+      if (length(diffs) > 0) {
+        showNotification("Metadata does not include all spectrum files!", type = "error", duration = 10)
+        return()
+      }
+      meta$tbl <- df[df$ID_Cell %in% file_ids,]
+      showNotification(paste0("Successfully load metadata for ", nrow(meta$tbl), " spectra."), type = "message", duration = 10)
+      output$meta_table <- renderDataTable({
+        DT::datatable(meta$tbl, escape=FALSE, selection='single', options = list(searchHighlight = TRUE, scrollX = TRUE))
       })
     }
   })
+
 }

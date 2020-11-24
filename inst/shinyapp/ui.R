@@ -42,13 +42,13 @@ dashboardPage(
     tags$script(HTML("$('body').addClass('sidebar-mini');")),
 
     tabItems(
-      # First tab content
+      # Introduction tab
       tabItem(
         tabName = "dashboard",
         h3("Introduction", style = "text-align:center;")
       ),
 
-      # Second tab content
+      # Loading data tab
       tabItem(
         tabName = "settings",
         h2("Load data"),
@@ -59,8 +59,18 @@ dashboardPage(
           column(3, fileInput("meta_file", "2. Upload Metadata", accept = ".tsv", placeholder = "meta.tsv")),
           column(3, actionButton("load_meta", "Load metadata"))
         ),
-        verbatimTextOutput("runtimeInfo", placeholder = TRUE),
-        tableOutput("zipped")
+        br(),
+        fluidRow(
+          column(6, DTOutput("spectra_files")),
+          column(6, DTOutput("meta_table")),
+        )
+      ),
+
+      # Tools tab
+      tabItem(
+        tabName = "tools",
+        h2("Tools"),
+        br()
       )
     )
   )
