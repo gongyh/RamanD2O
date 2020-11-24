@@ -73,12 +73,24 @@ dashboardPage(
         )
       ),
 
-      # Tools tab
+      # Subsample tab
       tabItem(
-        tabName = "tools",
-        h2("Tools"),
-        br()
+        tabName = "ss",
+        h2("Subsample"),
+        br(),
+        h4("Notice: Please make sure to only subsample once!"),
+        br(),
+        fluidRow(
+          column(4, sliderInput("percentage", "Percentage to keep:",
+                                min = 1, max = 100, value = 50),
+                 fluidRow(
+                   column(2, checkboxInput("shuffle", "Shuffle")),
+                   column(1, actionButton("subsample", "Subsample"))
+                 )),
+          column(8, DTOutput("sampled_table"))
+        )
       )
+
     )
   )
 )

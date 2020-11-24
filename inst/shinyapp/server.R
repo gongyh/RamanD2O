@@ -9,6 +9,7 @@ library(RColorBrewer)
 library(shinybusy)
 
 library(baseline)
+library(permute)
 
 options(encoding = "UTF-8")
 
@@ -94,14 +95,35 @@ function(input, output, session) {
       meta$tbl <- df[df$ID_Cell %in% file_ids,]
       rawdata <- merge(meta$tbl, scrs$spc, by = "ID_Cell")
       ncol_meta <- ncol(meta$tbl)
-      hs_raw$val <- new("hyperSpec", data = rawdata[ , 1:ncol_meta],
-                        spc = data.matrix(rawdata[ , (ncol_meta + 1):ncol(rawdata)]),
+      spc <- data.matrix(rawdata[ , (ncol_meta + 1):ncol(rawdata)])
+      rownames(spc) <- rawdata$ID_Cell
+      hs_raw$val <- new("hyperSpec", data = rawdata[ , 1:ncol_meta], spc = spc,
                         wavelength = as.numeric(colnames(scrs$spc)[2:ncol(scrs$spc)])
       )
       hs_cur$val <- hs_raw$val
       showNotification(paste0("Successfully load metadata for ", nrow(meta$tbl), " spectra."), type = "message", duration = 10)
       output$meta_table <- renderDataTable({
         DT::datatable(meta$tbl, escape=FALSE, selection='single', options = list(searchHighlight = TRUE, scrollX = TRUE))
+      })
+    }
+  })
+
+
+  # sabsample scrs on click of button
+  observeEvent(input$subsample, {
+    if (!is.null(hs_cur$val)) {
+      total <- nrow(hs_cur$val)
+      size <- floor(input$percentage / 100.0 * total)
+      index <- isample(hs_cur$val, size = max(size, 1))
+      if (input$shuffle) {
+        index <- shuffle(index)
+      }
+      sampled <- hs_cur$val[index]
+      hs_ss$val <- sampled
+      hs_cur$val <- sampled
+      showNotification(paste0("Subsampled ", nrow(sampled), " spectra."), type = "message", duration = 10)
+      output$sampled_table <- renderDataTable({
+        DT::datatable(hs_ss$val@data$spc[ , 1:6], escape=FALSE, selection='single', options = list(searchHighlight = TRUE, scrollX = TRUE))
       })
     }
   })
