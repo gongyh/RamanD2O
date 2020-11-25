@@ -3,6 +3,8 @@ library(shinydashboard)
 library(shinyjs)
 library(shinyFiles)
 library(DT)
+library(shinyalert)
+library(shinydisconnect)
 
 options(encoding = "UTF-8")
 
@@ -23,6 +25,8 @@ dashboardPage(
       menuItem("Load Data", tabName = "settings", icon = icon("cogs")),
       menuItem("Preprocess",
         menuSubItem("Subsample", tabName = "ss", icon = icon("vials")),
+        menuSubItem("Trim", tabName = "trim", icon = icon("cut")),
+        menuSubItem("Interpolation", tabName = "intp", icon = icon("arrows-alt-h")),
         menuSubItem("Smooth", tabName = "sm", icon = icon("wave-square")),
         menuSubItem("Baseline", tabName = "bl", icon = icon("chart-line")),
         menuSubItem("Normalization", tabName = "nl", icon = icon("grip-lines")),
@@ -45,8 +49,11 @@ dashboardPage(
 
   dashboardBody(
     shinyjs::useShinyjs(),
+    shinyalert::useShinyalert(),
     tags$head(includeCSS("style.css")),
     tags$script(HTML("$('body').addClass('sidebar-mini');")),
+
+    shinydisconnect::disconnectMessage2(),
 
     tabItems(
       # Introduction tab
@@ -62,9 +69,9 @@ dashboardPage(
         br(),
         fluidRow(
           column(3, fileInput("scrs_file", "1. Upload SCRS Zip file", accept = ".zip", placeholder = "SCRS.zip")),
-          column(3, actionButton("unzip", "Load SCRS")),
+          column(3, actionButton("unzip", "Load SCRS", class = "top25 btn-success")),
           column(3, fileInput("meta_file", "2. Upload Metadata", accept = ".tsv", placeholder = "meta.tsv")),
-          column(3, actionButton("load_meta", "Load metadata"))
+          column(3, actionButton("load_meta", "Load metadata", class = "top25 btn-success"))
         ),
         br(),
         fluidRow(
@@ -78,19 +85,42 @@ dashboardPage(
         tabName = "ss",
         h2("Subsample"),
         br(),
-        h4("Notice: Please make sure to only subsample once!"),
+        fluidRow(
+          column(
+            6, sliderInput("percentage", "Percentage to keep:",
+              min = 1, max = 100, value = 50, width = "100%"
+            ),
+            fluidRow(
+              column(2, uiOutput("hs_select_for_subsample")),
+              column(2, checkboxInput("shuffle", "Shuffle"), class = "top25"),
+              column(2, actionButton("subsample", "Subsample", class = "top25 btn-success"))
+            ),
+            DTOutput("sampled_table")
+          ),
+          column(6, plotOutput("after_subsample_plot"))
+        )
+      ),
+
+      # Trim tab
+      tabItem(
+        tabName = "trim",
+        h2("Trim"),
         br(),
         fluidRow(
-          column(4, sliderInput("percentage", "Percentage to keep:",
-                                min = 1, max = 100, value = 50),
-                 fluidRow(
-                   column(2, checkboxInput("shuffle", "Shuffle")),
-                   column(1, actionButton("subsample", "Subsample"))
-                 )),
-          column(8, DTOutput("sampled_table"))
+          column(
+            6, sliderInput("trim_range", " Selecting Wavelength Ranges:",
+              min = 0, max = 4000, value = c(400, 3400),
+              step = 1, dragRange = F, width = "100%"
+            ),
+            fluidRow(
+              column(2, uiOutput("hs_select_for_trim")),
+              column(1, actionButton("trim", "Trim", class = "top25 btn-success"))
+            ),
+            DTOutput("after_trim")
+          ),
+          column(6, plotOutput("after_trim_plot"))
         )
       )
-
     )
   )
 )

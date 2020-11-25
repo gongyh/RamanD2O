@@ -10,6 +10,7 @@ library(shinybusy)
 
 library(baseline)
 library(permute)
+library(shinyalert)
 
 options(encoding = "UTF-8")
 
@@ -32,6 +33,16 @@ function(input, output, session) {
     cat(".")
   })
 
+  output$hs_select_for_subsample <- renderUI({
+    hs_all <- names(hs$val)
+    selectInput("hs_selector_for_subsample", "Choose target", choices = hs_all)
+  })
+
+  output$hs_select_for_trim <- renderUI({
+    hs_all <- names(hs$val)
+    selectInput("hs_selector_for_trim", "Choose target", choices = hs_all)
+  })
+
   # Unzipping files on click of button
   observeEvent(input$unzip, {
     if (!is.null(input$scrs_file$datapath)) {
@@ -43,7 +54,10 @@ function(input, output, session) {
       total <- length(txtfiles)
       if (total == 0) {
         remove_modal_progress()
-        showNotification("No spectrum files found!", type = "error", duration = 10)
+        # showNotification("No spectrum files found!", type = "error", duration = 10)
+        showModal(modalDialog("No spectrum files found!",
+          title = "Error", easyClose = TRUE
+        ))
         return()
       }
       shift <- read.table(txtfiles[1], header = F, sep = "\t")$V1
@@ -68,11 +82,14 @@ function(input, output, session) {
       rownames(sc) <- NULL
       scrs$spc <- sc
       output$spectra_files <- renderDataTable({
-        DT::datatable(scrs$spc[,1:5], escape=FALSE, selection='single', options = list(searchHighlight = TRUE, scrollX = TRUE))
+        DT::datatable(scrs$spc[, 1:5], escape = FALSE, selection = "single", options = list(searchHighlight = TRUE, scrollX = TRUE))
       })
       # remove_modal_spinner()
       remove_modal_progress()
-      showNotification(paste0("Load ", length(txtfiles), " spectrum files."), type = "message", duration = 10)
+      # showNotification(paste0("Load ", length(txtfiles), " spectrum files."), type = "message", duration = 10)
+      showModal(modalDialog(paste0("Load ", length(txtfiles), " spectrum files."),
+        title = "Message", easyClose = TRUE
+      ))
     }
   })
 
@@ -83,7 +100,10 @@ function(input, output, session) {
       df <- read.table(input$meta_file$datapath, header = T, sep = "\t")
       # check whether all spectra file have metadata lines
       if (is.null(scrs$spc)) {
-        showNotification("Please load spectrum files first!", type = "error", duration = 10)
+        # showNotification("Please load spectrum files first!", type = "error", duration = 10)
+        showModal(modalDialog("Please load spectrum files first!",
+          title = "Error", easyClose = TRUE
+        ))
         return()
       }
       file_ids <- scrs$spc$ID_Cell
@@ -92,18 +112,22 @@ function(input, output, session) {
         showNotification("Metadata does not include all spectrum files!", type = "error", duration = 10)
         return()
       }
-      meta$tbl <- df[df$ID_Cell %in% file_ids,]
+      meta$tbl <- df[df$ID_Cell %in% file_ids, ]
       rawdata <- merge(meta$tbl, scrs$spc, by = "ID_Cell")
       ncol_meta <- ncol(meta$tbl)
-      spc <- data.matrix(rawdata[ , (ncol_meta + 1):ncol(rawdata)])
+      spc <- data.matrix(rawdata[, (ncol_meta + 1):ncol(rawdata)])
       rownames(spc) <- rawdata$ID_Cell
-      hs_raw$val <- new("hyperSpec", data = rawdata[ , 1:ncol_meta], spc = spc,
-                        wavelength = as.numeric(colnames(scrs$spc)[2:ncol(scrs$spc)])
+      hs_raw <- new("hyperSpec",
+        data = rawdata[, 1:ncol_meta], spc = spc,
+        wavelength = as.numeric(colnames(scrs$spc)[2:ncol(scrs$spc)])
       )
-      hs_cur$val <- hs_raw$val
-      showNotification(paste0("Successfully load metadata for ", nrow(meta$tbl), " spectra."), type = "message", duration = 10)
+      hs$val[["raw"]] <- hs_raw
+      # showNotification(paste0("Successfully load metadata for ", nrow(meta$tbl), " spectra."), type = "message", duration = 10)
+      showModal(modalDialog(paste0("Successfully load metadata for ", nrow(meta$tbl), " spectra."),
+        title = "Message", easyClose = TRUE
+      ))
       output$meta_table <- renderDataTable({
-        DT::datatable(meta$tbl, escape=FALSE, selection='single', options = list(searchHighlight = TRUE, scrollX = TRUE))
+        DT::datatable(meta$tbl, escape = FALSE, selection = "single", options = list(searchHighlight = TRUE, scrollX = TRUE))
       })
     }
   })
@@ -111,21 +135,59 @@ function(input, output, session) {
 
   # sabsample scrs on click of button
   observeEvent(input$subsample, {
-    if (!is.null(hs_cur$val)) {
-      total <- nrow(hs_cur$val)
+    if (input$hs_selector_for_subsample == "") {
+      shinyalert("Oops!", "Please first load your spectra data.", type = "error")
+      return()
+    } else {
+      hs_cur <- hs$val[[input$hs_selector_for_subsample]]
+      total <- nrow(hs_cur)
       size <- floor(input$percentage / 100.0 * total)
-      index <- isample(hs_cur$val, size = max(size, 1))
+      index <- isample(hs_cur, size = max(size, 2))
       if (input$shuffle) {
         index <- shuffle(index)
       }
-      sampled <- hs_cur$val[index]
-      hs_ss$val <- sampled
-      hs_cur$val <- sampled
-      showNotification(paste0("Subsampled ", nrow(sampled), " spectra."), type = "message", duration = 10)
+      sampled <- hs_cur[index]
+      hs$val[["sampled"]] <- sampled
+      # showNotification(paste0("Subsampled ", nrow(sampled), " spectra."), type = "message", duration = 10)
+      showModal(modalDialog(paste0("Subsampled ", nrow(sampled), " spectra."),
+        title = "Message", easyClose = TRUE
+      ))
       output$sampled_table <- renderDataTable({
-        DT::datatable(hs_ss$val@data$spc[ , 1:6], escape=FALSE, selection='single', options = list(searchHighlight = TRUE, scrollX = TRUE))
+        DT::datatable(sampled@data$spc[, 1:6], escape = FALSE, selection = "single", options = list(searchHighlight = TRUE, scrollX = TRUE))
       })
     }
   })
 
+  observeEvent(input$sampled_table_rows_selected, {
+    index <- input$sampled_table_rows_selected
+    item <- hs$val[["sampled"]][index]
+    output$after_subsample_plot <- renderPlot({
+      plot(item)
+    })
+  })
+
+  # trim scrs on click of button
+  observeEvent(input$trim, {
+    if (input$hs_selector_for_trim == "") {
+      shinyalert("Oops!", "Please first load your spectra data.", type = "error")
+      return()
+    } else {
+      hs_cur <- hs$val[[input$hs_selector_for_trim]]
+      minR <- input$trim_range[1]
+      maxR <- input$trim_range[2]
+      hs_tm <- hs_cur[, , minR ~ maxR]
+      hs$val[["trimmed"]] <- hs_tm
+      output$after_trim <- renderDataTable({
+        DT::datatable(hs_tm@data$spc[, 1:6], escape = FALSE, selection = "single", options = list(searchHighlight = TRUE, scrollX = TRUE))
+      })
+    }
+  })
+
+  observeEvent(input$after_trim_rows_selected, {
+    index <- input$after_trim_rows_selected
+    item <- hs$val[["trimmed"]][index]
+    output$after_trim_plot <- renderPlot({
+      plot(item)
+    })
+  })
 }

@@ -1,12 +1,7 @@
-body.sidebar-collapse .hide_when_sidebar_collapsed {
+.sidebar-collapse .hide_when_sidebar_collapsed {
   display: none;
 }
 
-#unzip {
+.top25 {
   margin-top: 25px;
 }
-
-#load_meta {
-  margin-top: 25px;
-}
-
