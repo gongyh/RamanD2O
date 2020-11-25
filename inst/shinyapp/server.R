@@ -35,12 +35,20 @@ function(input, output, session) {
 
   output$hs_select_for_subsample <- renderUI({
     hs_all <- names(hs$val)
-    selectInput("hs_selector_for_subsample", "Choose target", choices = hs_all)
+    selected <- NULL
+    if ("raw" %in% hs_all) {
+      selected <- "raw"
+    }
+    selectInput("hs_selector_for_subsample", "Choose target", choices = hs_all, selected = selected)
   })
 
   output$hs_select_for_trim <- renderUI({
     hs_all <- names(hs$val)
-    selectInput("hs_selector_for_trim", "Choose target", choices = hs_all)
+    selected <- NULL
+    if ("sampled" %in% hs_all) {
+      selected <- "sampled"
+    }
+    selectInput("hs_selector_for_trim", "Choose target", choices = hs_all, selected = selected)
   })
 
   # Unzipping files on click of button

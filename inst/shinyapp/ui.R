@@ -26,10 +26,11 @@ dashboardPage(
       menuItem("Preprocess",
         menuSubItem("Subsample", tabName = "ss", icon = icon("vials")),
         menuSubItem("Trim", tabName = "trim", icon = icon("cut")),
-        menuSubItem("Interpolation", tabName = "intp", icon = icon("arrows-alt-h")),
+        menuSubItem("Filter", tabName = "fl", icon = icon("filter")),
         menuSubItem("Smooth", tabName = "sm", icon = icon("wave-square")),
         menuSubItem("Baseline", tabName = "bl", icon = icon("chart-line")),
         menuSubItem("Normalization", tabName = "nl", icon = icon("grip-lines")),
+        menuSubItem("Export", tabName = "export", icon = icon("file-export")),
         menuSubItem("SNR", tabName = "snr", icon = icon("signal")),
         tabName = "tools", icon = icon("toolbox"), startExpanded = T
       ),
@@ -120,6 +121,46 @@ dashboardPage(
           ),
           column(6, plotOutput("after_trim_plot"))
         )
+      ),
+
+      # Filter tab
+      tabItem(
+        tabName = "fl",
+        h2("Filter")
+      ),
+
+      # Smooth tab
+      tabItem(
+        tabName = "sm",
+        h2("Smooth & Interpolation")
+      ),
+
+
+      # Baseline tab
+      tabItem(
+        tabName = "bl",
+        h2("Baseline")
+      ),
+
+
+      # Normalization tab
+      tabItem(
+        tabName = "nl",
+        h2("Normalization")
+      ),
+
+
+      # Export tab
+      tabItem(
+        tabName = "export",
+        h2("Export")
+      ),
+
+
+      # SNR tab
+      tabItem(
+        tabName = "snr",
+        h2("SNR")
       )
     )
   )
