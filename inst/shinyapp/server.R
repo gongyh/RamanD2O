@@ -42,4 +42,5 @@ function(input, output, session) {
   source(file.path("server", "trim.R"), local = TRUE)$value
   source(file.path("server", "smooth.R"), local = TRUE)$value
   source(file.path("server", "baseline.R"), local = TRUE)$value
+  source(file.path("server", "normalize.R"), local = TRUE)$value
 }
