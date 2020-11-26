@@ -1,0 +1,38 @@
+output$hs_select_for_trim <- renderUI({
+  hs_all <- names(hs$val)
+  selected <- NULL
+  if ("sampled" %in% hs_all) {
+    selected <- "sampled"
+  }
+  selectInput("hs_selector_for_trim", "Choose target", choices = hs_all, selected = selected)
+})
+
+# trim scrs on click of button
+observeEvent(input$trim, {
+  withBusyIndicatorServer("trim", {
+    # shinyjs::disable("trim")
+    if (input$hs_selector_for_trim == "") {
+      shinyalert("Oops!", "Please first load your spectra data.", type = "error")
+      # shinyjs::enable("trim")
+      return()
+    } else {
+      hs_cur <- hs$val[[input$hs_selector_for_trim]]
+      minR <- input$trim_range[1]
+      maxR <- input$trim_range[2]
+      hs_tm <- hs_cur[, , minR ~ maxR]
+      hs$val[["trimmed"]] <- hs_tm
+      output$after_trim <- renderDataTable({
+        DT::datatable(hs_tm$spc[, 1:6], escape = FALSE, selection = "single", options = list(searchHighlight = TRUE, scrollX = TRUE))
+      })
+    }
+    # shinyjs::enable("trim")
+  })
+})
+
+observeEvent(input$after_trim_rows_selected, {
+  index <- input$after_trim_rows_selected
+  item <- hs$val[["trimmed"]][index]
+  output$after_trim_plot <- renderPlot({
+    plot(item)
+  })
+})

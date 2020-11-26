@@ -1,0 +1,46 @@
+output$hs_select_for_subsample <- renderUI({
+  hs_all <- names(hs$val)
+  selected <- NULL
+  if ("raw" %in% hs_all) {
+    selected <- "raw"
+  }
+  selectInput("hs_selector_for_subsample", "Choose target", choices = hs_all, selected = selected)
+})
+
+# sabsample scrs on click of button
+observeEvent(input$subsample, {
+  withBusyIndicatorServer("subsample", {
+    # shinyjs::disable("subsample")
+    if (input$hs_selector_for_subsample == "") {
+      shinyalert("Oops!", "Please first load your spectra data.", type = "error")
+      # shinyjs::enable("subsample")
+      return()
+    } else {
+      hs_cur <- hs$val[[input$hs_selector_for_subsample]]
+      total <- nrow(hs_cur)
+      size <- floor(input$percentage / 100.0 * total)
+      index <- isample(hs_cur, size = max(size, 2))
+      if (input$shuffle) {
+        index <- shuffle(index)
+      }
+      sampled <- hs_cur[index]
+      hs$val[["sampled"]] <- sampled
+      # showNotification(paste0("Subsampled ", nrow(sampled), " spectra."), type = "message", duration = 10)
+      showModal(modalDialog(paste0("Subsampled ", nrow(sampled), " spectra."),
+        title = "Message", easyClose = TRUE
+      ))
+      output$sampled_table <- renderDataTable({
+        DT::datatable(sampled$spc[, 1:6], escape = FALSE, selection = "single", options = list(searchHighlight = TRUE, scrollX = TRUE))
+      })
+    }
+    # shinyjs::enable("subsample")
+  })
+})
+
+observeEvent(input$sampled_table_rows_selected, {
+  index <- input$sampled_table_rows_selected
+  item <- hs$val[["sampled"]][index]
+  output$after_subsample_plot <- renderPlot({
+    plot(item)
+  })
+})
