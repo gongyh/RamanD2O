@@ -132,14 +132,50 @@ dashboardPage(
       # Smooth tab
       tabItem(
         tabName = "sm",
-        h2("Smooth & Interpolation")
+        h2("Smooth interpolation"),
+        br(),
+        fluidRow(
+          column(6,
+            fluidRow(
+              column(2, uiOutput("hs_select_for_smooth")),
+              column(2, checkboxInput("interp", "Interpolation"), class = "top25"),
+              column(2, actionButton("smooth", "Smooth", class = "top25 btn-success"))
+            ),
+            hr(),
+            DTOutput("smoothed_table")
+          ),
+          column(6, plotOutput("after_smooth_plot"))
+        )
       ),
 
 
       # Baseline tab
       tabItem(
         tabName = "bl",
-        h2("Baseline")
+        h2("Baseline"),
+        br(),
+        fluidRow(
+          column(6,
+                 fluidRow(
+                   column(3, uiOutput("hs_select_for_baseline")),
+
+                   column(3, actionButton("baseline", "Baseline", class = "top25 btn-success"))
+                 ),
+                 fluidRow(
+                   column(3, selectInput("select_baseline", "Baseline method",
+                                         choices = c("polyfit","als"), selected = "als")),
+                   column(3, uiOutput("baseline_config"))
+                 ),
+                 radioButtons("select_negative", "How to handle negative values",
+                             choices = c("Set to zero" = "zero",
+                                         "Pull up" = "up",
+                                         "Keep intact" = "keep"),
+                             selected = "keep", inline = T),
+                 hr(),
+                 DTOutput("baselined_table")
+          ),
+          column(6, plotOutput("after_baseline_plot"))
+        )
       ),
 
 
