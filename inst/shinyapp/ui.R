@@ -6,21 +6,32 @@ library(DT)
 library(shinyalert)
 library(shinydisconnect)
 library(shinycssloaders)
+library(shinydashboardPlus)
 
 source("helpers.R")
 
 options(encoding = "UTF-8")
 options(spinner.type = 5, spinner.color = "#bf00ff", spinner.size = 1)
 
-dashboardPage(
+dashboardPagePlus(
   skin = "red",
 
   # BEGIN dashboardHeader
-  dashboardHeader(
+  dashboardHeaderPlus(
     title = "RamanD2O",
     tags$li(
       class = "dropdown",
       tags$a(href = "#", style = "font-size: 20px;", "A ShinyApp to Analyze Raman Spectra Data")
+    ),
+    left_menu = tagList(
+      tags$li(
+        class = "dropdown",
+        menuItem("Visualize", tabName = "visualize", icon = icon("poll"))
+      ),
+      tags$li(
+        class = "dropdown",
+        menuItem("Database", tabName = "database", icon = icon("coins"))
+      )
     )
   ),
   # END dashboardHeader
@@ -31,7 +42,7 @@ dashboardPage(
       menuItem("Introduction", tabName = "dashboard", icon = icon("dashboard")),
       menuItem("Load Data", tabName = "settings", icon = icon("cogs")),
       menuItem("Preprocess",
-        menuSubItem("Subsample", tabName = "ss", icon = icon("crosshairs")),
+        menuSubItem("Sample", tabName = "ss", icon = icon("crosshairs")),
         menuSubItem("Trim", tabName = "trim", icon = icon("cut")),
         menuSubItem("Filter", tabName = "fl", icon = icon("filter")),
         menuSubItem("Smooth", tabName = "sm", icon = icon("wave-square")),
@@ -45,7 +56,7 @@ dashboardPage(
       div(
         class = "hide_when_sidebar_collapsed",
         helpText("Developed by ", a("Yanhai Gong", href = "mailto:gongyh@qibebt.ac.cn"),
-          br(), a("Single Cell Center @ Qibebt, CAS",
+          br(), a("SCC, QIBEBT, CAS",
             href = "http://singlecellcenter.org/en/index.aspx", target = "_blank"
           ),
           style = "padding-left:1em; padding-right:1em;position:absolute; bottom:1em; "
@@ -74,7 +85,9 @@ dashboardPage(
       source(file.path("ui", "baseline.R"), local = TRUE)$value,
       source(file.path("ui", "normalize.R"), local = TRUE)$value,
       source(file.path("ui", "export.R"), local = TRUE)$value,
-      source(file.path("ui", "snratio.R"), local = TRUE)$value
+      source(file.path("ui", "snratio.R"), local = TRUE)$value,
+      source(file.path("ui", "visualize.R"), local = TRUE)$value,
+      source(file.path("ui", "database.R"), local = TRUE)$value
     )
   )
   # END dashboardBody
