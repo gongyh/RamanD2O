@@ -5,8 +5,12 @@ library(shinyFiles)
 library(DT)
 library(shinyalert)
 library(shinydisconnect)
+library(shinycssloaders)
+
+source("helpers.R")
 
 options(encoding = "UTF-8")
+options(spinner.type = 5, spinner.color = "#bf00ff", spinner.size = 1)
 
 dashboardPage(
   skin = "red",
@@ -70,14 +74,14 @@ dashboardPage(
         br(),
         fluidRow(
           column(3, fileInput("scrs_file", "1. Upload SCRS Zip file", accept = ".zip", placeholder = "SCRS.zip")),
-          column(3, actionButton("unzip", "Load SCRS", class = "top25 btn-success")),
+          column(3, withBusyIndicatorUI(actionButton("unzip", "Load SCRS", class = "btn-success")), class = "top25"),
           column(3, fileInput("meta_file", "2. Upload Metadata", accept = ".tsv", placeholder = "meta.tsv")),
-          column(3, actionButton("load_meta", "Load metadata", class = "top25 btn-success"))
+          column(3, withBusyIndicatorUI(actionButton("load_meta", "Load metadata", class = "btn-success")), class = "top25")
         ),
         br(),
         fluidRow(
-          column(6, DTOutput("spectra_files")),
-          column(6, DTOutput("meta_table")),
+          column(6, DTOutput("spectra_files") %>% withSpinner()),
+          column(6, DTOutput("meta_table") %>% withSpinner())
         )
       ),
 
@@ -88,17 +92,21 @@ dashboardPage(
         br(),
         fluidRow(
           column(
-            6, sliderInput("percentage", "Percentage to keep:",
+            6,
+            sliderInput("percentage", "Percentage to keep:",
               min = 1, max = 100, value = 50, width = "100%"
             ),
             fluidRow(
-              column(2, uiOutput("hs_select_for_subsample")),
-              column(2, checkboxInput("shuffle", "Shuffle"), class = "top25"),
-              column(2, actionButton("subsample", "Subsample", class = "top25 btn-success"))
-            ),
-            DTOutput("sampled_table")
+              column(3, uiOutput("hs_select_for_subsample")),
+              column(3, checkboxInput("shuffle", "Shuffle"), class = "top25"),
+              column(3, withBusyIndicatorUI(actionButton("subsample", "Subsample", class = "btn-success")), class = "top25")
+            )
           ),
-          column(6, plotOutput("after_subsample_plot"))
+          column(6, p("Notes:"))
+        ),
+        fluidRow(
+          column(6, DTOutput("sampled_table") %>% withSpinner()),
+          column(6, plotOutput("after_subsample_plot") %>% withSpinner())
         )
       ),
 
@@ -109,17 +117,21 @@ dashboardPage(
         br(),
         fluidRow(
           column(
-            6, sliderInput("trim_range", " Selecting Wavelength Ranges:",
+            6,
+            sliderInput("trim_range", " Selecting Wavelength Ranges:",
               min = 0, max = 4000, value = c(400, 3400),
               step = 1, dragRange = F, width = "100%"
             ),
             fluidRow(
-              column(2, uiOutput("hs_select_for_trim")),
-              column(1, actionButton("trim", "Trim", class = "top25 btn-success"))
-            ),
-            DTOutput("after_trim")
+              column(3, uiOutput("hs_select_for_trim")),
+              column(3, withBusyIndicatorUI(actionButton("trim", "Trim", class = "btn-success")), class = "top25")
+            )
           ),
-          column(6, plotOutput("after_trim_plot"))
+          column(6, p("Notes:"))
+        ),
+        fluidRow(
+          column(6, DTOutput("after_trim") %>% withSpinner()),
+          column(6, plotOutput("after_trim_plot") %>% withSpinner())
         )
       ),
 
@@ -135,16 +147,19 @@ dashboardPage(
         h2("Smooth interpolation"),
         br(),
         fluidRow(
-          column(6,
+          column(
+            6,
             fluidRow(
-              column(2, uiOutput("hs_select_for_smooth")),
-              column(2, checkboxInput("interp", "Interpolation"), class = "top25"),
-              column(2, actionButton("smooth", "Smooth", class = "top25 btn-success"))
-            ),
-            hr(),
-            DTOutput("smoothed_table")
+              column(3, uiOutput("hs_select_for_smooth")),
+              column(3, checkboxInput("interp", "Interpolation"), class = "top25"),
+              column(3, withBusyIndicatorUI(actionButton("smooth", "Smooth", class = "btn-success")), class = "top25")
+            )
           ),
-          column(6, plotOutput("after_smooth_plot"))
+          column(6, p("Notes:"))
+        ),
+        fluidRow(
+          column(6, DTOutput("smoothed_table") %>% withSpinner()),
+          column(6, plotOutput("after_smooth_plot") %>% withSpinner())
         )
       ),
 
@@ -155,26 +170,32 @@ dashboardPage(
         h2("Baseline"),
         br(),
         fluidRow(
-          column(6,
-                 fluidRow(
-                   column(3, uiOutput("hs_select_for_baseline")),
-
-                   column(3, actionButton("baseline", "Baseline", class = "top25 btn-success"))
-                 ),
-                 fluidRow(
-                   column(3, selectInput("select_baseline", "Baseline method",
-                                         choices = c("polyfit","als"), selected = "als")),
-                   column(3, uiOutput("baseline_config"))
-                 ),
-                 radioButtons("select_negative", "How to handle negative values",
-                             choices = c("Set to zero" = "zero",
-                                         "Pull up" = "up",
-                                         "Keep intact" = "keep"),
-                             selected = "keep", inline = T),
-                 hr(),
-                 DTOutput("baselined_table")
+          column(
+            6,
+            fluidRow(
+              column(3, uiOutput("hs_select_for_baseline")),
+              column(3, withBusyIndicatorUI(actionButton("baseline", "Baseline", class = "btn-success")), class = "top25")
+            ),
+            fluidRow(
+              column(3, selectInput("select_baseline", "Baseline method",
+                choices = c("polyfit", "als"), selected = "als"
+              )),
+              column(3, uiOutput("baseline_config"))
+            ),
+            radioButtons("select_negative", "How to handle negative values",
+              choices = c(
+                "Set to zero" = "zero",
+                "Pull up" = "up",
+                "Keep intact" = "keep"
+              ),
+              selected = "keep", inline = T
+            )
           ),
-          column(6, plotOutput("after_baseline_plot"))
+          column(6, p("Notes:"))
+        ),
+        fluidRow(
+          column(6, DTOutput("baselined_table") %>% withSpinner()),
+          column(6, plotOutput("after_baseline_plot") %>% withSpinner())
         )
       ),
 

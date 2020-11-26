@@ -78,7 +78,8 @@ function(input, output, session) {
 
   # Unzipping files on click of button
   observeEvent(input$unzip, {
-    shinyjs::disable("unzip")
+    withBusyIndicatorServer("unzip", {
+    # shinyjs::disable("unzip")
     if (!is.null(input$scrs_file$datapath)) {
       # show_modal_spinner(spin="fulfilling-square",color="#ff1d5e",text="Please wait ...")
       show_modal_progress_line(value = 0, text = "Decompressing ...")
@@ -92,7 +93,7 @@ function(input, output, session) {
         showModal(modalDialog("No spectrum files found!",
           title = "Error", easyClose = TRUE
         ))
-        shinyjs::enable("unzip")
+        # shinyjs::enable("unzip")
         return()
       }
       shift <- read.table(txtfiles[1], header = F, sep = "\t")$V1
@@ -126,13 +127,15 @@ function(input, output, session) {
         title = "Message", easyClose = TRUE
       ))
     }
-    shinyjs::enable("unzip")
+    # shinyjs::enable("unzip")
+    })
   })
 
 
   # load metadata table
   observeEvent(input$load_meta, {
-    shinyjs::disable("load_meta")
+    withBusyIndicatorServer("load_meta", {
+    # shinyjs::disable("load_meta")
     if (!is.null(input$meta_file$datapath)) {
       df <- read.table(input$meta_file$datapath, header = T, sep = "\t")
       # check whether all spectra file have metadata lines
@@ -141,14 +144,14 @@ function(input, output, session) {
         showModal(modalDialog("Please load spectrum files first!",
           title = "Error", easyClose = TRUE
         ))
-        shinyjs::enable("load_meta")
+        # shinyjs::enable("load_meta")
         return()
       }
       file_ids <- scrs$spc$ID_Cell
       diffs <- setdiff(file_ids, df$ID_Cell)
       if (length(diffs) > 0) {
         showNotification("Metadata does not include all spectrum files!", type = "error", duration = 10)
-        shinyjs::enable("load_meta")
+        # shinyjs::enable("load_meta")
         return()
       }
       meta$tbl <- df[df$ID_Cell %in% file_ids, ]
@@ -169,16 +172,18 @@ function(input, output, session) {
         DT::datatable(meta$tbl, escape = FALSE, selection = "single", options = list(searchHighlight = TRUE, scrollX = TRUE))
       })
     }
-    shinyjs::enable("load_meta")
+    # shinyjs::enable("load_meta")
+    })
   })
 
 
   # sabsample scrs on click of button
   observeEvent(input$subsample, {
-    shinyjs::disable("subsample")
+    withBusyIndicatorServer("subsample", {
+    # shinyjs::disable("subsample")
     if (input$hs_selector_for_subsample == "") {
       shinyalert("Oops!", "Please first load your spectra data.", type = "error")
-      shinyjs::enable("subsample")
+      # shinyjs::enable("subsample")
       return()
     } else {
       hs_cur <- hs$val[[input$hs_selector_for_subsample]]
@@ -198,7 +203,8 @@ function(input, output, session) {
         DT::datatable(sampled$spc[, 1:6], escape = FALSE, selection = "single", options = list(searchHighlight = TRUE, scrollX = TRUE))
       })
     }
-    shinyjs::enable("subsample")
+    # shinyjs::enable("subsample")
+    })
   })
 
   observeEvent(input$sampled_table_rows_selected, {
@@ -211,10 +217,11 @@ function(input, output, session) {
 
   # trim scrs on click of button
   observeEvent(input$trim, {
-    shinyjs::disable("trim")
+    withBusyIndicatorServer("trim", {
+    # shinyjs::disable("trim")
     if (input$hs_selector_for_trim == "") {
       shinyalert("Oops!", "Please first load your spectra data.", type = "error")
-      shinyjs::enable("trim")
+      # shinyjs::enable("trim")
       return()
     } else {
       hs_cur <- hs$val[[input$hs_selector_for_trim]]
@@ -226,7 +233,8 @@ function(input, output, session) {
         DT::datatable(hs_tm$spc[, 1:6], escape = FALSE, selection = "single", options = list(searchHighlight = TRUE, scrollX = TRUE))
       })
     }
-    shinyjs::enable("trim")
+    # shinyjs::enable("trim")
+    })
   })
 
   observeEvent(input$after_trim_rows_selected, {
@@ -239,10 +247,11 @@ function(input, output, session) {
 
   # smooth scrs on click of button
   observeEvent(input$smooth, {
-    shinyjs::disable("smooth")
+    withBusyIndicatorServer("smooth", {
+    # shinyjs::disable("smooth")
     if (input$hs_selector_for_smooth == "") {
       shinyalert("Oops!", "Please first load your spectra data.", type = "error")
-      shinyjs::enable("smooth")
+      # shinyjs::enable("smooth")
       return()
     } else {
       hs_cur <- hs$val[[input$hs_selector_for_smooth]]
@@ -256,16 +265,16 @@ function(input, output, session) {
       colnames(hs_sm$spc) <- hs_sm@wavelength
       hs$val[["smoothed"]] <- hs_sm
       output$smoothed_table <- renderDataTable({
-        df <- as.data.frame(hs_sm$spc) %>% mutate_if(is.numeric, round2)
-        colnames(df) <- hs_sm@wavelength
+        df <- as.data.frame(hs_sm$spc[, 1:6]) %>% mutate_if(is.numeric, round2)
+        colnames(df) <- hs_sm@wavelength[1:6]
         rownames(df) <- rownames(hs_sm$spc)
-        DT::datatable(df[, 1:6],
-          escape = FALSE, selection = "single",
+        DT::datatable(df, escape = FALSE, selection = "single",
           options = list(searchHighlight = TRUE, scrollX = TRUE)
         )
       })
     }
-    shinyjs::enable("smooth")
+    # shinyjs::enable("smooth")
+    })
   })
 
   observeEvent(input$smoothed_table_rows_selected, {
@@ -293,10 +302,11 @@ function(input, output, session) {
 
   # baseline scrs on click of button
   observeEvent(input$baseline, {
-    shinyjs::disable("baseline")
+    withBusyIndicatorServer("baseline", {
+    # shinyjs::disable("baseline")
     if (input$hs_selector_for_baseline == "") {
       shinyalert("Oops!", "Please first load your spectra data.", type = "error")
-      shinyjs::enable("baseline")
+      # shinyjs::enable("baseline")
       return()
     } else {
       hs_cur <- hs$val[[input$hs_selector_for_baseline]]
@@ -317,7 +327,7 @@ function(input, output, session) {
         dimnames(hs_bl$spc) <- dimnames(hs_cur$spc)
       } else {
         shinyalert("Oops!", "Baseline method not implemented yet.", type = "error")
-        shinyjs::enable("baseline")
+        # shinyjs::enable("baseline")
         return()
       }
       # handle negative
@@ -336,15 +346,15 @@ function(input, output, session) {
       }
       hs$val[["baselined"]] <- hs_bl
       output$baselined_table <- renderDataTable({
-        df <- as.data.frame(hs_bl$spc) %>% mutate_if(is.numeric, round2)
+        df <- as.data.frame(hs_bl$spc[, 1:6]) %>% mutate_if(is.numeric, round2)
         rownames(df) <- rownames(hs_bl$spc)
-        DT::datatable(df[, 1:6],
-          escape = FALSE, selection = "single",
+        DT::datatable(df, escape = FALSE, selection = "single",
           options = list(searchHighlight = TRUE, scrollX = TRUE)
         )
       })
     }
-    shinyjs::enable("baseline")
+    # shinyjs::enable("baseline")
+    })
   })
 
   observeEvent(input$baselined_table_rows_selected, {
