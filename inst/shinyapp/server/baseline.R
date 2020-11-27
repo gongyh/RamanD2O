@@ -84,7 +84,8 @@ observeEvent(input$baseline, {
 observeEvent(input$baselined_table_rows_selected, {
   index <- input$baselined_table_rows_selected
   item <- hs$val[["baselined"]][index]
-  output$after_baseline_plot <- renderPlot({
-    plot(item)
+  output$after_baseline_plot <- renderPlotly({
+    p <- qplotspc(item) + xlab(TeX("\\Delta \\tilde{\\nu }/c{{m}^{-1}}")) + ylab("I / a.u.")
+    ggplotly(p) %>% config(mathjax = 'cdn')
   })
 })

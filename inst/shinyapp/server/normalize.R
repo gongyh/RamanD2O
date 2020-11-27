@@ -38,7 +38,8 @@ observeEvent(input$normalize, {
 observeEvent(input$normalized_table_rows_selected, {
   index <- input$normalized_table_rows_selected
   item <- hs$val[["normalized"]][index]
-  output$after_normalize_plot <- renderPlot({
-    plot(item)
+  output$after_normalize_plot <- renderPlotly({
+    p <- qplotspc(item) + xlab(TeX("\\Delta \\tilde{\\nu }/c{{m}^{-1}}")) + ylab("I / a.u.")
+    ggplotly(p) %>% config(mathjax = 'cdn')
   })
 })

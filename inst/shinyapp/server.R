@@ -7,15 +7,20 @@ library(ggpubr)
 library(stringr)
 library(RColorBrewer)
 library(shinybusy)
-
 library(baseline)
 library(permute)
 library(shinyalert)
-
 library(dplyr)
+library(plotly)
+library(ggplot2)
+library(hyperSpec)
+library(hySpc.ggplot2)
+
+theme_set(theme_bw())
+
+set.seed(2020)
 
 options(encoding = "UTF-8")
-
 options(shiny.maxRequestSize = 6000 * 1024^2)
 
 source("globals.R")

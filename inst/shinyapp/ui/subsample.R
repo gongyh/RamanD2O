@@ -35,7 +35,7 @@ tabItem(
     ),
     box(
       title = "Spectra Figure", status = "warning", solidHeader = TRUE, collapsible = TRUE,
-      column(12, plotOutput("after_subsample_plot") %>% withSpinner())
+      column(12, plotlyOutput("after_subsample_plot") %>% withSpinner())
     )
   )
 )

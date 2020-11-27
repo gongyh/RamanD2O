@@ -45,7 +45,8 @@ observeEvent(input$smooth, {
 observeEvent(input$smoothed_table_rows_selected, {
   index <- input$smoothed_table_rows_selected
   item <- hs$val[["smoothed"]][index]
-  output$after_smooth_plot <- renderPlot({
-    plot(item)
+  output$after_smooth_plot <- renderPlotly({
+    p <- qplotspc(item) + xlab(TeX("\\Delta \\tilde{\\nu }/c{{m}^{-1}}")) + ylab("I / a.u.")
+    ggplotly(p) %>% config(mathjax = 'cdn')
   })
 })

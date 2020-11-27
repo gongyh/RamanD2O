@@ -40,7 +40,8 @@ observeEvent(input$subsample, {
 observeEvent(input$sampled_table_rows_selected, {
   index <- input$sampled_table_rows_selected
   item <- hs$val[["sampled"]][index]
-  output$after_subsample_plot <- renderPlot({
-    plot(item)
+  output$after_subsample_plot <- renderPlotly({
+    p <- qplotspc(item) + xlab(TeX("\\Delta \\tilde{\\nu }/c{{m}^{-1}}")) + ylab("I / a.u.")
+    ggplotly(p) %>% config(mathjax = 'cdn')
   })
 })

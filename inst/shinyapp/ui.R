@@ -7,6 +7,7 @@ library(shinyalert)
 library(shinydisconnect)
 library(shinycssloaders)
 library(shinydashboardPlus)
+library(plotly)
 
 source("helpers.R")
 
