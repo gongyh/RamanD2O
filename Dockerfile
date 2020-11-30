@@ -28,7 +28,7 @@ RUN R -e "install.packages(c('hyperSpec', 'hySpc.ggplot2'), \
 
 # copy the app to the image
 RUN mkdir /root/RamanD2O
-COPY shinyapp /root/RamanD2O
+COPY inst/shinyapp /root/RamanD2O
 
 EXPOSE 3838
 
