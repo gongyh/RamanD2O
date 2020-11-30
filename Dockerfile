@@ -1,6 +1,6 @@
 FROM openanalytics/r-base
 
-LABEL maintainer "Tobias Verbeke <tobias.verbeke@openanalytics.eu>"
+LABEL maintainer "Yanhai Gong <gongyh@qibebt.ac.cn>"
 
 # system libraries of general use
 RUN apt-get update && apt-get install -y \
@@ -13,7 +13,9 @@ RUN apt-get update && apt-get install -y \
   libssl-dev \
   libssh2-1-dev \
   libssl1.0.0 \
-  file
+  file \
+  libxml2 \
+  libxml2-dev
 
 # basic shiny functionality
 RUN R -e "install.packages(c('shiny', 'shinydashboard', 'shinyjs', 'shinyFiles', \
