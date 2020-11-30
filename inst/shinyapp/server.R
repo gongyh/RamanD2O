@@ -1,38 +1,3 @@
-library(shiny)
-library(shinyFiles)
-library(shinyjs)
-library(fs)
-library(DT)
-library(ggpubr)
-library(stringr)
-library(RColorBrewer)
-library(shinybusy)
-library(baseline)
-library(permute)
-library(shinyalert)
-library(dplyr)
-library(plotly)
-library(ggplot2)
-library(hyperSpec)
-library(hySpc.ggplot2)
-
-theme_set(theme_bw())
-
-set.seed(2020)
-
-options(encoding = "UTF-8")
-options(shiny.maxRequestSize = 6000 * 1024^2)
-
-source("globals.R")
-source("helpers.R")
-
-# prepare colors
-cols1 <- brewer.pal(12, "Paired")
-cols1 <- cols1[-11]
-cols2 <- brewer.pal(8, "Dark2")
-cols <- c(cols1, cols2)
-
-
 function(input, output, session) {
 
   # set user info

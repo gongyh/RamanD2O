@@ -24,7 +24,7 @@ tabItem(
             "Pull up" = "up",
             "Keep intact" = "keep"
           ),
-          selected = "keep", inline = T
+          selected = "up", inline = T
         )
       )
     ),

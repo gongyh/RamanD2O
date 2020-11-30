@@ -1,18 +1,5 @@
-library(shiny)
-library(shinydashboard)
-library(shinyjs)
-library(shinyFiles)
-library(DT)
-library(shinyalert)
-library(shinydisconnect)
-library(shinycssloaders)
-library(shinydashboardPlus)
-library(plotly)
-
+source("globals.R")
 source("helpers.R")
-
-options(encoding = "UTF-8")
-options(spinner.type = 5, spinner.color = "#bf00ff", spinner.size = 1)
 
 dashboardPagePlus(
   skin = "red",

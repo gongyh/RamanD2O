@@ -18,7 +18,7 @@ RUN apt-get update && apt-get install -y \
   libxml2-dev
 
 # basic shiny functionality
-RUN R -e "install.packages(c('shiny', 'shinydashboard', 'shinyjs', 'shinyFiles', \
+RUN R -e "install.packages(c('shiny', 'shinydashboard', 'shinyjs', 'shinyFiles', 'shinybusy', \
   'shinyalert', 'shinydisconnect', 'shinycssloaders', 'shinydashboardPlus', 'DT', \
   'plotly', 'fs', 'ggpubr', 'ggplot2', 'stringr', 'RColorBrewer', 'dplyr', 'compiler'),  \
   repos='https://cloud.r-project.org/')"
