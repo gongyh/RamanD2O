@@ -1,4 +1,4 @@
-FROM openanalytics/r-base:3.6.1
+FROM openanalytics/r-base
 
 LABEL maintainer "Tobias Verbeke <tobias.verbeke@openanalytics.eu>"
 
