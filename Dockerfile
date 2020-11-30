@@ -18,10 +18,10 @@ RUN apt-get update && apt-get install -y \
   libxml2-dev
 
 # basic shiny functionality
-RUN R -e "install.packages(c('shiny', 'shinydashboard', 'shinyjs', 'shinyFiles', 'shinybusy', \
-  'shinyalert', 'shinydisconnect', 'shinycssloaders', 'shinytoastr', 'DT', 'fresh', \
-  'plotly', 'fs', 'ggpubr', 'ggplot2', 'stringr', 'RColorBrewer', 'dplyr', 'compiler'), \
-  repos='https://cloud.r-project.org/')"
+RUN R -e "install.packages(c('shiny', 'shinydashboard', 'shinyjs', 'shinyFiles', \
+  'shinybusy', 'shinyalert', 'shinydisconnect', 'shinycssloaders', 'shinytoastr', \
+  'DT', 'fresh', 'devtools', 'plotly', 'fs', 'ggpubr', 'ggplot2', 'stringr', \
+  'RColorBrewer', 'dplyr', 'compiler'), repos='https://cloud.r-project.org/')"
 RUN R -e "devtools::install_github('RinteRface/shinydashboardPlus')"
 
 # install dependencies of the RamanD2O app
