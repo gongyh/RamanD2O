@@ -1,3 +1,18 @@
+# helper functions for RamanD2O shiny app
+
+removeCosmic <- function(spc) {
+  medianFilt <- runmed(spc, 3)
+  diff <- spc - medianFilt
+  cutoff <- max(2000, 8 * sd(diff))
+  df <- data.frame(raw = spc, med = medianFilt, diff = diff)
+  cosmic <- FALSE
+  if (length(which(df$diff > cutoff)) > 0) {
+    cosmic <- TRUE
+    df[which(df$diff > cutoff), "raw"] <- df[which(df$diff > cutoff), "med"]
+  }
+  return(list("spc" = df$raw, "cosmic" = cosmic))
+}
+
 round2 <- function(x) {
   round(x, digits = 2)
 }

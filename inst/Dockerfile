@@ -1,4 +1,4 @@
-FROM openanalytics/r-base
+FROM openanalytics/r-base:3.6.1
 
 LABEL maintainer "Tobias Verbeke <tobias.verbeke@openanalytics.eu>"
 
@@ -12,17 +12,19 @@ RUN apt-get update && apt-get install -y \
   libxt-dev \
   libssl-dev \
   libssh2-1-dev \
-  libssl1.0.0
-
-# system library dependency for the euler app
-RUN apt-get update && apt-get install -y \
-  libmpfr-dev
+  libssl1.0.0 \
+  file
 
 # basic shiny functionality
-RUN R -e "install.packages(c('shiny', 'rmarkdown'), repos='https://cloud.r-project.org/')"
+RUN R -e "install.packages(c('shiny', 'shinydashboard', 'shinyjs', 'shinyFiles', \
+  'shinyalert', 'shinydisconnect', 'shinycssloaders', 'shinydashboardPlus', 'DT', \
+  'plotly', 'fs', 'ggpubr', 'ggplot2', 'stringr', 'RColorBrewer', 'dplyr', 'compiler'),  \
+  repos='https://cloud.r-project.org/')"
 
-# install dependencies of the euler app
-RUN R -e "install.packages('Rmpfr', repos='https://cloud.r-project.org/')"
+# install dependencies of the RamanD2O app
+RUN R -e "install.packages(c('baseline', 'permute'), repos='https://cloud.r-project.org/')"
+RUN R -e "install.packages(c('hyperSpec', 'hySpc.ggplot2'), \
+  repos=c('https://r-hyperspec.github.io/pkg-repo/', getOption('repos')))"
 
 # copy the app to the image
 RUN mkdir /root/RamanD2O
