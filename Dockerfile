@@ -19,9 +19,10 @@ RUN apt-get update && apt-get install -y \
 
 # basic shiny functionality
 RUN R -e "install.packages(c('shiny', 'shinydashboard', 'shinyjs', 'shinyFiles', 'shinybusy', \
-  'shinyalert', 'shinydisconnect', 'shinycssloaders', 'shinydashboardPlus', 'DT', \
-  'plotly', 'fs', 'ggpubr', 'ggplot2', 'stringr', 'RColorBrewer', 'dplyr', 'compiler'),  \
+  'shinyalert', 'shinydisconnect', 'shinycssloaders', 'shinytoastr', 'DT', 'fresh', \
+  'plotly', 'fs', 'ggpubr', 'ggplot2', 'stringr', 'RColorBrewer', 'dplyr', 'compiler'), \
   repos='https://cloud.r-project.org/')"
+RUN R -e "devtools::install_github('RinteRface/shinydashboardPlus')"
 
 # install dependencies of the RamanD2O app
 RUN R -e "install.packages(c('baseline', 'permute'), repos='https://cloud.r-project.org/')"

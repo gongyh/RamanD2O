@@ -35,11 +35,36 @@ observeEvent(input$normalize, {
   })
 })
 
-observeEvent(input$normalized_table_rows_selected, {
-  index <- input$normalized_table_rows_selected
-  item <- hs$val[["normalized"]][index]
-  output$after_normalize_plot <- renderPlotly({
-    p <- qplotspc(item) + xlab(TeX("\\Delta \\tilde{\\nu }/c{{m}^{-1}}")) + ylab("I / a.u.")
-    ggplotly(p) %>% config(mathjax = 'cdn')
-  })
-})
+
+observeEvent(hs$val[["normalized"]],
+  {
+    hs_nl <- hs$val[["normalized"]]
+    output$normalized_table <- renderDataTable({
+      df <- NULL
+      if (!is.null(hs_nl)) {
+        df <- as.data.frame(hs_nl$spc[, 1:6]) %>% mutate_if(is.numeric, round2)
+        colnames(df) <- hs_nl@wavelength[1:6]
+        rownames(df) <- rownames(hs_nl$spc)
+      }
+      DT::datatable(df,
+        escape = FALSE, selection = "single",
+        options = list(searchHighlight = TRUE, scrollX = TRUE)
+      )
+    })
+  },
+  ignoreNULL = FALSE
+)
+
+
+observeEvent(input$normalized_table_rows_selected,
+  {
+    output$after_normalize_plot <- renderPlotly({
+      validate(need(input$normalized_table_rows_selected, ""))
+      index <- input$normalized_table_rows_selected
+      item <- hs$val[["normalized"]][index]
+      p <- qplotspc(item) + xlab(TeX("\\Delta \\tilde{\\nu }/c{{m}^{-1}}")) + ylab("I / a.u.")
+      ggplotly(p) %>% config(mathjax = "cdn")
+    })
+  },
+  ignoreNULL = FALSE
+)

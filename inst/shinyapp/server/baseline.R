@@ -68,24 +68,38 @@ observeEvent(input$baseline, {
         # treat as keep
       }
       hs$val[["baselined"]] <- hs_bl
-      output$baselined_table <- renderDataTable({
-        df <- as.data.frame(hs_bl$spc[, 1:6]) %>% mutate_if(is.numeric, round2)
-        rownames(df) <- rownames(hs_bl$spc)
-        DT::datatable(df,
-          escape = FALSE, selection = "single",
-          options = list(searchHighlight = TRUE, scrollX = TRUE)
-        )
-      })
     }
     # shinyjs::enable("baseline")
   })
 })
 
-observeEvent(input$baselined_table_rows_selected, {
-  index <- input$baselined_table_rows_selected
-  item <- hs$val[["baselined"]][index]
-  output$after_baseline_plot <- renderPlotly({
-    p <- qplotspc(item) + xlab(TeX("\\Delta \\tilde{\\nu }/c{{m}^{-1}}")) + ylab("I / a.u.")
-    ggplotly(p) %>% config(mathjax = 'cdn')
-  })
-})
+observeEvent(hs$val[["baselined"]],
+  {
+    hs_bl <- hs$val[["baselined"]]
+    output$baselined_table <- renderDataTable({
+      df <- NULL
+      if (!is.null(hs_bl)) {
+        df <- as.data.frame(hs_bl$spc[, 1:6]) %>% mutate_if(is.numeric, round2)
+        rownames(df) <- rownames(hs_bl$spc)
+      }
+      DT::datatable(df,
+        escape = FALSE, selection = "single",
+        options = list(searchHighlight = TRUE, scrollX = TRUE)
+      )
+    })
+  },
+  ignoreNULL = FALSE
+)
+
+observeEvent(input$baselined_table_rows_selected,
+  {
+    output$after_baseline_plot <- renderPlotly({
+      validate(need(input$baselined_table_rows_selected, ""))
+      index <- input$baselined_table_rows_selected
+      item <- hs$val[["baselined"]][index]
+      p <- qplotspc(item) + xlab(TeX("\\Delta \\tilde{\\nu }/c{{m}^{-1}}")) + ylab("I / a.u.")
+      ggplotly(p) %>% config(mathjax = "cdn")
+    })
+  },
+  ignoreNULL = FALSE
+)

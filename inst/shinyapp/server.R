@@ -7,7 +7,7 @@ function(input, output, session) {
   output$user <- renderUser({
     dashboardUser(
       name = user_name,
-      src = "https://adminlte.io/themes/AdminLTE/dist/img/user2-160x160.jpg"
+      image = "https://adminlte.io/themes/AdminLTE/dist/img/user2-160x160.jpg"
     )
   })
 
@@ -16,6 +16,15 @@ function(input, output, session) {
   observe({
     autoInvalidate()
     cat(".")
+  })
+
+  # load demo data
+  observeEvent(input$load_demo, {
+    withBusyIndicatorServer("load_demo", {
+      scrs$spc <- readRDS("scrs_spc.RDS")
+      meta$tbl <- readRDS("meta_tbl.RDS")
+      hs$val[["raw"]] <- readRDS("hs_raw.RDS")
+    })
   })
 
   source(file.path("server", "unzip_scrs.R"), local = TRUE)$value

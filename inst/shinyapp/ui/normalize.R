@@ -32,7 +32,7 @@ tabItem(
   fluidRow(
     box(
       title = "Spectra Table", status = "warning", solidHeader = TRUE, collapsible = TRUE,
-      column(12, DTOutput("normalized_table") %>% withSpinner())
+      column(12, DTOutput("normalized_table", height = "400px") %>% withSpinner())
     ),
     box(
       title = "Spectra Figure", status = "warning", solidHeader = TRUE, collapsible = TRUE,

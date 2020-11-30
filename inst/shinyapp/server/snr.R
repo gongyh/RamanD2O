@@ -64,11 +64,33 @@ observeEvent(input$snr, {
   })
 })
 
-observeEvent(input$snr_table_rows_selected, {
-  index <- input$snr_table_rows_selected
-  item <- hs$val[["snr"]][index]
-  output$after_snr_plot <- renderPlotly({
-    p <- qplotspc(item) + xlab(TeX("\\Delta \\tilde{\\nu }/c{{m}^{-1}}")) + ylab("I / a.u.")
-    ggplotly(p) %>% config(mathjax = "cdn")
-  })
-})
+observeEvent(hs$val[["snr"]],
+  {
+    hs_snr <- hs$val[["snr"]]
+    output$snr_table <- renderDataTable({
+      df <- NULL
+      if (!is.null(hs_snr)) {
+        df <- hs_snr@data
+        df$spc <- NULL
+      }
+      DT::datatable(df,
+        escape = FALSE, selection = "single",
+        options = list(searchHighlight = TRUE, scrollX = TRUE)
+      )
+    })
+  },
+  ignoreNULL = FALSE
+)
+
+observeEvent(input$snr_table_rows_selected,
+  {
+    output$after_snr_plot <- renderPlotly({
+      validate(need(input$snr_table_rows_selected, ""))
+      index <- input$snr_table_rows_selected
+      item <- hs$val[["snr"]][index]
+      p <- qplotspc(item) + xlab(TeX("\\Delta \\tilde{\\nu }/c{{m}^{-1}}")) + ylab("I / a.u.")
+      ggplotly(p) %>% config(mathjax = "cdn")
+    })
+  },
+  ignoreNULL = FALSE
+)

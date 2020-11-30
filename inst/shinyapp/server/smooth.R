@@ -42,11 +42,34 @@ observeEvent(input$smooth, {
   })
 })
 
-observeEvent(input$smoothed_table_rows_selected, {
-  index <- input$smoothed_table_rows_selected
-  item <- hs$val[["smoothed"]][index]
-  output$after_smooth_plot <- renderPlotly({
-    p <- qplotspc(item) + xlab(TeX("\\Delta \\tilde{\\nu }/c{{m}^{-1}}")) + ylab("I / a.u.")
-    ggplotly(p) %>% config(mathjax = 'cdn')
-  })
-})
+observeEvent(hs$val[["smoothed"]],
+  {
+    hs_sm <- hs$val[["smoothed"]]
+    output$smoothed_table <- renderDataTable({
+      df <- NULL
+      if (!is.null(hs_sm)) {
+        df <- as.data.frame(hs_sm$spc[, 1:6]) %>% mutate_if(is.numeric, round2)
+        colnames(df) <- hs_sm@wavelength[1:6]
+        rownames(df) <- rownames(hs_sm$spc)
+      }
+      DT::datatable(df,
+        escape = FALSE, selection = "single",
+        options = list(searchHighlight = TRUE, scrollX = TRUE)
+      )
+    })
+  },
+  ignoreNULL = FALSE
+)
+
+observeEvent(input$smoothed_table_rows_selected,
+  {
+    output$after_smooth_plot <- renderPlotly({
+      validate(need(input$smoothed_table_rows_selected, ""))
+      index <- input$smoothed_table_rows_selected
+      item <- hs$val[["smoothed"]][index]
+      p <- qplotspc(item) + xlab(TeX("\\Delta \\tilde{\\nu }/c{{m}^{-1}}")) + ylab("I / a.u.")
+      ggplotly(p) %>% config(mathjax = "cdn")
+    })
+  },
+  ignoreNULL = FALSE
+)

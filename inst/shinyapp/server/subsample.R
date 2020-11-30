@@ -26,22 +26,35 @@ observeEvent(input$subsample, {
       sampled <- hs_cur[index]
       hs$val[["sampled"]] <- sampled
       # showNotification(paste0("Subsampled ", nrow(sampled), " spectra."), type = "message", duration = 10)
-      showModal(modalDialog(paste0("Subsampled ", nrow(sampled), " spectra."),
-        title = "Message", easyClose = TRUE
-      ))
-      output$sampled_table <- renderDataTable({
-        DT::datatable(sampled$spc[, 1:6], escape = FALSE, selection = "single", options = list(searchHighlight = TRUE, scrollX = TRUE))
-      })
+      # showModal(modalDialog(paste0("Subsampled ", nrow(sampled), " spectra."),
+      #  title = "Message", easyClose = TRUE
+      # ))
+      toastr_success(paste0("Subsampled ", nrow(sampled), " spectra."), position = "top-center")
     }
     # shinyjs::enable("subsample")
   })
 })
 
-observeEvent(input$sampled_table_rows_selected, {
-  index <- input$sampled_table_rows_selected
-  item <- hs$val[["sampled"]][index]
-  output$after_subsample_plot <- renderPlotly({
-    p <- qplotspc(item) + xlab(TeX("\\Delta \\tilde{\\nu }/c{{m}^{-1}}")) + ylab("I / a.u.")
-    ggplotly(p) %>% config(mathjax = 'cdn')
-  })
-})
+observeEvent(hs$val[["sampled"]],
+  {
+    # req(hs$val[["sampled"]])
+    sampled <- hs$val[["sampled"]]
+    output$sampled_table <- renderDataTable({
+      DT::datatable(sampled$spc[, 1:6], escape = FALSE, selection = "single", options = list(searchHighlight = TRUE, scrollX = TRUE))
+    })
+  },
+  ignoreNULL = FALSE
+)
+
+observeEvent(input$sampled_table_rows_selected,
+  {
+    output$after_subsample_plot <- renderPlotly({
+      validate(need(input$sampled_table_rows_selected, ""))
+      index <- input$sampled_table_rows_selected
+      item <- hs$val[["sampled"]][index]
+      p <- qplotspc(item) + xlab(TeX("\\Delta \\tilde{\\nu }/c{{m}^{-1}}")) + ylab("I / a.u.")
+      ggplotly(p) %>% config(mathjax = "cdn")
+    })
+  },
+  ignoreNULL = FALSE
+)

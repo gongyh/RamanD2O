@@ -1,17 +1,18 @@
 source("globals.R")
 source("helpers.R")
 
-dashboardPagePlus(
-  skin = "red",
+dashboardPage(
+  md = FALSE,
+  skin = "blue",
 
   # BEGIN dashboardHeader
-  dashboardHeaderPlus(
+  dashboardHeader(
     title = "RamanD2O",
     tags$li(
       class = "dropdown",
       tags$a(href = "#", style = "font-size: 20px;", "A ShinyApp to Analyze Raman Spectra Data  ")
     ),
-    left_menu = tagList(
+    leftUi = tagList(
       tags$li(
         class = "dropdown",
         menuItem("Visualize", tabName = "visualize", icon = icon("poll"))
@@ -24,6 +25,8 @@ dashboardPagePlus(
     userOutput("user")
   ),
   # END dashboardHeader
+
+  controlbar = dashboardControlbar(collapsed = T, skinSelector()),
 
   # BEGIN dashboardSidebar
   dashboardSidebar(
@@ -63,6 +66,7 @@ dashboardPagePlus(
     tags$script(HTML("$('body').addClass('sidebar-mini');")),
 
     shinydisconnect::disconnectMessage2(),
+    useToastr(),
 
     tabItems(
       source(file.path("ui", "dashboard.R"), local = TRUE)$value,
@@ -78,6 +82,8 @@ dashboardPagePlus(
       source(file.path("ui", "visualize.R"), local = TRUE)$value,
       source(file.path("ui", "database.R"), local = TRUE)$value
     )
-  )
+  ),
   # END dashboardBody
+
+  footer = dashboardFooter()
 )

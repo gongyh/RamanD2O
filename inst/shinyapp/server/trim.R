@@ -10,10 +10,8 @@ output$hs_select_for_trim <- renderUI({
 # trim scrs on click of button
 observeEvent(input$trim, {
   withBusyIndicatorServer("trim", {
-    # shinyjs::disable("trim")
     if (input$hs_selector_for_trim == "") {
       shinyalert("Oops!", "Please first load your spectra data.", type = "error")
-      # shinyjs::enable("trim")
       return()
     } else {
       hs_cur <- hs$val[[input$hs_selector_for_trim]]
@@ -21,19 +19,29 @@ observeEvent(input$trim, {
       maxR <- input$trim_range[2]
       hs_tm <- hs_cur[, , minR ~ maxR]
       hs$val[["trimmed"]] <- hs_tm
-      output$after_trim <- renderDataTable({
-        DT::datatable(hs_tm$spc[, 1:6], escape = FALSE, selection = "single", options = list(searchHighlight = TRUE, scrollX = TRUE))
-      })
     }
-    # shinyjs::enable("trim")
   })
 })
 
-observeEvent(input$after_trim_rows_selected, {
-  index <- input$after_trim_rows_selected
-  item <- hs$val[["trimmed"]][index]
-  output$after_trim_plot <- renderPlotly({
-    p <- qplotspc(item) + xlab(TeX("\\Delta \\tilde{\\nu }/c{{m}^{-1}}")) + ylab("I / a.u.")
-    ggplotly(p) %>% config(mathjax = 'cdn')
-  })
-})
+observeEvent(hs$val[["trimmed"]],
+  {
+    hs_tm <- hs$val[["trimmed"]]
+    output$after_trim <- renderDataTable({
+      DT::datatable(hs_tm$spc[, 1:6], escape = FALSE, selection = "single", options = list(searchHighlight = TRUE, scrollX = TRUE))
+    })
+  },
+  ignoreNULL = FALSE
+)
+
+observeEvent(input$after_trim_rows_selected,
+  {
+    output$after_trim_plot <- renderPlotly({
+      validate(need(input$after_trim_rows_selected, ""))
+      index <- input$after_trim_rows_selected
+      item <- hs$val[["trimmed"]][index]
+      p <- qplotspc(item) + xlab(TeX("\\Delta \\tilde{\\nu }/c{{m}^{-1}}")) + ylab("I / a.u.")
+      ggplotly(p) %>% config(mathjax = "cdn")
+    })
+  },
+  ignoreNULL = FALSE
+)

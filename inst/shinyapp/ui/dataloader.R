@@ -3,6 +3,8 @@ tabItem(
   tabName = "settings",
   h2("Load data"),
   br(),
+  withBusyIndicatorUI(actionButton("load_demo", "Quick start, load demo data", class = "primary")),
+  br(),
   fluidRow(
     box(
       title = "Spectra Uploader", status = "info", solidHeader = TRUE, collapsible = FALSE,
@@ -19,11 +21,11 @@ tabItem(
   fluidRow(
     box(
       title = "Spectra Table", status = "info", solidHeader = TRUE, collapsible = TRUE,
-      column(12, DTOutput("spectra_files") %>% withSpinner())
+      column(12, DTOutput("spectra_files", height = "400px") %>% withSpinner())
     ),
     box(
       title = "Metadata Table", status = "warning", solidHeader = TRUE, collapsible = TRUE,
-      column(12, DTOutput("meta_table") %>% withSpinner())
+      column(12, DTOutput("meta_table", height = "400px") %>% withSpinner())
     )
   )
 )

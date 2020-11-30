@@ -11,10 +11,10 @@ observeEvent(input$unzip, {
       if (total == 0) {
         remove_modal_progress()
         # showNotification("No spectrum files found!", type = "error", duration = 10)
-        showModal(modalDialog("No spectrum files found!",
-          title = "Error", easyClose = TRUE
-        ))
-
+        # showModal(modalDialog("No spectrum files found!",
+        #  title = "Error", easyClose = TRUE
+        # ))
+        toastr_error("No spectrum files found!", position = "top-center")
         return()
       }
       shift <- read.table(txtfiles[1], header = F, sep = "\t")$V1
@@ -38,17 +38,27 @@ observeEvent(input$unzip, {
       colnames(sc) <- scrs_colnames
       rownames(sc) <- NULL
       scrs$spc <- sc
-      output$spectra_files <- renderDataTable({
-        DT::datatable(scrs$spc[, 1:5], escape = FALSE, selection = "single", options = list(searchHighlight = TRUE, scrollX = TRUE))
-      })
       # remove_modal_spinner()
       remove_modal_progress()
       # showNotification(paste0("Load ", length(txtfiles), " spectrum files."), type = "message", duration = 10)
-      showModal(modalDialog(paste0("Load ", length(txtfiles), " spectrum files."),
-        title = "Message", easyClose = TRUE
-      ))
+      # showModal(modalDialog(paste0("Load ", length(txtfiles), " spectrum files."),
+      #  title = "Message", easyClose = TRUE
+      # ))
+      toastr_success(paste0("Load ", length(txtfiles), " spectrum files."), position = "top-center")
     } else {
-      showModal(modalDialog("No spectra zip file selected!", title = "Error", easyClose = TRUE))
+      # showModal(modalDialog("No spectra zip file selected!", title = "Error", easyClose = TRUE))
+      toastr_error("No spectra zip file selected!", position = "top-center")
     }
   })
 })
+
+# updata table
+observeEvent(scrs$spc,
+  {
+    # req(scrs$spc)
+    output$spectra_files <- renderDataTable({
+      DT::datatable(scrs$spc[, 1:5], escape = FALSE, selection = "single", options = list(searchHighlight = TRUE, scrollX = TRUE))
+    })
+  },
+  ignoreNULL = FALSE
+)
