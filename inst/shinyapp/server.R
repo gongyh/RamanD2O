@@ -34,6 +34,18 @@ cols <- c(cols1, cols2)
 
 
 function(input, output, session) {
+
+  # set user info
+  if (user_name == "Anonymous" && !is.null(session$user)) {
+    user_name <- session$user
+  }
+  output$user <- renderUser({
+    dashboardUser(
+      name = user_name,
+      src = "https://adminlte.io/themes/AdminLTE/dist/img/user2-160x160.jpg"
+    )
+  })
+
   # print one dot every minute to prevent gray-out
   autoInvalidate <- reactiveTimer(60000)
   observe({

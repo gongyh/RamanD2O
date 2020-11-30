@@ -22,7 +22,7 @@ dashboardPagePlus(
     title = "RamanD2O",
     tags$li(
       class = "dropdown",
-      tags$a(href = "#", style = "font-size: 20px;", "A ShinyApp to Analyze Raman Spectra Data")
+      tags$a(href = "#", style = "font-size: 20px;", "A ShinyApp to Analyze Raman Spectra Data  ")
     ),
     left_menu = tagList(
       tags$li(
@@ -33,7 +33,8 @@ dashboardPagePlus(
         class = "dropdown",
         menuItem("Database", tabName = "database", icon = icon("coins"))
       )
-    )
+    ),
+    userOutput("user")
   ),
   # END dashboardHeader
 
