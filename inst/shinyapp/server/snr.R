@@ -18,39 +18,46 @@ observeEvent(input$snr, {
     } else {
       hs_cur <- hs$val[[input$hs_selector_for_snr]]
       wavelength <- wl(hs_cur)
+      SNR_All <- NULL
+      hs_snr <- hs_cur
+      spc <- hs_cur$spc
       # snr
-      if (input$select_baseline == "new") {
-        b_als <- baseline(hs_cur$spc, method = "als")
-        data <- hs_cur@data
-        data$spc <- NULL
-        hs_bl <- new("hyperSpec",
-                     data = data,
-                     spc = getCorrected(b_als), wavelength = wavelength
-        )
-      } else if (input$select_baseline == "old") {
-        order <- input$polyfit_order
-        hs_bl <- hs_cur - spc.fit.poly.below(hs_cur, poly.order = 7)
-        hs_bl$spc <- unAsIs(hs_bl$spc)
-        dimnames(hs_bl$spc) <- dimnames(hs_cur$spc)
+      if (input$select_snr == "new") {
+        for (i in 1:nrow(spc)) {
+          Baseline_start <- which.min(abs(wavelength - 1730)) # 1760
+          Baseline_end <- which.min(abs(wavelength - 1800)) # 1960
+          Baseline <- spc[i, Baseline_start:Baseline_end]
+          marker <- max(spc[i, which.min(abs(wavelength - 3050)):which.min(abs(wavelength - 2800))]) # C-H peak
+          SNR <- (marker - sum(Baseline) / length(Baseline)) / sqrt(marker)
+          SNR_All <- rbind(SNR_All, SNR)
+        }
+        hs_snr$SNR <- round2(SNR_All)
+      } else if (input$select_snr == "old") {
+        for (i in 1:nrow(spc)) {
+          Baseline_start <- which.min(abs(wavelength - 1760))
+          Baseline_end <- which.min(abs(wavelength - 1960))
+          Baseline <- spc[i, Baseline_start:Baseline_end]
+          marker <- max(spc[1, which.min(abs(wavelength - 1400)):which.min(abs(wavelength - 1460))])
+          SNR <- (marker - sum(Baseline) / length(Baseline)) / sd(Baseline)
+          SNR_All <- rbind(SNR_All, SNR)
+        }
+        hs_snr$SNR <- round2(SNR_All)
       } else {
         shinyalert("Oops!", "SNR method not implemented yet.", type = "error")
         return()
       }
       # handle filter
       if (input$filter_by_snr) {
-        hs_bl_spc <- hs_bl$spc
-        hs_bl_spc[hs_bl_spc < 0] <- 0
-        hs_bl$spc <- hs_bl_spc
-      } else {
-        # treat as keep
+        snr_cutoff <- input$snr_cutoff
+        hs_snr <- hs_snr[hs_snr$SNR >= snr_cutoff]
       }
-      hs$val[["snr"]] <- hs_bl
+      hs$val[["snr"]] <- hs_snr
       output$snr_table <- renderDataTable({
-        df <- as.data.frame(hs_bl$spc[, 1:6]) %>% mutate_if(is.numeric, round2)
-        rownames(df) <- rownames(hs_bl$spc)
+        df <- hs_snr@data
+        df$spc <- NULL
         DT::datatable(df,
-                      escape = FALSE, selection = "single",
-                      options = list(searchHighlight = TRUE, scrollX = TRUE)
+          escape = FALSE, selection = "single",
+          options = list(searchHighlight = TRUE, scrollX = TRUE)
         )
       })
     }
@@ -62,6 +69,6 @@ observeEvent(input$snr_table_rows_selected, {
   item <- hs$val[["snr"]][index]
   output$after_snr_plot <- renderPlotly({
     p <- qplotspc(item) + xlab(TeX("\\Delta \\tilde{\\nu }/c{{m}^{-1}}")) + ylab("I / a.u.")
-    ggplotly(p) %>% config(mathjax = 'cdn')
+    ggplotly(p) %>% config(mathjax = "cdn")
   })
 })

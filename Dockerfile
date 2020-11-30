@@ -32,6 +32,7 @@ RUN R -e "install.packages(c('hyperSpec', 'hySpc.ggplot2'), \
 RUN mkdir /root/RamanD2O
 COPY inst/shinyapp /root/RamanD2O
 
+COPY Rprofile.site /usr/lib/R/etc/
 EXPOSE 3838
 
 CMD ["R", "-e", "shiny::runApp('/root/RamanD2O')"]

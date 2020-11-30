@@ -10,14 +10,14 @@ tabItem(
         fluidRow(
           column(4, uiOutput("hs_select_for_snr")),
           column(4, selectInput("select_snr", "Select method",
-                                choices = c("new", "old"), selected = "new"
+            choices = c("new", "old"), selected = "new"
           )),
           column(4, withBusyIndicatorUI(actionButton("snr", "Calculate", class = "btn-success")), class = "top25")
         ),
         fluidRow(
           column(4, checkboxInput("filter_by_snr", "Remove Low-SNR Spectra"), class = "top25"),
           column(4, numericInput("snr_cutoff", "SNR Cutoff: (0~30)",
-                                min = 0, max = 30, step=0.1, value = 2.5, width = "100%"
+            min = 0, max = 30, step = 0.1, value = 2.5, width = "100%"
           ))
         )
       )

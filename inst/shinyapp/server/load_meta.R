@@ -1,7 +1,6 @@
 # load metadata table
 observeEvent(input$load_meta, {
   withBusyIndicatorServer("load_meta", {
-    # shinyjs::disable("load_meta")
     if (!is.null(input$meta_file$datapath)) {
       df <- read.table(input$meta_file$datapath, header = T, sep = "\t")
       # check whether all spectra file have metadata lines
@@ -10,14 +9,14 @@ observeEvent(input$load_meta, {
         showModal(modalDialog("Please load spectrum files first!",
           title = "Error", easyClose = TRUE
         ))
-        # shinyjs::enable("load_meta")
+
         return()
       }
       file_ids <- scrs$spc$ID_Cell
       diffs <- setdiff(file_ids, df$ID_Cell)
       if (length(diffs) > 0) {
         showNotification("Metadata does not include all spectrum files!", type = "error", duration = 10)
-        # shinyjs::enable("load_meta")
+
         return()
       }
       meta$tbl <- df[df$ID_Cell %in% file_ids, ]
@@ -37,7 +36,8 @@ observeEvent(input$load_meta, {
       output$meta_table <- renderDataTable({
         DT::datatable(meta$tbl, escape = FALSE, selection = "single", options = list(searchHighlight = TRUE, scrollX = TRUE))
       })
+    } else {
+      showModal(modalDialog("No file selected!", title = "Error", easyClose = TRUE))
     }
-    # shinyjs::enable("load_meta")
   })
 })

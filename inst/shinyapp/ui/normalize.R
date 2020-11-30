@@ -15,7 +15,7 @@ tabItem(
           column(6, selectInput("select_normalize", "Normalize method",
             choices = c("area"), selected = "area"
           )),
-          column(6, checkboxInput("fingerprint", "Fingerprint"), class = "top25")
+          column(6, checkboxInput("fingerprint", "Fingerprint", value = TRUE), class = "top25")
         )
       )
     ),

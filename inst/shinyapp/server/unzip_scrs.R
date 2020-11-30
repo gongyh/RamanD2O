@@ -1,7 +1,6 @@
 # Unzipping files on click of button
 observeEvent(input$unzip, {
   withBusyIndicatorServer("unzip", {
-    # shinyjs::disable("unzip")
     if (!is.null(input$scrs_file$datapath)) {
       # show_modal_spinner(spin="fulfilling-square",color="#ff1d5e",text="Please wait ...")
       show_modal_progress_line(value = 0, text = "Decompressing ...")
@@ -15,7 +14,7 @@ observeEvent(input$unzip, {
         showModal(modalDialog("No spectrum files found!",
           title = "Error", easyClose = TRUE
         ))
-        # shinyjs::enable("unzip")
+
         return()
       }
       shift <- read.table(txtfiles[1], header = F, sep = "\t")$V1
@@ -48,7 +47,8 @@ observeEvent(input$unzip, {
       showModal(modalDialog(paste0("Load ", length(txtfiles), " spectrum files."),
         title = "Message", easyClose = TRUE
       ))
+    } else {
+      showModal(modalDialog("No spectra zip file selected!", title = "Error", easyClose = TRUE))
     }
-    # shinyjs::enable("unzip")
   })
 })
