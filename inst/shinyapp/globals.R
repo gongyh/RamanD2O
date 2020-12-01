@@ -24,6 +24,7 @@ library(RColorBrewer)
 library(dplyr)
 library(plotly)
 library(ggplot2)
+library(mongolite)
 
 library(baseline)
 library(permute)
@@ -55,3 +56,4 @@ scrs <- reactiveValues(spc = NULL)
 meta <- reactiveValues(tbl = NULL)
 
 hs <- reactiveValues(val = list())
+mongo_connection <- reactiveValues(obj = NULL)

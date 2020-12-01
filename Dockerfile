@@ -15,13 +15,15 @@ RUN apt-get update && apt-get install -y \
   libssl1.0.0 \
   file \
   libxml2 \
-  libxml2-dev
+  libxml2-dev \
+  libsasl2-dev
 
 # basic shiny functionality
 RUN R -e "install.packages(c('shiny', 'shinydashboard', 'shinyjs', 'shinyFiles', \
   'shinybusy', 'shinyalert', 'shinydisconnect', 'shinycssloaders', 'shinytoastr', \
   'DT', 'fresh', 'devtools', 'plotly', 'fs', 'ggpubr', 'ggplot2', 'stringr', \
-  'RColorBrewer', 'dplyr', 'compiler'), repos='https://cloud.r-project.org/')"
+  'RColorBrewer', 'dplyr', 'compiler', 'mongolite', 'zip'), \
+  repos='https://cloud.r-project.org/')"
 RUN R -e "devtools::install_github('RinteRface/shinydashboardPlus')"
 
 # install dependencies of the RamanD2O app

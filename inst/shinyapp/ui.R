@@ -83,5 +83,5 @@ dashboardPage(
   ),
   # END dashboardBody
 
-  footer = dashboardFooter()
+  footer = dashboardFooter(left = "By Yanhai Gong", right = "SCC, QIBEBT, CAS, 2020")
 )
