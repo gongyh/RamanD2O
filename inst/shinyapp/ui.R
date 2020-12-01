@@ -40,7 +40,6 @@ dashboardPage(
         menuSubItem("Smooth", tabName = "sm", icon = icon("wave-square")),
         menuSubItem("Baseline", tabName = "bl", icon = icon("chart-line")),
         menuSubItem("Normalize", tabName = "nl", icon = icon("compress-arrows-alt")),
-        menuSubItem("Export", tabName = "export", icon = icon("file-export")),
         menuSubItem("SNR", tabName = "snr", icon = icon("signal")),
         tabName = "tools", icon = icon("toolbox"), startExpanded = T
       ),
@@ -77,7 +76,6 @@ dashboardPage(
       source(file.path("ui", "smooth.R"), local = TRUE)$value,
       source(file.path("ui", "baseline.R"), local = TRUE)$value,
       source(file.path("ui", "normalize.R"), local = TRUE)$value,
-      source(file.path("ui", "export.R"), local = TRUE)$value,
       source(file.path("ui", "snratio.R"), local = TRUE)$value,
       source(file.path("ui", "visualize.R"), local = TRUE)$value,
       source(file.path("ui", "database.R"), local = TRUE)$value

@@ -3,7 +3,8 @@ tabItem(
   tabName = "settings",
   h2("Load data"),
   br(),
-  withBusyIndicatorUI(actionButton("load_demo", "Quick start, load demo data", class = "primary")),
+  p("If have imported your data from external database, then no need to reload here.", style = "color:red;"),
+  withBusyIndicatorUI(actionLink("load_demo", "Quick start, load demo data", class = "primary")),
   br(),
   fluidRow(
     box(
