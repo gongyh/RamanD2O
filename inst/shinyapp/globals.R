@@ -16,6 +16,7 @@ library(shinydashboardPlus)
 library(shinytoastr)
 
 library(fs)
+library(zip)
 library(DT)
 library(ggpubr)
 library(stringr)

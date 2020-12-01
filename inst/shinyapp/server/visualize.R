@@ -26,16 +26,20 @@ output$download <- downloadHandler(
     if (input$select_type == "csv") {
       write.csv(data, file)
     } else if (input$select_type == "zip") {
-      zip_dir <- file.path(tempdir(), input$hs_selector_for_export)
+      setwd(tempdir())
+      zip_dir <- input$hs_selector_for_export
+      meta <- data@data
+      meta$spc <- NULL
+      write.table(meta, "meta.txt", row.names = F, col.names = T, quote = F, sep = "\t")
       dir.create(zip_dir)
       files <- c()
-      for (i in (1:nrow(data))){
+      for (i in (1:nrow(data))) {
         cell <- data[i]
-        txtdf <-data.frame(shift=cell@wavelength,intensity=t(cell$spc))
-        txtname <- file.path(tempdir(), input$hs_selector_for_export, paste0(cell$ID_Cell, ".txt"))
-        write.table(txtdf, txtname, row.names=F, col.names=F, quote=F, sep = "\t")
+        txtdf <- data.frame(shift = cell@wavelength, intensity = t(cell$spc))
+        txtname <- file.path(zip_dir, paste0(cell$ID_Cell, ".txt"))
+        write.table(txtdf, txtname, row.names = F, col.names = F, quote = F, sep = "\t")
       }
-      zip(file.path(tempdir(), "tmp.zip"), zip_dir)
+      zip::zip(zipfile = file, c(zip_dir, "meta.txt"))
     }
   }
 )
