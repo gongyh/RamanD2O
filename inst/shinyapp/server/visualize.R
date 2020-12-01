@@ -46,12 +46,14 @@ output$download <- downloadHandler(
 
 observeEvent(input$hs_selector_for_export,
   {
-    hs_cur <- NULL
+    df <- NULL
     if (!is.null(input$hs_selector_for_export)) {
-      hs_cur <- hs$val[[input$hs_selector_for_export]]$spc[, 1:6]
+      hs_cur <- hs$val[[input$hs_selector_for_export]]
+      df <- as.data.frame(hs_cur$spc[, 1:6]) %>% mutate_if(is.numeric, round2)
+      rownames(df) <- rownames(hs_cur$spc)
     }
     output$visualize_table <- renderDataTable({
-      DT::datatable(hs_cur, escape = FALSE, selection = "single", options = list(searchHighlight = TRUE, scrollX = TRUE))
+      DT::datatable(df, escape = FALSE, selection = "single", options = list(searchHighlight = TRUE, scrollX = TRUE))
     })
   },
   ignoreNULL = FALSE
