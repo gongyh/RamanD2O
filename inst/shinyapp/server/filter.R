@@ -34,7 +34,8 @@ observeEvent(input$filter, {
   })
 })
 
-observeEvent(hs$val[["filtered"]], {
+observeEvent(hs$val[["filtered"]],
+  {
     hs_fl <- hs$val[["filtered"]]
     output$after_filter <- renderDataTable({
       DT::datatable(hs_fl$spc[, 1:6], escape = FALSE, selection = "single", options = list(searchHighlight = TRUE, scrollX = TRUE))
@@ -43,7 +44,8 @@ observeEvent(hs$val[["filtered"]], {
   ignoreNULL = FALSE
 )
 
-observeEvent(input$after_filter_rows_selected, {
+observeEvent(input$after_filter_rows_selected,
+  {
     output$after_filter_plot <- renderPlotly({
       validate(need(input$after_filter_rows_selected, ""))
       index <- input$after_filter_rows_selected

@@ -31,7 +31,7 @@ output$download <- downloadHandler(
       meta <- data@data
       meta$spc <- NULL
       write.table(meta, "meta.txt", row.names = F, col.names = T, quote = F, sep = "\t")
-      dir.create(zip_dir)
+      if (!dir.exists(zip_dir)) dir.create(zip_dir)
       files <- c()
       for (i in (1:nrow(data))) {
         cell <- data[i]
@@ -42,4 +42,31 @@ output$download <- downloadHandler(
       zip::zip(zipfile = file, c(zip_dir, "meta.txt"))
     }
   }
+)
+
+observeEvent(input$hs_selector_for_export,
+  {
+    hs_cur <- NULL
+    if (!is.null(input$hs_selector_for_export)) {
+      hs_cur <- hs$val[[input$hs_selector_for_export]]$spc[, 1:6]
+    }
+    output$visualize_table <- renderDataTable({
+      DT::datatable(hs_cur, escape = FALSE, selection = "single", options = list(searchHighlight = TRUE, scrollX = TRUE))
+    })
+  },
+  ignoreNULL = FALSE
+)
+
+observeEvent(input$visualize_table_rows_selected,
+  {
+    output$after_visualize_plot <- renderPlotly({
+      validate(need(input$hs_selector_for_export, ""))
+      validate(need(input$visualize_table_rows_selected, ""))
+      index <- input$visualize_table_rows_selected
+      item <- hs$val[[input$hs_selector_for_export]][index]
+      p <- qplotspc(item) + xlab(TeX("\\Delta \\tilde{\\nu }/c{{m}^{-1}}")) + ylab("I / a.u.")
+      ggplotly(p) %>% config(mathjax = "cdn")
+    })
+  },
+  ignoreNULL = FALSE
 )
