@@ -6,7 +6,7 @@ function(input, output, session) {
   }
   output$user <- renderUser({
     dashboardUser(
-      name = user_name,
+      name = str_trunc(user_name, 20),
       image = "https://adminlte.io/themes/AdminLTE/dist/img/user2-160x160.jpg"
     )
   })
@@ -31,6 +31,7 @@ function(input, output, session) {
   source(file.path("server", "load_meta.R"), local = TRUE)$value
   source(file.path("server", "subsample.R"), local = TRUE)$value
   source(file.path("server", "trim.R"), local = TRUE)$value
+  source(file.path("server", "filter.R"), local = TRUE)$value
   source(file.path("server", "smooth.R"), local = TRUE)$value
   source(file.path("server", "baseline.R"), local = TRUE)$value
   source(file.path("server", "normalize.R"), local = TRUE)$value

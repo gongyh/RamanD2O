@@ -13,6 +13,12 @@ removeCosmic <- function(spc) {
   return(list("spc" = df$raw, "cosmic" = cosmic))
 }
 
+mean_sd_filter <- function (x, n = 5) {
+  x <- x - mean(x)
+  s <- n * sd(x)
+  (x <= s) & (x > -s)
+}
+
 round2 <- function(x) {
   round(x, digits = 2)
 }

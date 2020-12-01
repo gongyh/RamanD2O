@@ -12,10 +12,8 @@ output$hs_select_for_smooth <- renderUI({
 # smooth scrs on click of button
 observeEvent(input$smooth, {
   withBusyIndicatorServer("smooth", {
-    # shinyjs::disable("smooth")
     if (input$hs_selector_for_smooth == "") {
       shinyalert("Oops!", "Please first load your spectra data.", type = "error")
-      # shinyjs::enable("smooth")
       return()
     } else {
       hs_cur <- hs$val[[input$hs_selector_for_smooth]]
@@ -28,17 +26,7 @@ observeEvent(input$smooth, {
       hs_sm <- spc.loess(hs_cur, wavelength, normalize = F)
       colnames(hs_sm$spc) <- hs_sm@wavelength
       hs$val[["smoothed"]] <- hs_sm
-      output$smoothed_table <- renderDataTable({
-        df <- as.data.frame(hs_sm$spc[, 1:6]) %>% mutate_if(is.numeric, round2)
-        colnames(df) <- hs_sm@wavelength[1:6]
-        rownames(df) <- rownames(hs_sm$spc)
-        DT::datatable(df,
-          escape = FALSE, selection = "single",
-          options = list(searchHighlight = TRUE, scrollX = TRUE)
-        )
-      })
     }
-    # shinyjs::enable("smooth")
   })
 })
 
