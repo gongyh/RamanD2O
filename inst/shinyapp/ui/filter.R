@@ -47,6 +47,11 @@ tabItem(
     ),
     box(
       title = "Spectra Figure", status = "warning", solidHeader = TRUE, collapsible = TRUE,
+      fluidRow(
+        column(3, withBusyIndicatorUI(actionButton("remove", "Remove", class = "btn-success")), class = "top25", style = "text-align: center;"),
+        column(9, p("Caution: you use this button to manually remove the selected spectrum, need double check!"), class = "top25")
+      ),
+      hr(),
       column(12, plotlyOutput("after_filter_plot") %>% withSpinner())
     )
   )

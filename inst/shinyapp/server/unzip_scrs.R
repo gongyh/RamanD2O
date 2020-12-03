@@ -4,7 +4,7 @@ observeEvent(input$unzip, {
     if (!is.null(input$scrs_file$datapath)) {
       # show_modal_spinner(spin="fulfilling-square",color="#ff1d5e",text="Please wait ...")
       show_modal_progress_line(value = 0, text = "Decompressing ...")
-      files <- unzip(input$scrs_file$datapath, list = FALSE, exdir = tempdir())
+      files <- utils::unzip(input$scrs_file$datapath, list = FALSE, exdir = tempdir())
       txtfiles <- str_subset(files, ".*..txt")
       i <- 1
       total <- length(txtfiles)

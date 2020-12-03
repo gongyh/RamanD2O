@@ -51,7 +51,7 @@ observeEvent(input$hs_selector_for_export,
       hs_cur <- hs$val[[input$hs_selector_for_export]]
     }
     output$visualize_table <- renderDataTable({
-      DT::datatable(if (is.null(hs_cur)) NULL else round(hs_cur$spc, 2),
+      DT::datatable(if (is.null(hs_cur)) NULL else hs_cur@data %>% select(!matches("spc")),
         escape = FALSE, selection = "single", extensions = list("Responsive", "Scroller"),
         options = list(searchHighlight = TRUE, scrollX = TRUE)
       )

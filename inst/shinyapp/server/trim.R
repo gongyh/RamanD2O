@@ -27,7 +27,7 @@ observeEvent(hs$val[["trimmed"]],
   {
     hs_tm <- hs$val[["trimmed"]]
     output$after_trim <- renderDataTable({
-      DT::datatable(hs_tm$spc,
+      DT::datatable(if (is.null(hs_tm)) NULL else hs_tm@data %>% select(!matches("spc")),
         escape = FALSE, selection = "single",
         extensions = list("Responsive", "Scroller"),
         options = list(searchHighlight = TRUE, scrollX = TRUE)

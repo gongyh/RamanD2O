@@ -40,7 +40,7 @@ observeEvent(hs$val[["sampled"]],
     # req(hs$val[["sampled"]])
     sampled <- hs$val[["sampled"]]
     output$sampled_table <- renderDataTable({
-      DT::datatable(sampled$spc,
+      DT::datatable(if (is.null(sampled)) NULL else sampled@data %>% select(!matches("spc")),
         escape = FALSE, selection = "single",
         extensions = list("Responsive", "Scroller"),
         options = list(searchHighlight = TRUE, scrollX = TRUE)

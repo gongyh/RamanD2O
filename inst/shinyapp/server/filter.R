@@ -38,7 +38,7 @@ observeEvent(hs$val[["filtered"]],
   {
     hs_fl <- hs$val[["filtered"]]
     output$after_filter <- renderDataTable({
-      DT::datatable(hs_fl$spc,
+      DT::datatable(if (is.null(hs_fl)) NULL else hs_fl@data %>% select(!matches("spc")),
         escape = FALSE, selection = "single", extensions = list("Responsive", "Scroller"),
         options = list(searchHighlight = TRUE, scrollX = TRUE)
       )
@@ -59,3 +59,18 @@ observeEvent(input$after_filter_rows_selected,
   },
   ignoreNULL = FALSE
 )
+
+# remove scrs on click of button
+observeEvent(input$remove, {
+  withBusyIndicatorServer("remove", {
+    if (is.null(input$after_filter_rows_selected)) {
+      shinyalert("Oops!", "Please first select one spectrum to visualize.", type = "error")
+      return()
+    } else {
+      shinyalert("Caution", "Confirm to delete this spectrum?", type = "info", closeOnClickOutside = T, showCancelButton = T,
+                 callbackR = function(x) {
+                   if(x) hs$val[["filtered"]] <- hs$val[["filtered"]][-input$after_filter_rows_selected]
+                 })
+    }
+  })
+})

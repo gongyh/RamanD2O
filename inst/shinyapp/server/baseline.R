@@ -59,9 +59,8 @@ observeEvent(input$baseline, {
         hs_bl_spc[hs_bl_spc < 0] <- 0
         hs_bl$spc <- hs_bl_spc
       } else if (input$select_negative == "up") {
-        yminset <- apply(hs_bl$spc, 1, min)
-        hs_bl_spc <- hs_bl$spc + abs(yminset)
-        hs_bl$spc <- hs_bl_spc
+        offsets <- apply(hs_bl, 1, min)
+        hs_bl <- sweep(hs_bl, 1, offsets, "-")
       } else if (input$select_negative == "keep") {
         # need to do nothing
       } else {
@@ -77,7 +76,7 @@ observeEvent(hs$val[["baselined"]],
   {
     hs_bl <- hs$val[["baselined"]]
     output$baselined_table <- renderDataTable({
-      DT::datatable(if (is.null(hs_bl)) NULL else round(hs_bl$spc, 2),
+      DT::datatable(if (is.null(hs_bl)) NULL else hs_bl@data %>% select(!matches("spc")),
         escape = FALSE, selection = "single", extensions = list("Responsive", "Scroller"),
         options = list(searchHighlight = TRUE, scrollX = TRUE)
       )

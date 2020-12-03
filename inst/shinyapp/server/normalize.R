@@ -31,7 +31,7 @@ observeEvent(hs$val[["normalized"]],
   {
     hs_nl <- hs$val[["normalized"]]
     output$normalized_table <- renderDataTable({
-      DT::datatable(if (is.null(hs_nl)) NULL else round(hs_nl$spc, 2),
+      DT::datatable(if (is.null(hs_nl)) NULL else hs_nl@data %>% select(!matches("spc")),
         escape = FALSE, selection = "single", extensions = list("Responsive", "Scroller"),
         options = list(searchHighlight = TRUE, scrollX = TRUE)
       )
