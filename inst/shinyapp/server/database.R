@@ -7,16 +7,16 @@ observeEvent(input$connectdb, {
         '[{"$group":{"_id":"$project", "count": {"$sum":1}}}]',
         options = '{"allowDiskUse":true}'
       )
-      names(dbstats$projects) <- c("project", "count")
+      if (nrow(dbstats$projects) > 0) names(dbstats$projects) <- c("project", "count")
     },
     error = function(e) {
       shinyalert("Oops!", e$message, type = "error")
     },
     finally = {
       output$db_message <- renderText({
-        paste0("MongoDB is connected at ", Sys.time(), '\n\nproject, count\n', toString(dbstats$projects))
+        paste0("MongoDB is connected at ", Sys.time(), "\n\nproject, count\n", toString(dbstats$projects))
       })
-      shinyjs::disable("connectdb")
+      updateActionButton(session, "connectdb", label = "Refresh")
     }
   )
 })
@@ -52,7 +52,7 @@ observeEvent(input$savedb, {
       return()
     } else {
       hs_cur <- hs$val[[input$hs_selector_for_database]]
-      hs_df <- as.wide.df(hs_cur)
+      hs_df <- as.wide.df(hs_cur, wl.prefix = "spc.")
       hs_df$dtype <- input$hs_selector_for_database
       hs_df$project <- input$project
       tryCatch(
@@ -75,7 +75,7 @@ observeEvent(input$savedb, {
 
 output$project_select_for_database <- renderUI({
   pj_all <- dbstats$projects$project
-  selectInput("project_selector_for_database", "Choose target", choices = pj_all)
+  selectInput("project_selector_for_database", "Choose project", choices = pj_all)
 })
 
 
@@ -91,17 +91,33 @@ observeEvent(input$load_from_db, {
       tryCatch(
         {
           cells <- mongo_connection$obj$find(paste0('{"project": "', prj, '", "dtype": "raw"}'))
+          meta <- cells %>% select(!starts_with("spc"))
+          meta$dtype <- NULL
+          meta$project <- NULL
+          spc <- cells %>% select(starts_with("spc"))
+          wavelength <- colnames(spc)
+          wavelength <- str_replace_all(wavelength, "_", ".")
+          wavelength <- str_remove(wavelength, "spc.")
+          colnames(spc) <- wavelength
+          hs_raw <- new("hyperSpec",
+            data = meta, spc = as.matrix(spc),
+            wavelength = as.numeric(wavelength)
+          )
+          hs$val[["raw"]] <- hs_raw
         },
         error = function(e) {
           shinyalert("Oops!", e$message, type = "error")
         },
         finally = {
           output$db_message3 <- renderText({
-            paste0("Data loaded from database at ", Sys.time())
+            if (is.null(hs_raw)) {
+              paste0("spectra loading failed at ", Sys.time())
+            } else {
+              paste0(length(hs_raw), " spectra loaded from database at ", Sys.time())
+            }
           })
         }
       )
     }
   })
 })
-
