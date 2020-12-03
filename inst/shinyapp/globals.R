@@ -56,5 +56,6 @@ scrs <- reactiveValues(spc = NULL)
 meta <- reactiveValues(tbl = NULL)
 
 hs <- reactiveValues(val = list())
+
 mongo_connection <- reactiveValues(obj = NULL)
 dbstats <- reactiveValues(projects = NULL)

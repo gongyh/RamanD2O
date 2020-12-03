@@ -22,15 +22,6 @@ observeEvent(input$normalize, {
         hs_nl <- hs_cur / rowMeans(hs_cur)
       }
       hs$val[["normalized"]] <- hs_nl
-      output$normalized_table <- renderDataTable({
-        df <- as.data.frame(hs_nl$spc[, 1:6]) %>% mutate_if(is.numeric, round2)
-        colnames(df) <- hs_nl@wavelength[1:6]
-        rownames(df) <- rownames(hs_nl$spc)
-        DT::datatable(df,
-          escape = FALSE, selection = "single",
-          options = list(searchHighlight = TRUE, scrollX = TRUE)
-        )
-      })
     }
   })
 })
@@ -40,14 +31,8 @@ observeEvent(hs$val[["normalized"]],
   {
     hs_nl <- hs$val[["normalized"]]
     output$normalized_table <- renderDataTable({
-      df <- NULL
-      if (!is.null(hs_nl)) {
-        df <- as.data.frame(hs_nl$spc[, 1:6]) %>% mutate_if(is.numeric, round2)
-        colnames(df) <- hs_nl@wavelength[1:6]
-        rownames(df) <- rownames(hs_nl$spc)
-      }
-      DT::datatable(df,
-        escape = FALSE, selection = "single",
+      DT::datatable(if (is.null(hs_nl)) NULL else round(hs_nl$spc, 2),
+        escape = FALSE, selection = "single", extensions = list("Responsive", "Scroller"),
         options = list(searchHighlight = TRUE, scrollX = TRUE)
       )
     })

@@ -91,19 +91,21 @@ observeEvent(input$load_from_db, {
       tryCatch(
         {
           cells <- mongo_connection$obj$find(paste0('{"project": "', prj, '", "dtype": "raw"}'))
-          meta <- cells %>% select(!starts_with("spc"))
-          meta$dtype <- NULL
-          meta$project <- NULL
+          dmeta <- cells %>% select(!starts_with("spc"))
+          dmeta$dtype <- NULL
+          dmeta$project <- NULL
           spc <- cells %>% select(starts_with("spc"))
           wavelength <- colnames(spc)
           wavelength <- str_replace_all(wavelength, "_", ".")
           wavelength <- str_remove(wavelength, "spc.")
           colnames(spc) <- wavelength
           hs_raw <- new("hyperSpec",
-            data = meta, spc = as.matrix(spc),
+            data = dmeta, spc = as.matrix(spc),
             wavelength = as.numeric(wavelength)
           )
           hs$val[["raw"]] <- hs_raw
+          scrs$spc <- spc
+          meta$tbl <- dmeta
         },
         error = function(e) {
           shinyalert("Oops!", e$message, type = "error")

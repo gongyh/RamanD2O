@@ -77,13 +77,8 @@ observeEvent(hs$val[["baselined"]],
   {
     hs_bl <- hs$val[["baselined"]]
     output$baselined_table <- renderDataTable({
-      df <- NULL
-      if (!is.null(hs_bl)) {
-        df <- as.data.frame(hs_bl$spc[, 1:6]) %>% mutate_if(is.numeric, round2)
-        rownames(df) <- rownames(hs_bl$spc)
-      }
-      DT::datatable(df,
-        escape = FALSE, selection = "single",
+      DT::datatable(if (is.null(hs_bl)) NULL else round(hs_bl$spc, 2),
+        escape = FALSE, selection = "single", extensions = list("Responsive", "Scroller"),
         options = list(searchHighlight = TRUE, scrollX = TRUE)
       )
     })

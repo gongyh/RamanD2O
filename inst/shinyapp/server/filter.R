@@ -38,7 +38,10 @@ observeEvent(hs$val[["filtered"]],
   {
     hs_fl <- hs$val[["filtered"]]
     output$after_filter <- renderDataTable({
-      DT::datatable(hs_fl$spc[, 1:6], escape = FALSE, selection = "single", options = list(searchHighlight = TRUE, scrollX = TRUE))
+      DT::datatable(hs_fl$spc,
+        escape = FALSE, selection = "single", extensions = list("Responsive", "Scroller"),
+        options = list(searchHighlight = TRUE, scrollX = TRUE)
+      )
     })
   },
   ignoreNULL = FALSE

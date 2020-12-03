@@ -45,7 +45,10 @@ observeEvent(meta$tbl,
   {
     # req(meta$tbl)
     output$meta_table <- renderDataTable({
-      DT::datatable(meta$tbl, escape = FALSE, selection = "single", options = list(searchHighlight = TRUE, scrollX = TRUE))
+      DT::datatable(meta$tbl,
+        escape = FALSE, selection = "single", extensions = list("Responsive", "Scroller"),
+        options = list(searchHighlight = TRUE, scrollX = TRUE)
+      )
     })
   },
   ignoreNULL = FALSE

@@ -52,14 +52,6 @@ observeEvent(input$snr, {
         hs_snr <- hs_snr[hs_snr$SNR >= snr_cutoff]
       }
       hs$val[["snr"]] <- hs_snr
-      output$snr_table <- renderDataTable({
-        df <- hs_snr@data
-        df$spc <- NULL
-        DT::datatable(df,
-          escape = FALSE, selection = "single",
-          options = list(searchHighlight = TRUE, scrollX = TRUE)
-        )
-      })
     }
   })
 })
@@ -68,13 +60,8 @@ observeEvent(hs$val[["snr"]],
   {
     hs_snr <- hs$val[["snr"]]
     output$snr_table <- renderDataTable({
-      df <- NULL
-      if (!is.null(hs_snr)) {
-        df <- hs_snr@data
-        df$spc <- NULL
-      }
-      DT::datatable(df,
-        escape = FALSE, selection = "single",
+      DT::datatable(if (is.null(hs_snr)) NULL else round(hs_snr$spc, 2),
+        escape = FALSE, selection = "single", extensions = list("Responsive", "Scroller"),
         options = list(searchHighlight = TRUE, scrollX = TRUE)
       )
     })
