@@ -8,15 +8,16 @@ observeEvent(input$connectdb, {
         options = '{"allowDiskUse":true}'
       )
       if (nrow(dbstats$projects) > 0) names(dbstats$projects) <- c("project", "count")
-    },
-    error = function(e) {
-      shinyalert("Oops!", e$message, type = "error")
-    },
-    finally = {
       output$db_message <- renderText({
         paste0("MongoDB is connected at ", Sys.time(), "\n\nproject, count\n", toString(dbstats$projects))
       })
       updateActionButton(session, "connectdb", label = "Refresh")
+    },
+    error = function(e) {
+      shinyalert("Oops!", e$message, type = "error")
+      output$db_message <- renderText({
+        "Failed! To connect to your MongoDB database, please contact your database manager."
+      })
     }
   )
 })
