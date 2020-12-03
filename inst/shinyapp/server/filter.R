@@ -67,10 +67,12 @@ observeEvent(input$remove, {
       shinyalert("Oops!", "Please first select one spectrum to visualize.", type = "error")
       return()
     } else {
-      shinyalert("Caution", "Confirm to delete this spectrum?", type = "info", closeOnClickOutside = T, showCancelButton = T,
-                 callbackR = function(x) {
-                   if(x) hs$val[["filtered"]] <- hs$val[["filtered"]][-input$after_filter_rows_selected]
-                 })
+      shinyalert("Caution", "Confirm to delete this spectrum?",
+        type = "info", closeOnClickOutside = T, showCancelButton = T,
+        callbackR = function(x) {
+          if (x) hs$val[["filtered"]] <- hs$val[["filtered"]][-input$after_filter_rows_selected]
+        }
+      )
     }
   })
 })

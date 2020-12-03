@@ -41,7 +41,7 @@ tabItem(
       fluidRow(
         column(4, uiOutput("project_select_for_database")),
         column(4, withBusyIndicatorUI(actionButton("load_from_db", "Load raw data", class = "btn-success", icon = icon("download"))),
-               class = "top25", style = "text-align: center;"
+          class = "top25", style = "text-align: center;"
         ),
         column(4, p("You may need to refresh the database connection to let your project selectable."))
       ),

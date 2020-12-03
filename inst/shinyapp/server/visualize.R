@@ -56,6 +56,22 @@ observeEvent(input$hs_selector_for_export,
         options = list(searchHighlight = TRUE, scrollX = TRUE)
       )
     })
+    output$visualize_pcaColBy <- renderUI({
+      metacols <- c("cluster_name")
+      if (!is.null(hs_cur)) {
+        metacols <- c(metacols, colnames(hs_cur))
+        metacols <- metacols[metacols != "spc"]
+      }
+      selectInput("select_pcaColBy", "Color by", choices = metacols, selected = "cluster_name")
+    })
+    output$visualize_aggBy <- renderUI({
+      metacols <- c(" ")
+      if (!is.null(hs_cur)) {
+        metacols <- c(metacols, colnames(hs_cur))
+        metacols <- metacols[metacols != "spc"]
+      }
+      selectInput("select_aggBy", "Aggregate by", choices = metacols)
+    })
   },
   ignoreNULL = FALSE
 )
@@ -69,6 +85,68 @@ observeEvent(input$visualize_table_rows_selected,
       item <- hs$val[[input$hs_selector_for_export]][index]
       p <- qplotspc(item) + xlab(TeX("\\Delta \\tilde{\\nu }/c{{m}^{-1}}")) + ylab("I / a.u.")
       ggplotly(p) %>% config(mathjax = "cdn")
+    })
+  },
+  ignoreNULL = FALSE
+)
+
+
+# plot all on click of button
+observeEvent(input$plot_all,
+  {
+    withBusyIndicatorServer("plot_all", {
+      type <- input$select_ptype
+      output$simple_plot <- renderPlot({
+        validate(need(input$hs_selector_for_export, ""))
+        hs_cur <- hs$val[[input$hs_selector_for_export]]
+        plot(hs_cur, type)
+      })
+    })
+  },
+  ignoreNULL = FALSE
+)
+
+
+# plot pca on click of button
+observeEvent(input$plot_pca,
+  {
+    withBusyIndicatorServer("plot_pca", {
+      nclusters <- input$num_clusters
+      colby <- input$select_pcaColBy
+      output$pca_plot <- renderPlotly({
+        validate(need(input$hs_selector_for_export, ""))
+        hs_cur <- hs$val[[input$hs_selector_for_export]]
+        pca <- prcomp(~spc, data = hs_cur, center = FALSE)
+        scores <- pca$x
+        rownames(scores) <- rownames(hs_cur$spc)
+        HC <- hclust(dist(scores), method = "ward.D2")
+        Clusters <- cutree(HC, k = nclusters)
+        Df <- data.frame(scores, "cluster" = factor(Clusters))
+        Df <- cbind(hs_cur@data %>% select(!matches("spc")), Df)
+        Df <- transform(Df, cluster_name = paste("Cluster", Clusters))
+        plot_ly(Df,
+          x = ~PC1, y = ~PC2, text = rownames(Df), type = "scatter", symbol = ~cluster_name,
+          mode = "markers", color = Df[, colby], marker = list(size = 11)
+        )
+      })
+    })
+  },
+  ignoreNULL = FALSE
+)
+
+
+# plot agg on click of button
+observeEvent(input$plot_agg,
+  {
+    withBusyIndicatorServer("plot_agg", {
+      validate(need(input$select_aggBy, ""))
+      aggby <- input$select_aggBy
+      output$agg_plot <- renderPlot({
+        validate(need(input$hs_selector_for_export, ""))
+        hs_cur <- hs$val[[input$hs_selector_for_export]]
+        means <- aggregate(hs_cur, by = hs_cur@data[, aggby], mean_pm_sd)
+        plot(means, stacked = ".aggregate", fill = ".aggregate", axis.args = list(las = 1))
+      })
     })
   },
   ignoreNULL = FALSE
