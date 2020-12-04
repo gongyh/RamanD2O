@@ -65,12 +65,12 @@ observeEvent(input$hs_selector_for_export,
       selectInput("select_pcaColBy", "Color by", choices = metacols, selected = "cluster_name")
     })
     output$visualize_aggBy <- renderUI({
-      metacols <- c(" ")
+      metacols <- c("")
       if (!is.null(hs_cur)) {
-        metacols <- c(metacols, colnames(hs_cur))
+        metacols <- colnames(hs_cur)
         metacols <- metacols[metacols != "spc"]
       }
-      selectInput("select_aggBy", "Aggregate by", choices = metacols)
+      selectInput("select_aggBy", "Aggregate by", choices = metacols, selected = F)
     })
   },
   ignoreNULL = FALSE
@@ -124,8 +124,8 @@ observeEvent(input$plot_pca,
         Df <- data.frame(scores, "cluster" = factor(Clusters))
         Df <- cbind(hs_cur@data %>% select(!matches("spc")), Df)
         Df <- transform(Df, cluster_name = paste("Cluster", Clusters))
-        plot_ly(Df,
-          x = ~PC1, y = ~PC2, text = rownames(Df), type = "scatter", symbol = ~cluster_name,
+        rownames(Df) <- rownames(scores)
+        plot_ly(Df, x = ~PC1, y = ~PC2, text = rownames(Df), type = "scatter", symbol = ~cluster_name,
           mode = "markers", color = Df[, colby], marker = list(size = 11)
         )
       })
@@ -139,13 +139,17 @@ observeEvent(input$plot_pca,
 observeEvent(input$plot_agg,
   {
     withBusyIndicatorServer("plot_agg", {
-      validate(need(input$select_aggBy, ""))
-      aggby <- input$select_aggBy
       output$agg_plot <- renderPlot({
         validate(need(input$hs_selector_for_export, ""))
+        req(input$select_aggBy, cancelOutput = T)
+        aggby <- input$select_aggBy
         hs_cur <- hs$val[[input$hs_selector_for_export]]
         means <- aggregate(hs_cur, by = hs_cur@data[, aggby], mean_pm_sd)
-        plot(means, stacked = ".aggregate", fill = ".aggregate", axis.args = list(las = 1))
+        if (any(is.na(means$spc))) {
+          return()
+        } else {
+          plot(means, stacked = ".aggregate", fill = ".aggregate", axis.args = list(las = 1))
+        }
       })
     })
   },

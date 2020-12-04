@@ -34,9 +34,10 @@ tabItem(
       column(
         12,
         tabsetPanel(
-          tabPanel("Selected Spectrum", plotlyOutput("after_visualize_plot") %>% withSpinner()),
+          tabPanel("Selected", br(), plotlyOutput("after_visualize_plot") %>% withSpinner()),
           tabPanel(
-            "All spectra",
+            "All",
+            br(),
             fluidRow(
               column(4, selectInput("select_ptype", "Choose type",
                 choices = c("spc", "spcmeansd", "spcprctile", "spcprctl5"), selected = "spcprctile"
@@ -46,7 +47,8 @@ tabItem(
             plotOutput("simple_plot") %>% withSpinner()
           ),
           tabPanel(
-            "PCA & HCA",
+            "PCA",
+            br(),
             fluidRow(
               column(4, numericInput("num_clusters", "How many clusters", 3, min = 1, max = 10, step = 1)),
               column(4, uiOutput("visualize_pcaColBy")),
@@ -55,14 +57,23 @@ tabItem(
             plotlyOutput("pca_plot") %>% withSpinner()
           ),
           tabPanel(
-            "Group-wise aggregation",
+            "Aggregation",
+            br(),
             fluidRow(
               column(4, uiOutput("visualize_aggBy")),
               column(4, withBusyIndicatorUI(actionButton("plot_agg", "Analysis & Draw", class = "btn-success")), class = "top25")
             ),
             plotOutput("agg_plot") %>% withSpinner()
           ),
-          tabPanel("Grouped spectra", plotlyOutput("group_plot") %>% withSpinner())
+          tabPanel(
+            "Compare",
+            br(),
+            fluidRow(
+              column(9, uiOutput("visualize_compare")),
+              column(3, withBusyIndicatorUI(actionButton("plot_compare", "Plot", class = "btn-success")), class = "top25")
+            ),
+            plotlyOutput("groupCmp_plot") %>% withSpinner()
+          )
         )
       )
     )
