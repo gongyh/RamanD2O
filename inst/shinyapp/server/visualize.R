@@ -72,6 +72,39 @@ observeEvent(input$hs_selector_for_export,
       }
       selectInput("select_aggBy", "Aggregate by", choices = metacols, selected = F)
     })
+    output$visualize_x <- renderUI({
+      metacols <- c(".wavelength")
+      if (!is.null(hs_cur)) {
+        metacols <- c(metacols, colnames(hs_cur))
+        metacols <- metacols[metacols != "spc"]
+      }
+      selectInput("selectx", "X", choices = metacols, selected = ".wavelength")
+    })
+    output$visualize_y <- renderUI({
+      metacols <- c("spc")
+      if (!is.null(hs_cur)) {
+        metacols <- colnames(hs_cur)
+        metacols <- metacols[metacols != "spc"]
+        metacols <- c("spc", metacols)
+      }
+      selectInput("selecty", "Y", choices = metacols, selected = "spc")
+    })
+    output$visualize_sgroup <- renderUI({
+      metacols <- c("")
+      if (!is.null(hs_cur)) {
+        metacols <- colnames(hs_cur)
+        metacols <- metacols[metacols != "spc"]
+      }
+      selectInput("select_sgroup", "Group", choices = metacols, selected = F)
+    })
+    output$visualize_scolor <- renderUI({
+      metacols <- c("")
+      if (!is.null(hs_cur)) {
+        metacols <- colnames(hs_cur)
+        metacols <- metacols[metacols != "spc"]
+      }
+      selectInput("select_scolor", "Color", choices = metacols, selected = F)
+    })
   },
   ignoreNULL = FALSE
 )
@@ -125,7 +158,8 @@ observeEvent(input$plot_pca,
         Df <- cbind(hs_cur@data %>% select(!matches("spc")), Df)
         Df <- transform(Df, cluster_name = paste("Cluster", Clusters))
         rownames(Df) <- rownames(scores)
-        plot_ly(Df, x = ~PC1, y = ~PC2, text = rownames(Df), type = "scatter", symbol = ~cluster_name,
+        plot_ly(Df,
+          x = ~PC1, y = ~PC2, text = rownames(Df), type = "scatter", symbol = ~cluster_name,
           mode = "markers", color = Df[, colby], marker = list(size = 11)
         )
       })
@@ -150,6 +184,36 @@ observeEvent(input$plot_agg,
         } else {
           plot(means, stacked = ".aggregate", fill = ".aggregate", axis.args = list(las = 1))
         }
+      })
+    })
+  },
+  ignoreNULL = FALSE
+)
+
+# plot compare on click of button
+observeEvent(input$plot_compare,
+  {
+    withBusyIndicatorServer("plot_compare", {
+      output$groupCmp_plot <- renderPlotly({
+        validate(need(input$hs_selector_for_export, ""))
+        hs_cur <- hs$val[[input$hs_selector_for_export]]
+        x <- input$selectx
+        y <- input$selecty
+        req(input$select_sgroup, cancelOutput = T)
+        req(input$select_scolor, cancelOutput = T)
+        g <- input$select_sgroup
+        c <- input$select_scolor
+        df <- as.long.df(hs_cur)
+        p <- ggplot(df, aes_string(x = x, y = y, group = g, color = c))
+        if (input$stype == "Lineplot") {
+          p <- p + geom_line()
+        } else if (input$stype == "Boxplot") {
+          p <- p + geom_boxplot()
+        } else if (input$stype == "Barplot") {
+          p <- p + geom_bar()
+        }
+
+        ggplotly(p)
       })
     })
   },

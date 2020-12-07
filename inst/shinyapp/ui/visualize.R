@@ -69,8 +69,14 @@ tabItem(
             "Compare",
             br(),
             fluidRow(
-              column(9, uiOutput("visualize_compare")),
-              column(3, withBusyIndicatorUI(actionButton("plot_compare", "Plot", class = "btn-success")), class = "top25")
+              column(4, uiOutput("visualize_x")),
+              column(4, uiOutput("visualize_y")),
+              column(4, uiOutput("visualize_scolor"))
+            ),
+            fluidRow(
+              column(4, uiOutput("visualize_sgroup")),
+              column(4, selectInput("stype", "Plot type", choices = c("Lineplot", "Boxplot", "Barplot"), selected = "Lineplot")),
+              column(4, withBusyIndicatorUI(actionButton("plot_compare", "Plot", class = "btn-success")), class = "top25")
             ),
             plotlyOutput("groupCmp_plot") %>% withSpinner()
           )

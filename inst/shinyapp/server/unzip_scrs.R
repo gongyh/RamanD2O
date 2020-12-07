@@ -59,7 +59,7 @@ observeEvent(scrs$spc,
     output$spectra_files <- renderDataTable({
       DT::datatable(scrs$spc,
         escape = FALSE, selection = "single", extensions = list("Responsive", "Scroller"),
-        options = list(searchHighlight = TRUE, scrollX = TRUE)
+        options = list(deferRender = TRUE, searchHighlight = TRUE, scrollX = TRUE)
       )
     })
   },
