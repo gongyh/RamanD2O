@@ -19,10 +19,8 @@ observeEvent(input$subsample, {
       hs_cur <- hs$val[[input$hs_selector_for_subsample]]
       total <- nrow(hs_cur)
       size <- floor(input$percentage / 100.0 * total)
-      index <- isample(hs_cur, size = max(size, 2))
-      if (input$shuffle) {
-        index <- shuffle(index)
-      }
+      tindex <- isample(hs_cur)
+      index <- tindex[1:max(size, 2)]
       sampled <- hs_cur[index]
       hs$val[["sampled"]] <- sampled
       # showNotification(paste0("Subsampled ", nrow(sampled), " spectra."), type = "message", duration = 10)

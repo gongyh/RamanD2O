@@ -13,7 +13,6 @@ tabItem(
         ),
         fluidRow(
           column(4, uiOutput("hs_select_for_subsample")),
-          column(4, checkboxInput("shuffle", "Shuffle"), class = "top25"),
           column(4, withBusyIndicatorUI(actionButton("subsample", "Subsample", class = "btn-success")), class = "top25")
         )
       )

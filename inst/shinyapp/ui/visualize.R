@@ -3,34 +3,28 @@ tabItem(
   tabName = "visualize",
   h2("Visualize"),
   br(),
-  uiOutput("hs_select_for_export"),
   fluidRow(
     box(
       title = "Settings", status = "info", solidHeader = TRUE, collapsible = FALSE, width = 12,
       column(
         12,
         fluidRow(
+          column(2, uiOutput("hs_select_for_export")),
           column(2, selectInput("select_type", "Choose format",
             choices = c("csv", "zip"), selected = "csv"
           )),
           column(2, downloadButton("download", "Download", class = "btn-success"), class = "top25"),
-          column(8, p("Download zip file will produce an archive with multiple spectrum files in txt format and a metadata table file."), class = "top25")
+          column(6, p("Download zip file will produce an archive with multiple spectrum files in txt format and a metadata table file."), class = "top25")
         )
       )
     )
   ),
   fluidRow(
     box(
-      title = "Spectra Table", status = "warning", solidHeader = TRUE,
-      collapsible = TRUE, width = 12, collapsed = TRUE,
-      column(12, DTOutput("visualize_table", height = "400px") %>% withSpinner())
-    ),
-    box(
       title = "Spectra Figure", status = "warning", solidHeader = TRUE, collapsible = TRUE, width = 12,
       column(
         12,
         tabsetPanel(
-          tabPanel("Selected", br(), plotlyOutput("after_visualize_plot") %>% withSpinner()),
           tabPanel(
             "All",
             br(),
@@ -75,6 +69,14 @@ tabItem(
               column(4, withBusyIndicatorUI(actionButton("plot_compare", "Plot", class = "btn-success")), class = "top25")
             ),
             plotlyOutput("groupCmp_plot") %>% withSpinner()
+          ),
+          tabPanel(
+            "Selected",
+            br(),
+            fluidRow(
+              column(6, DTOutput("visualize_table", height = "400px") %>% withSpinner()),
+              column(6, plotlyOutput("after_visualize_plot") %>% withSpinner())
+            )
           )
         )
       )

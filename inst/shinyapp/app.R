@@ -12,16 +12,6 @@ ui <- dashboardPage(
       class = "dropdown",
       tags$a(href = "#", style = "font-size: 20px;", "A ShinyApp to Analyze Raman Spectra Data  ")
     ),
-    leftUi = tagList(
-      tags$li(
-        class = "dropdown",
-        menuItem("Visualize", tabName = "visualize", icon = icon("poll"))
-      ),
-      tags$li(
-        class = "dropdown",
-        menuItem("Database", tabName = "database", icon = icon("coins"))
-      )
-    ),
     userOutput("user")
   ),
   # END dashboardHeader
@@ -33,7 +23,7 @@ ui <- dashboardPage(
     sidebarMenu(
       menuItem("Introduction", tabName = "dashboard", icon = icon("dashboard")),
       menuItem("Load Data", tabName = "settings", icon = icon("cogs")),
-      menuItem("Preprocess",
+      menuItem("Pipeline",
         menuSubItem("Sample", tabName = "ss", icon = icon("crosshairs")),
         menuSubItem("Trim", tabName = "trim", icon = icon("cut")),
         menuSubItem("Filter", tabName = "fl", icon = icon("filter")),
@@ -41,8 +31,19 @@ ui <- dashboardPage(
         menuSubItem("Baseline", tabName = "bl", icon = icon("chart-line")),
         menuSubItem("Normalize", tabName = "nl", icon = icon("compress-arrows-alt")),
         menuSubItem("SNR", tabName = "snr", icon = icon("signal")),
-        menuSubItem("CDR", tabName = "cdr", icon = icon("percentage")),
+        menuSubItem("CDR", tabName = "cdr", icon = icon("battery-half")),
+        tabName = "pipeline", icon = icon("project-diagram"), startExpanded = T
+      ),
+      menuItem("Tools",
+        menuItem("Visualize", tabName = "visualize", icon = icon("poll")),
+        menuItem("Database", tabName = "database", icon = icon("coins")),
         tabName = "tools", icon = icon("toolbox"), startExpanded = T
+      ),
+      menuItem("Machine learning",
+        menuItem("Prepare", tabName = "prepare", icon = icon("hourglass-start")),
+        menuItem("Explore", tabName = "explore", icon = icon("eye")),
+        menuItem("Random forest", tabName = "rf", icon = icon("tree")),
+        tabName = "ml", icon = icon("robot"), startExpanded = T
       ),
 
       div(
@@ -70,7 +71,9 @@ ui <- dashboardPage(
 
     tabItems(
       source(file.path("ui", "dashboard.R"), local = TRUE)$value,
+
       source(file.path("ui", "dataloader.R"), local = TRUE)$value,
+
       source(file.path("ui", "subsample.R"), local = TRUE)$value,
       source(file.path("ui", "trim.R"), local = TRUE)$value,
       source(file.path("ui", "filter.R"), local = TRUE)$value,
@@ -78,9 +81,12 @@ ui <- dashboardPage(
       source(file.path("ui", "baseline.R"), local = TRUE)$value,
       source(file.path("ui", "normalize.R"), local = TRUE)$value,
       source(file.path("ui", "snratio.R"), local = TRUE)$value,
+      source(file.path("ui", "cdr.R"), local = TRUE)$value,
+
       source(file.path("ui", "visualize.R"), local = TRUE)$value,
       source(file.path("ui", "database.R"), local = TRUE)$value,
-      source(file.path("ui", "cdr.R"), local = TRUE)$value
+
+      source(file.path("ui", "ml_prepare.R"), local = TRUE)$value
     )
   ),
   # END dashboardBody
@@ -128,6 +134,7 @@ server <- function(input, output, session) {
   source(file.path("server", "database.R"), local = TRUE)$value
   source(file.path("server", "snr.R"), local = TRUE)$value
   source(file.path("server", "cdr.R"), local = TRUE)$value
+  source(file.path("server", "ml_prepare.R"), local = TRUE)$value
 }
 
 # Create Shiny object
