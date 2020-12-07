@@ -1,10 +1,10 @@
 output$hs_select_for_cdr <- renderUI({
   hs_all <- names(hs$val)
   selected <- NULL
-  if ("normalized" %in% hs_all) {
-    selected <- "normalized"
-  } else if ("snr" %in% hs_all) {
+  if ("snr" %in% hs_all) {
     selected <- "snr"
+  } else if ("normalized" %in% hs_all) {
+    selected <- "normalized"
   }
   selectInput("hs_selector_for_cdr", "Choose target", choices = hs_all, selected = selected)
 })
@@ -17,19 +17,22 @@ observeEvent(input$cdr, {
       return()
     } else {
       hs_cur <- hs$val[[input$hs_selector_for_cdr]]
-      wave_nums <- wl(hs_cur)
+      wavelength <- wl(hs_cur)
       CDR_All <- NULL
       hs_cdr <- hs_cur
       spc <- hs_cur$spc
       # cdr
       for (i in 1:nrow(spc)) {
-        CD_start <- which.min(abs(wave_nums - 2050))
-        CD_end <- which.min(abs(wave_nums - 2300))
-        CH_start <- which.min(abs(wave_nums - 3050))
-        CH_end <- which.min(abs(wave_nums - 2800))
+        Baseline_start <- which.min(abs(wavelength - 1760))
+        Baseline_end <- which.min(abs(wavelength - 1960))
+        Baseline <- spc[i, Baseline_start:Baseline_end]
+        CD_start <- which.min(abs(wavelength - 2050))
+        CD_end <- which.min(abs(wavelength - 2300))
+        CH_start <- which.min(abs(wavelength - 3050))
+        CH_end <- which.min(abs(wavelength - 2800))
         CD <- spc[i, CD_start:CD_end]
         CH <- spc[i, CH_start:CH_end]
-        CDR <- sum(CD) / (sum(CD) + sum(CH))
+        CDR <- (sum(CD) - sum(Baseline) * 1.25) / (sum(CD) + sum(CH) - sum(Baseline) * 2.5)
         CDR_All <- rbind(CDR_All, CDR)
       }
       hs_cdr$CDR <- round2(CDR_All)
@@ -56,8 +59,9 @@ observeEvent(input$cdr_table_rows_selected,
     output$after_cdr_plot <- renderPlotly({
       validate(need(input$cdr_table_rows_selected, ""))
       index <- input$cdr_table_rows_selected
-      item <- hs$val[["cdr"]][index][, , c(2050 ~ 3050)]
-      p <- qplotspc(item) + xlab(TeX("\\Delta \\tilde{\\nu }/c{{m}^{-1}}")) + ylab("I / a.u.")
+      item <- hs$val[["cdr"]][index][, , c(2050 - 250 ~ 3050 + 250)]
+      p <- qplotspc(item) + xlab(TeX("\\Delta \\tilde{\\nu }/c{{m}^{-1}}")) + ylab("I / a.u.") +
+        geom_vline(xintercept = c(2050, 2300, 2800, 3050), color = "gray")
       ggplotly(p) %>% config(mathjax = "cdn")
     })
   },

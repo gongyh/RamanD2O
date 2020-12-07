@@ -14,7 +14,7 @@ observeEvent(input$normalize, {
       shinyalert("Oops!", "Please first load your spectra data.", type = "error")
       return()
     } else {
-      hs_cur <- hs$val[[input$hs_selector_for_smooth]]
+      hs_cur <- hs$val[[input$hs_selector_for_normalize]]
       wavelength <- wl(hs_cur)
       if (input$fingerprint) {
         hs_nl <- hs_cur / rowMeans(hs_cur[, , c(500 ~ 2000)])

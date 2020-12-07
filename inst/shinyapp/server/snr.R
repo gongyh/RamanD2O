@@ -37,7 +37,7 @@ observeEvent(input$snr, {
           Baseline_start <- which.min(abs(wavelength - 1760))
           Baseline_end <- which.min(abs(wavelength - 1960))
           Baseline <- spc[i, Baseline_start:Baseline_end]
-          marker <- max(spc[1, which.min(abs(wavelength - 1400)):which.min(abs(wavelength - 1460))])
+          marker <- max(spc[i, which.min(abs(wavelength - 1400)):which.min(abs(wavelength - 1460))])
           SNR <- (marker - sum(Baseline) / length(Baseline)) / sd(Baseline)
           SNR_All <- rbind(SNR_All, SNR)
         }
