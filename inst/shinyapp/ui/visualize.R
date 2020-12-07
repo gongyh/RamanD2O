@@ -26,11 +26,12 @@ tabItem(
   ),
   fluidRow(
     box(
-      title = "Spectra Table", status = "warning", solidHeader = TRUE, collapsible = TRUE,
+      title = "Spectra Table", status = "warning", solidHeader = TRUE,
+      collapsible = TRUE, width = 12, collapsed = TRUE,
       column(12, DTOutput("visualize_table", height = "400px") %>% withSpinner())
     ),
     box(
-      title = "Spectra Figure", status = "warning", solidHeader = TRUE, collapsible = TRUE,
+      title = "Spectra Figure", status = "warning", solidHeader = TRUE, collapsible = TRUE, width = 12,
       column(
         12,
         tabsetPanel(
@@ -75,7 +76,7 @@ tabItem(
             ),
             fluidRow(
               column(4, uiOutput("visualize_sgroup")),
-              column(4, selectInput("stype", "Plot type", choices = c("Lineplot", "Boxplot", "Barplot"), selected = "Lineplot")),
+              column(4, selectInput("stype", "Plot type", choices = c("Lineplot", "Boxplot"), selected = "Lineplot")),
               column(4, withBusyIndicatorUI(actionButton("plot_compare", "Plot", class = "btn-success")), class = "top25")
             ),
             plotlyOutput("groupCmp_plot") %>% withSpinner()

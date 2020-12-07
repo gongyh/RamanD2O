@@ -209,10 +209,7 @@ observeEvent(input$plot_compare,
           p <- p + geom_line()
         } else if (input$stype == "Boxplot") {
           p <- p + geom_boxplot()
-        } else if (input$stype == "Barplot") {
-          p <- p + geom_bar()
         }
-
         ggplotly(p)
       })
     })
