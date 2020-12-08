@@ -31,6 +31,9 @@ RUN R -e "install.packages(c('baseline', 'permute'), repos='https://cloud.r-proj
 RUN R -e "install.packages(c('hyperSpec', 'hySpc.ggplot2'), \
   repos=c('https://r-hyperspec.github.io/pkg-repo/', getOption('repos')))"
 
+# extra R packages
+RUN R -e "install.packages(c('Rtsne'), repos='https://cloud.r-project.org/')"
+
 # copy the app to the image
 RUN mkdir /root/RamanD2O
 COPY inst/shinyapp /root/RamanD2O

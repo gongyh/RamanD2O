@@ -25,6 +25,7 @@ library(dplyr)
 library(plotly)
 library(ggplot2)
 library(mongolite)
+library(Rtsne)
 
 library(baseline)
 library(permute)

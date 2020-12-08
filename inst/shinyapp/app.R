@@ -71,9 +71,7 @@ ui <- dashboardPage(
 
     tabItems(
       source(file.path("ui", "dashboard.R"), local = TRUE)$value,
-
       source(file.path("ui", "dataloader.R"), local = TRUE)$value,
-
       source(file.path("ui", "subsample.R"), local = TRUE)$value,
       source(file.path("ui", "trim.R"), local = TRUE)$value,
       source(file.path("ui", "filter.R"), local = TRUE)$value,
@@ -82,11 +80,10 @@ ui <- dashboardPage(
       source(file.path("ui", "normalize.R"), local = TRUE)$value,
       source(file.path("ui", "snratio.R"), local = TRUE)$value,
       source(file.path("ui", "cdr.R"), local = TRUE)$value,
-
       source(file.path("ui", "visualize.R"), local = TRUE)$value,
       source(file.path("ui", "database.R"), local = TRUE)$value,
-
-      source(file.path("ui", "ml_prepare.R"), local = TRUE)$value
+      source(file.path("ui", "ml_prepare.R"), local = TRUE)$value,
+      source(file.path("ui", "ml_explore.R"), local = TRUE)$value
     )
   ),
   # END dashboardBody
@@ -135,6 +132,7 @@ server <- function(input, output, session) {
   source(file.path("server", "snr.R"), local = TRUE)$value
   source(file.path("server", "cdr.R"), local = TRUE)$value
   source(file.path("server", "ml_prepare.R"), local = TRUE)$value
+  source(file.path("server", "ml_explore.R"), local = TRUE)$value
 }
 
 # Create Shiny object
