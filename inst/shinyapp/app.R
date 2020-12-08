@@ -23,6 +23,11 @@ ui <- dashboardPage(
     sidebarMenu(
       menuItem("Introduction", tabName = "dashboard", icon = icon("dashboard")),
       menuItem("Load Data", tabName = "settings", icon = icon("cogs")),
+      menuItem("Tools",
+        menuItem("Visualize", tabName = "visualize", icon = icon("poll")),
+        menuItem("Database", tabName = "database", icon = icon("coins")),
+        tabName = "tools", icon = icon("toolbox"), startExpanded = T
+      ),
       menuItem("Pipeline",
         menuSubItem("Sample", tabName = "ss", icon = icon("crosshairs")),
         menuSubItem("Trim", tabName = "trim", icon = icon("cut")),
@@ -33,11 +38,6 @@ ui <- dashboardPage(
         menuSubItem("SNR", tabName = "snr", icon = icon("signal")),
         menuSubItem("CDR", tabName = "cdr", icon = icon("battery-half")),
         tabName = "pipeline", icon = icon("project-diagram"), startExpanded = T
-      ),
-      menuItem("Tools",
-        menuItem("Visualize", tabName = "visualize", icon = icon("poll")),
-        menuItem("Database", tabName = "database", icon = icon("coins")),
-        tabName = "tools", icon = icon("toolbox"), startExpanded = T
       ),
       menuItem("Machine learning",
         menuItem("Prepare", tabName = "prepare", icon = icon("hourglass-start")),
