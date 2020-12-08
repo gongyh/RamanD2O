@@ -78,7 +78,7 @@ ui <- dashboardPage(
       source(file.path("ui", "smooth.R"), local = TRUE)$value,
       source(file.path("ui", "baseline.R"), local = TRUE)$value,
       source(file.path("ui", "normalize.R"), local = TRUE)$value,
-      source(file.path("ui", "snratio.R"), local = TRUE)$value,
+      source(file.path("ui", "snr.R"), local = TRUE)$value,
       source(file.path("ui", "cdr.R"), local = TRUE)$value,
       source(file.path("ui", "visualize.R"), local = TRUE)$value,
       source(file.path("ui", "database.R"), local = TRUE)$value,
@@ -119,8 +119,7 @@ server <- function(input, output, session) {
     })
   })
 
-  source(file.path("server", "unzip_scrs.R"), local = TRUE)$value
-  source(file.path("server", "load_meta.R"), local = TRUE)$value
+  source(file.path("server", "dataloader.R"), local = TRUE)$value
   source(file.path("server", "subsample.R"), local = TRUE)$value
   source(file.path("server", "trim.R"), local = TRUE)$value
   source(file.path("server", "filter.R"), local = TRUE)$value
