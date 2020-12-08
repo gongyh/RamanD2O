@@ -105,6 +105,14 @@ observeEvent(input$hs_selector_for_export,
       }
       selectInput("select_scolor", "Color", choices = metacols, selected = F)
     })
+    output$visualize_facet <- renderUI({
+      metacols <- c("_")
+      if (!is.null(hs_cur)) {
+        metacols <- cbind(metacols, colnames(hs_cur))
+        metacols <- metacols[metacols != "spc"]
+      }
+      selectInput("select_facet", "Facet by", choices = metacols, selected = "")
+    })
   },
   ignoreNULL = FALSE
 )
@@ -209,6 +217,9 @@ observeEvent(input$plot_compare,
           p <- p + geom_line()
         } else if (input$stype == "Boxplot") {
           p <- p + geom_boxplot()
+        }
+        if (!is.null(input$select_facet) && (input$select_facet != "_")) {
+          p <- p + facet_wrap(input$select_facet)
         }
         ggplotly(p)
       })

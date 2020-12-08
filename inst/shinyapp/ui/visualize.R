@@ -29,10 +29,10 @@ tabItem(
             "All",
             br(),
             fluidRow(
-              column(4, selectInput("select_ptype", "Choose type",
+              column(2, selectInput("select_ptype", "Choose type",
                 choices = c("spc", "spcmeansd", "spcprctile", "spcprctl5"), selected = "spcprctile"
               )),
-              column(4, withBusyIndicatorUI(actionButton("plot_all", "Plot", class = "btn-success")), class = "top25")
+              column(2, withBusyIndicatorUI(actionButton("plot_all", "Plot", class = "btn-success")), class = "top25")
             ),
             plotOutput("simple_plot") %>% withSpinner()
           ),
@@ -40,9 +40,9 @@ tabItem(
             "PCA",
             br(),
             fluidRow(
-              column(4, numericInput("num_clusters", "How many clusters", 3, min = 1, max = 10, step = 1)),
-              column(4, uiOutput("visualize_pcaColBy")),
-              column(4, withBusyIndicatorUI(actionButton("plot_pca", "Analysis & Draw", class = "btn-success")), class = "top25")
+              column(2, numericInput("num_clusters", "How many clusters", 3, min = 1, max = 10, step = 1)),
+              column(2, uiOutput("visualize_pcaColBy")),
+              column(2, withBusyIndicatorUI(actionButton("plot_pca", "Analysis & Draw", class = "btn-success")), class = "top25")
             ),
             plotlyOutput("pca_plot") %>% withSpinner()
           ),
@@ -50,8 +50,8 @@ tabItem(
             "Aggregation",
             br(),
             fluidRow(
-              column(4, uiOutput("visualize_aggBy")),
-              column(4, withBusyIndicatorUI(actionButton("plot_agg", "Analysis & Draw", class = "btn-success")), class = "top25")
+              column(2, uiOutput("visualize_aggBy")),
+              column(2, withBusyIndicatorUI(actionButton("plot_agg", "Analysis & Draw", class = "btn-success")), class = "top25")
             ),
             plotOutput("agg_plot") %>% withSpinner()
           ),
@@ -59,14 +59,15 @@ tabItem(
             "Compare",
             br(),
             fluidRow(
-              column(4, uiOutput("visualize_x")),
-              column(4, uiOutput("visualize_y")),
-              column(4, uiOutput("visualize_scolor"))
+              column(2, uiOutput("visualize_x")),
+              column(2, uiOutput("visualize_y")),
+              column(2, uiOutput("visualize_sgroup")),
+              column(2, uiOutput("visualize_scolor"))
             ),
             fluidRow(
-              column(4, uiOutput("visualize_sgroup")),
-              column(4, selectInput("stype", "Plot type", choices = c("Lineplot", "Boxplot"), selected = "Lineplot")),
-              column(4, withBusyIndicatorUI(actionButton("plot_compare", "Plot", class = "btn-success")), class = "top25")
+              column(2, uiOutput("visualize_facet")),
+              column(2, selectInput("stype", "Plot type", choices = c("Lineplot", "Boxplot"), selected = "Lineplot")),
+              column(2, withBusyIndicatorUI(actionButton("plot_compare", "Plot", class = "btn-success")), class = "top25")
             ),
             plotlyOutput("groupCmp_plot") %>% withSpinner()
           ),
