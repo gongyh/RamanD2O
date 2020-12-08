@@ -9,7 +9,13 @@ observeEvent(input$connectdb, {
       )
       if (nrow(dbstats$projects) > 0) names(dbstats$projects) <- c("project", "count")
       output$db_message <- renderText({
-        paste0("MongoDB is connected at ", Sys.time(), "\n\nproject, count\n", toString(dbstats$projects))
+        msg <- paste0("MongoDB is connected at ", Sys.time(), "\n\nproject, count\n")
+        if (nrow(dbstats$projects) > 0) {
+          for (i in 1:nrow(dbstats$projects)) {
+            msg <- paste(msg, toString(dbstats$projects[i, ]), "\n")
+          }
+        }
+        msg
       })
       updateActionButton(session, "connectdb", label = "Refresh")
     },
