@@ -35,6 +35,7 @@ ui <- dashboardPage(
         menuSubItem("Smooth", tabName = "sm", icon = icon("wave-square")),
         menuSubItem("Baseline", tabName = "bl", icon = icon("chart-line")),
         menuSubItem("Normalize", tabName = "nl", icon = icon("compress-arrows-alt")),
+        menuSubItem("Cartenoid", tabName = "ct", icon = icon("palette")),
         menuSubItem("SNR", tabName = "snr", icon = icon("signal")),
         menuSubItem("CDR", tabName = "cdr", icon = icon("battery-half")),
         tabName = "pipeline", icon = icon("project-diagram"), startExpanded = T
@@ -78,6 +79,7 @@ ui <- dashboardPage(
       source(file.path("ui", "smooth.R"), local = TRUE)$value,
       source(file.path("ui", "baseline.R"), local = TRUE)$value,
       source(file.path("ui", "normalize.R"), local = TRUE)$value,
+      source(file.path("ui", "cartenoid.R"), local = TRUE)$value,
       source(file.path("ui", "snr.R"), local = TRUE)$value,
       source(file.path("ui", "cdr.R"), local = TRUE)$value,
       source(file.path("ui", "visualize.R"), local = TRUE)$value,
@@ -128,6 +130,7 @@ server <- function(input, output, session) {
   source(file.path("server", "normalize.R"), local = TRUE)$value
   source(file.path("server", "visualize.R"), local = TRUE)$value
   source(file.path("server", "database.R"), local = TRUE)$value
+  source(file.path("server", "cartenoid.R"), local = TRUE)$value
   source(file.path("server", "snr.R"), local = TRUE)$value
   source(file.path("server", "cdr.R"), local = TRUE)$value
   source(file.path("server", "ml_prepare.R"), local = TRUE)$value

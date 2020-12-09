@@ -13,6 +13,20 @@ removeCosmic <- function(spc) {
   return(list("spc" = df$raw, "cosmic" = cosmic))
 }
 
+# search peaks for each spectrum
+# size: need to be odd number
+findPeaks <- function(spc, size = 9, level = 0.1) {
+  half <- (size - 1) / 2
+  maxI <- max(spc)
+  peaks <- c()
+  for (i in (half + 1):(length(spc) - half)) {
+    if ((spc[i] >= level * maxI) && (spc[i] >= max(spc[(i - half):(i + half)]))) {
+      peaks <- c(peaks, i)
+    }
+  }
+  peaks
+}
+
 mean_sd_filter <- function(x, n = 5) {
   x <- x - mean(x)
   s <- n * sd(x)
