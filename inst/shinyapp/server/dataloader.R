@@ -17,13 +17,13 @@ observeEvent(input$unzip, {
         toastr_error("No spectrum files found!", position = "top-center")
         return()
       }
-      shift <- read.table(txtfiles[1], header = F, sep = "\t", stringsAsFactors = T)$V1
+      shift <- read.table(txtfiles[1], header = F, sep = "\t")$V1
       scrs_colnames <- c("ID_Cell", shift)
       scrs_df <- c()
       for (filename in txtfiles)
       {
         ID_Cell <- sub(".txt", "", basename(filename))
-        dt <- read.table(filename, header = F, sep = "\t", stringsAsFactors = T)$V2
+        dt <- read.table(filename, header = F, sep = "\t")$V2
         # remove Cosmic Rays
         dt2 <- removeCosmic(dt)
         if (dt2$cosmic) {
