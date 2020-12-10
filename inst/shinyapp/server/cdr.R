@@ -12,11 +12,11 @@ output$hs_select_for_cdr <- renderUI({
 # calc CDR for scrs on click of button
 observeEvent(input$cdr, {
   withBusyIndicatorServer("cdr", {
-    if (input$hs_selector_for_cdr == "") {
+    if (isolate(input$hs_selector_for_cdr) == "") {
       shinyalert("Oops!", "Please first load your spectra data.", type = "error")
       return()
     } else {
-      hs_cur <- hs$val[[input$hs_selector_for_cdr]]
+      hs_cur <- hs$val[[isolate(input$hs_selector_for_cdr)]]
       wavelength <- wl(hs_cur)
       CDR_All <- NULL
       hs_cdr <- hs_cur
@@ -36,7 +36,7 @@ observeEvent(input$cdr, {
         CDR_All <- rbind(CDR_All, CDR)
       }
       hs_cdr$CDR <- round2(CDR_All)
-      hs_cdr$D2O <- ifelse(CDR_All >= input$cdr_cutoff, 1, 0)
+      hs_cdr$D2O <- ifelse(CDR_All >= isolate(input$cdr_cutoff), 1, 0)
       hs$val[["cdr"]] <- hs_cdr
     }
   })

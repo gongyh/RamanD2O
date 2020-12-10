@@ -10,13 +10,13 @@ output$hs_select_for_normalize <- renderUI({
 # smooth scrs on click of button
 observeEvent(input$normalize, {
   withBusyIndicatorServer("normalize", {
-    if (input$hs_selector_for_normalize == "") {
+    if (isolate(input$hs_selector_for_normalize) == "") {
       shinyalert("Oops!", "Please first load your spectra data.", type = "error")
       return()
     } else {
-      hs_cur <- hs$val[[input$hs_selector_for_normalize]]
+      hs_cur <- hs$val[[isolate(input$hs_selector_for_normalize)]]
       wavelength <- wl(hs_cur)
-      if (input$fingerprint) {
+      if (isolate(input$fingerprint)) {
         hs_nl <- hs_cur / rowMeans(hs_cur[, , c(500 ~ 2000)])
       } else {
         hs_nl <- hs_cur / rowMeans(hs_cur)

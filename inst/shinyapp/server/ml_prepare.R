@@ -14,19 +14,19 @@ output$hs_select_for_ml_prepare <- renderUI({
 # prepare training datasets for scrs on click of button
 observeEvent(input$prepare, {
   withBusyIndicatorServer("prepare", {
-    if (input$hs_selector_for_ml_prepare == "") {
+    if (isolate(input$hs_selector_for_ml_prepare) == "") {
       shinyalert("Oops!", "Please first load your spectra data.", type = "error")
       return()
     } else {
-      hs_cur <- hs$val[[input$hs_selector_for_ml_prepare]]
-      if (input$prepare_trim) {
-        minR <- input$ptrim_range[1]
-        maxR <- input$ptrim_range[2]
+      hs_cur <- hs$val[[isolate(input$hs_selector_for_ml_prepare)]]
+      if (isolate(input$prepare_trim)) {
+        minR <- isolate(input$ptrim_range)[1]
+        maxR <- isolate(input$ptrim_range)[2]
         hs_cur <- hs_cur[, , minR ~ maxR]
       }
       # randomly split
       total <- nrow(hs_cur)
-      size <- floor(input$train_pct / 100.0 * total)
+      size <- floor(isolate(input$train_pct) / 100.0 * total)
       tindex <- isample(hs_cur)
       index <- tindex[1:max(size, 2)]
       hs$val[["train"]] <- hs_cur[index]

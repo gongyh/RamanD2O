@@ -10,13 +10,13 @@ output$hs_select_for_trim <- renderUI({
 # trim scrs on click of button
 observeEvent(input$trim, {
   withBusyIndicatorServer("trim", {
-    if (input$hs_selector_for_trim == "") {
+    if (isolate(input$hs_selector_for_trim) == "") {
       shinyalert("Oops!", "Please first load your spectra data.", type = "error")
       return()
     } else {
-      hs_cur <- hs$val[[input$hs_selector_for_trim]]
-      minR <- input$trim_range[1]
-      maxR <- input$trim_range[2]
+      hs_cur <- hs$val[[isolate(input$hs_selector_for_trim)]]
+      minR <- isolate(input$trim_range)[1]
+      maxR <- isolate(input$trim_range)[2]
       hs_tm <- hs_cur[, , minR ~ maxR]
       hs$val[["trimmed"]] <- hs_tm
     }

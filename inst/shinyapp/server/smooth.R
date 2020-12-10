@@ -12,13 +12,13 @@ output$hs_select_for_smooth <- renderUI({
 # smooth scrs on click of button
 observeEvent(input$smooth, {
   withBusyIndicatorServer("smooth", {
-    if (input$hs_selector_for_smooth == "") {
+    if (isolate(input$hs_selector_for_smooth) == "") {
       shinyalert("Oops!", "Please first load your spectra data.", type = "error")
       return()
     } else {
-      hs_cur <- hs$val[[input$hs_selector_for_smooth]]
+      hs_cur <- hs$val[[isolate(input$hs_selector_for_smooth)]]
       wavelength <- wl(hs_cur)
-      if (input$interp) {
+      if (isolate(input$interp)) {
         minWl <- round(min(wavelength)) + 1
         maxWl <- round(max(wavelength)) - 1
         wavelength <- minWl:maxWl

@@ -1,10 +1,10 @@
 # Unzipping files on click of button
 observeEvent(input$unzip, {
   withBusyIndicatorServer("unzip", {
-    if (!is.null(input$scrs_file$datapath)) {
+    if (!is.null(isolate(input$scrs_file$datapath))) {
       # show_modal_spinner(spin="fulfilling-square",color="#ff1d5e",text="Please wait ...")
       show_modal_progress_line(value = 0, text = "Decompressing ...")
-      files <- utils::unzip(input$scrs_file$datapath, list = FALSE, exdir = tempdir())
+      files <- utils::unzip(isolate(input$scrs_file$datapath), list = FALSE, exdir = tempdir())
       txtfiles <- str_subset(files, ".*..txt")
       i <- 1
       total <- length(txtfiles)
@@ -17,13 +17,13 @@ observeEvent(input$unzip, {
         toastr_error("No spectrum files found!", position = "top-center")
         return()
       }
-      shift <- read.table(txtfiles[1], header = F, sep = "\t")$V1
+      shift <- read.table(txtfiles[1], header = F, sep = "\t", stringsAsFactors = T)$V1
       scrs_colnames <- c("ID_Cell", shift)
       scrs_df <- c()
       for (filename in txtfiles)
       {
         ID_Cell <- sub(".txt", "", basename(filename))
-        dt <- read.table(filename, header = F, sep = "\t")$V2
+        dt <- read.table(filename, header = F, sep = "\t", stringsAsFactors = T)$V2
         # remove Cosmic Rays
         dt2 <- removeCosmic(dt)
         if (dt2$cosmic) {
@@ -34,7 +34,7 @@ observeEvent(input$unzip, {
         update_modal_progress(i / total, paste0("Reading ", i, " spectrum (", floor(100 * i / total), "%)"))
         i <- i + 1
       }
-      sc <- data.frame(t(scrs_df))
+      sc <- data.frame(t(scrs_df), stringsAsFactors = T)
       colnames(sc) <- scrs_colnames
       rownames(sc) <- NULL
       scrs$spc <- sc
@@ -55,8 +55,8 @@ observeEvent(input$unzip, {
 # load metadata table
 observeEvent(input$load_meta, {
   withBusyIndicatorServer("load_meta", {
-    if (!is.null(input$meta_file$datapath)) {
-      df <- read.table(input$meta_file$datapath, header = T, sep = "\t")
+    if (!is.null(isolate(input$meta_file$datapath))) {
+      df <- read.table(isolate(input$meta_file$datapath), header = T, sep = "\t", stringsAsFactors = T)
       # check whether all spectra file have metadata lines
       if (is.null(scrs$spc)) {
         # showNotification("Please load spectrum files first!", type = "error", duration = 10)

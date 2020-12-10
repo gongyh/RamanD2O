@@ -12,11 +12,11 @@ output$hs_select_for_cartenoid <- renderUI({
 # detect cartenoid scrs on click of button
 observeEvent(input$cartenoid, {
   withBusyIndicatorServer("cartenoid", {
-    if (input$hs_selector_for_cartenoid == "") {
+    if (isolate(input$hs_selector_for_cartenoid) == "") {
       shinyalert("Oops!", "Please first load your spectra data.", type = "error")
       return()
     } else {
-      hs_cur <- hs$val[[input$hs_selector_for_cartenoid]]
+      hs_cur <- hs$val[[isolate(input$hs_selector_for_cartenoid)]]
       wavelength <- wl(hs_cur)
       keep <- c()
       for (i in (1:nrow(hs_cur))) {
@@ -29,7 +29,7 @@ observeEvent(input$cartenoid, {
         }
       }
       hs_bl <- hs_cur
-      if (input$filter_cartenoid == TRUE) {
+      if (isolate(input$filter_cartenoid) == TRUE) {
         hs_bl <- hs_cur[keep]
       } else {
         hs_bl$Cartenoid <- !keep

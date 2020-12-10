@@ -2,7 +2,7 @@
 observeEvent(input$connectdb, {
   tryCatch(
     {
-      mongo_connection$obj <- mongo(collection = input$collection, db = input$db, url = input$url)
+      mongo_connection$obj <- mongo(collection = isolate(input$collection), db = isolate(input$db), url = isolate(input$url))
       dbstats$projects <- mongo_connection$obj$aggregate(
         '[{"$group":{"_id":"$project", "count": {"$sum":1}}}]',
         options = '{"allowDiskUse":true}'
@@ -28,17 +28,6 @@ observeEvent(input$connectdb, {
   )
 })
 
-observeEvent(
-  {
-    input$collection
-    input$db
-    input$url
-  },
-  {
-    shinyjs::enable("connectdb")
-  }
-)
-
 output$hs_select_for_database <- renderUI({
   hs_all <- names(hs$val)
   selected <- NULL
@@ -54,14 +43,14 @@ output$hs_select_for_database <- renderUI({
 observeEvent(input$savedb, {
   req(mongo_connection$obj)
   withBusyIndicatorServer("savedb", {
-    if (input$hs_selector_for_database == "") {
+    if (isolate(input$hs_selector_for_database) == "") {
       shinyalert("Oops!", "Please first load your spectra data.", type = "error")
       return()
     } else {
-      hs_cur <- hs$val[[input$hs_selector_for_database]]
+      hs_cur <- hs$val[[isolate(input$hs_selector_for_database)]]
       hs_df <- as.wide.df(hs_cur, wl.prefix = "spc.")
-      hs_df$dtype <- input$hs_selector_for_database
-      hs_df$project <- input$project
+      hs_df$dtype <- isolate(input$hs_selector_for_database)
+      hs_df$project <- isolate(input$project)
       tryCatch(
         {
           mongo_connection$obj$insert(hs_df)
@@ -90,11 +79,11 @@ output$project_select_for_database <- renderUI({
 observeEvent(input$load_from_db, {
   req(mongo_connection$obj)
   withBusyIndicatorServer("load_from_db", {
-    if (input$project_selector_for_database == "") {
+    if (isolate(input$project_selector_for_database) == "") {
       shinyalert("Oops!", "Please connect to database first.", type = "error")
       return()
     } else {
-      prj <- input$project_selector_for_database
+      prj <- isolate(input$project_selector_for_database)
       tryCatch(
         {
           cells <- mongo_connection$obj$find(paste0('{"project": "', prj, '", "dtype": "raw"}'))

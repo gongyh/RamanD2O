@@ -11,14 +11,14 @@ output$hs_select_for_subsample <- renderUI({
 observeEvent(input$subsample, {
   withBusyIndicatorServer("subsample", {
     # shinyjs::disable("subsample")
-    if (input$hs_selector_for_subsample == "") {
+    if (isolate(input$hs_selector_for_subsample) == "") {
       shinyalert("Oops!", "Please first load your spectra data.", type = "error")
       # shinyjs::enable("subsample")
       return()
     } else {
-      hs_cur <- hs$val[[input$hs_selector_for_subsample]]
+      hs_cur <- hs$val[[isolate(input$hs_selector_for_subsample)]]
       total <- nrow(hs_cur)
-      size <- floor(input$percentage / 100.0 * total)
+      size <- floor(isolate(input$percentage) / 100.0 * total)
       tindex <- isample(hs_cur)
       index <- tindex[1:max(size, 2)]
       sampled <- hs_cur[index]

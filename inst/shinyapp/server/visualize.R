@@ -12,22 +12,22 @@ output$hs_select_for_export <- renderUI({
 
 output$download <- downloadHandler(
   filename = function() {
-    name <- paste0("spectra-", input$hs_selector_for_export, "-", format(Sys.time(), "%Y%m%d%H%M%S"))
+    name <- paste0("spectra-", isolate(input$hs_selector_for_export), "-", format(Sys.time(), "%Y%m%d%H%M%S"))
     suffix <- ".csv"
-    if (input$select_type == "csv") {
+    if (isolate(input$select_type) == "csv") {
       suffix <- ".csv"
-    } else if (input$select_type == "zip") {
+    } else if (isolate(input$select_type) == "zip") {
       suffix <- ".zip"
     }
     paste0(name, suffix)
   },
   content = function(file) {
-    data <- hs$val[[input$hs_selector_for_export]]
-    if (input$select_type == "csv") {
+    data <- hs$val[[isolate(input$hs_selector_for_export)]]
+    if (isolate(input$select_type == "csv")) {
       write.csv(data, file)
-    } else if (input$select_type == "zip") {
+    } else if (isolate(input$select_type == "zip")) {
       setwd(tempdir())
-      zip_dir <- input$hs_selector_for_export
+      zip_dir <- isolate(input$hs_selector_for_export)
       meta <- data@data
       meta$spc <- NULL
       write.table(meta, "meta.txt", row.names = F, col.names = T, quote = F, sep = "\t")
@@ -120,10 +120,10 @@ observeEvent(input$hs_selector_for_export,
 observeEvent(input$visualize_table_rows_selected,
   {
     output$after_visualize_plot <- renderPlotly({
-      validate(need(input$hs_selector_for_export, ""))
+      validate(need(isolate(input$hs_selector_for_export), ""))
       validate(need(input$visualize_table_rows_selected, ""))
       index <- input$visualize_table_rows_selected
-      item <- hs$val[[input$hs_selector_for_export]][index]
+      item <- hs$val[[isolate(input$hs_selector_for_export)]][index]
       p <- qplotspc(item) + xlab(TeX("\\Delta \\tilde{\\nu }/c{{m}^{-1}}")) + ylab("I / a.u.")
       ggplotly(p) %>% config(mathjax = "cdn")
     })
@@ -136,10 +136,10 @@ observeEvent(input$visualize_table_rows_selected,
 observeEvent(input$plot_all,
   {
     withBusyIndicatorServer("plot_all", {
-      type <- input$select_ptype
+      type <- isolate(input$select_ptype)
       output$simple_plot <- renderPlot({
-        validate(need(input$hs_selector_for_export, ""))
-        hs_cur <- hs$val[[input$hs_selector_for_export]]
+        validate(need(isolate(input$hs_selector_for_export), ""))
+        hs_cur <- hs$val[[isolate(input$hs_selector_for_export)]]
         plot(hs_cur, type)
       })
     })
@@ -152,11 +152,12 @@ observeEvent(input$plot_all,
 observeEvent(input$plot_pca,
   {
     withBusyIndicatorServer("plot_pca", {
-      nclusters <- input$num_clusters
-      colby <- input$select_pcaColBy
       output$pca_plot <- renderPlotly({
-        validate(need(input$hs_selector_for_export, ""))
-        hs_cur <- hs$val[[input$hs_selector_for_export]]
+        validate(need(isolate(input$hs_selector_for_export), ""))
+        req(isolate(input$select_pcaColBy), cancelOutput = T)
+        nclusters <- isolate(input$num_clusters)
+        colby <- isolate(input$select_pcaColBy)
+        hs_cur <- hs$val[[isolate(input$hs_selector_for_export)]]
         pca <- prcomp(~spc, data = hs_cur, center = FALSE)
         scores <- pca$x
         rownames(scores) <- rownames(hs_cur$spc)
@@ -173,7 +174,7 @@ observeEvent(input$plot_pca,
       })
     })
   },
-  ignoreNULL = FALSE
+  ignoreNULL = TRUE
 )
 
 
@@ -182,10 +183,10 @@ observeEvent(input$plot_agg,
   {
     withBusyIndicatorServer("plot_agg", {
       output$agg_plot <- renderPlot({
-        validate(need(input$hs_selector_for_export, ""))
-        req(input$select_aggBy, cancelOutput = T)
-        aggby <- input$select_aggBy
-        hs_cur <- hs$val[[input$hs_selector_for_export]]
+        validate(need(isolate(input$hs_selector_for_export), ""))
+        req(isolate(input$select_aggBy), cancelOutput = T)
+        aggby <- isolate(input$select_aggBy)
+        hs_cur <- hs$val[[isolate(input$hs_selector_for_export)]]
         means <- aggregate(hs_cur, by = hs_cur@data[, aggby], mean_pm_sd)
         if (any(is.na(means$spc))) {
           return()
@@ -195,7 +196,7 @@ observeEvent(input$plot_agg,
       })
     })
   },
-  ignoreNULL = FALSE
+  ignoreNULL = TRUE
 )
 
 # plot compare on click of button
@@ -203,27 +204,29 @@ observeEvent(input$plot_compare,
   {
     withBusyIndicatorServer("plot_compare", {
       output$groupCmp_plot <- renderPlotly({
-        validate(need(input$hs_selector_for_export, ""))
-        hs_cur <- hs$val[[input$hs_selector_for_export]]
-        x <- input$selectx
-        y <- input$selecty
-        req(input$select_sgroup, cancelOutput = T)
-        req(input$select_scolor, cancelOutput = T)
-        g <- input$select_sgroup
-        c <- input$select_scolor
+        validate(need(isolate(input$hs_selector_for_export), ""))
+        req(isolate(input$selectx), cancelOutput = T)
+        req(isolate(input$selecty), cancelOutput = T)
+        hs_cur <- hs$val[[isolate(input$hs_selector_for_export)]]
+        x <- isolate(input$selectx)
+        y <- isolate(input$selecty)
+        req(isolate(input$select_sgroup), cancelOutput = T)
+        req(isolate(input$select_scolor), cancelOutput = T)
+        g <- isolate(input$select_sgroup)
+        c <- isolate(input$select_scolor)
         df <- as.long.df(hs_cur)
         p <- ggplot(df, aes_string(x = x, y = y, group = g, color = c))
-        if (input$stype == "Lineplot") {
+        if (isolate(input$stype) == "Lineplot") {
           p <- p + geom_line()
-        } else if (input$stype == "Boxplot") {
+        } else if (isolate(input$stype) == "Boxplot") {
           p <- p + geom_boxplot()
         }
-        if (!is.null(input$select_facet) && (input$select_facet != "_")) {
-          p <- p + facet_wrap(input$select_facet)
+        if (!is.null(isolate(input$select_facet)) && (isolate(input$select_facet) != "_")) {
+          p <- p + facet_wrap(isolate(input$select_facet))
         }
         ggplotly(p)
       })
     })
   },
-  ignoreNULL = FALSE
+  ignoreNULL = TRUE
 )

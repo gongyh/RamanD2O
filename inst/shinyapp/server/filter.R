@@ -12,21 +12,21 @@ output$hs_select_for_filter <- renderUI({
 # filter scrs on click of button
 observeEvent(input$filter, {
   withBusyIndicatorServer("filter", {
-    if (input$hs_selector_for_filter == "") {
+    if (isolate(input$hs_selector_for_filter) == "") {
       shinyalert("Oops!", "Please first load your spectra data.", type = "error")
       return()
     } else {
-      hs_cur <- hs$val[[input$hs_selector_for_filter]]
-      if (input$filter_low) {
-        low.int <- apply(hs_cur, 1, max) < input$lowest
+      hs_cur <- hs$val[[isolate(input$hs_selector_for_filter)]]
+      if (isolate(input$filter_low)) {
+        low.int <- apply(hs_cur, 1, max) < isolate(input$lowest)
         hs_cur <- hs_cur[!low.int]
       }
-      if (input$filter_high) {
-        high.int <- apply(hs_cur > input$highest, 1, any)
+      if (isolate(input$filter_high)) {
+        high.int <- apply(hs_cur > isolate(input$highest), 1, any)
         hs_cur <- hs_cur[!high.int]
       }
-      if (input$filter_sd) {
-        OK <- apply(hs_cur[[]], 2, mean_sd_filter, n = input$n_sd)
+      if (isolate(input$filter_sd)) {
+        OK <- apply(hs_cur[[]], 2, mean_sd_filter, n = isolate(input$n_sd))
         hs_cur <- hs_cur[apply(OK, 1, all)]
       }
       hs$val[["filtered"]] <- hs_cur
@@ -63,14 +63,14 @@ observeEvent(input$after_filter_rows_selected,
 # remove scrs on click of button
 observeEvent(input$remove, {
   withBusyIndicatorServer("remove", {
-    if (is.null(input$after_filter_rows_selected)) {
+    if (is.null(isolate(input$after_filter_rows_selected))) {
       shinyalert("Oops!", "Please first select one spectrum to visualize.", type = "error")
       return()
     } else {
       shinyalert("Caution", "Confirm to delete this spectrum?",
         type = "info", closeOnClickOutside = T, showCancelButton = T,
         callbackR = function(x) {
-          if (x) hs$val[["filtered"]] <- hs$val[["filtered"]][-input$after_filter_rows_selected]
+          if (x) hs$val[["filtered"]] <- hs$val[["filtered"]][-isolate(input$after_filter_rows_selected)]
         }
       )
     }

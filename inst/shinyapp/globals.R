@@ -32,8 +32,6 @@ library(permute)
 library(hyperSpec)
 library(hySpc.ggplot2)
 
-if (Sys.getenv("SHINY_PORT") == "") options(shiny.maxRequestSize = 10000 * 1024^2)
-
 user_name <- Sys.getenv("SHINYPROXY_USERNAME")
 if (user_name == "") user_name <- "Anonymous"
 
@@ -42,15 +40,7 @@ theme_set(theme_bw())
 set.seed(2020)
 
 options(encoding = "UTF-8")
-options(shiny.maxRequestSize = 6000 * 1024^2)
-
-# prepare colors
-cols1 <- brewer.pal(12, "Paired")
-cols1 <- cols1[-11]
-cols2 <- brewer.pal(8, "Dark2")
-cols <- c(cols1, cols2)
-
-options(encoding = "UTF-8")
+options(shiny.maxRequestSize = 200 * 1024^2)
 options(spinner.type = 5, spinner.color = "#bf00ff", spinner.size = 1)
 
 scrs <- reactiveValues(spc = NULL)

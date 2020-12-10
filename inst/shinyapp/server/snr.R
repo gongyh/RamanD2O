@@ -12,17 +12,17 @@ output$hs_select_for_snr <- renderUI({
 # calc SNR for scrs on click of button
 observeEvent(input$snr, {
   withBusyIndicatorServer("snr", {
-    if (input$hs_selector_for_snr == "") {
+    if (isolate(input$hs_selector_for_snr) == "") {
       shinyalert("Oops!", "Please first load your spectra data.", type = "error")
       return()
     } else {
-      hs_cur <- hs$val[[input$hs_selector_for_snr]]
+      hs_cur <- hs$val[[isolate(input$hs_selector_for_snr)]]
       wavelength <- wl(hs_cur)
       SNR_All <- NULL
       hs_snr <- hs_cur
       spc <- hs_cur$spc
       # snr
-      if (input$select_snr == "new") {
+      if (isolate(input$select_snr) == "new") {
         for (i in 1:nrow(spc)) {
           Baseline_start <- which.min(abs(wavelength - 1730)) # 1760
           Baseline_end <- which.min(abs(wavelength - 1800)) # 1960
@@ -32,7 +32,7 @@ observeEvent(input$snr, {
           SNR_All <- rbind(SNR_All, SNR)
         }
         hs_snr$SNR <- round2(SNR_All)
-      } else if (input$select_snr == "old") {
+      } else if (isolate(input$select_snr) == "old") {
         for (i in 1:nrow(spc)) {
           Baseline_start <- which.min(abs(wavelength - 1760))
           Baseline_end <- which.min(abs(wavelength - 1960))
@@ -47,8 +47,8 @@ observeEvent(input$snr, {
         return()
       }
       # handle filter
-      if (input$filter_by_snr) {
-        snr_cutoff <- input$snr_cutoff
+      if (isolate(input$filter_by_snr)) {
+        snr_cutoff <- isolate(input$snr_cutoff)
         hs_snr <- hs_snr[hs_snr$SNR >= snr_cutoff]
       }
       hs$val[["snr"]] <- hs_snr
