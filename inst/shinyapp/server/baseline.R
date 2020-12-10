@@ -26,10 +26,8 @@ observeEvent(input$select_baseline, {
 # baseline scrs on click of button
 observeEvent(input$baseline, {
   withBusyIndicatorServer("baseline", {
-    # shinyjs::disable("baseline")
     if (input$hs_selector_for_baseline == "") {
       shinyalert("Oops!", "Please first load your spectra data.", type = "error")
-      # shinyjs::enable("baseline")
       return()
     } else {
       hs_cur <- hs$val[[input$hs_selector_for_baseline]]
@@ -50,7 +48,6 @@ observeEvent(input$baseline, {
         dimnames(hs_bl$spc) <- dimnames(hs_cur$spc)
       } else {
         shinyalert("Oops!", "Baseline method not implemented yet.", type = "error")
-        # shinyjs::enable("baseline")
         return()
       }
       # handle negative
@@ -68,7 +65,6 @@ observeEvent(input$baseline, {
       }
       hs$val[["baselined"]] <- hs_bl
     }
-    # shinyjs::enable("baseline")
   })
 })
 

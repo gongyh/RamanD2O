@@ -10,27 +10,23 @@ observeEvent(input$unzip, {
       total <- length(txtfiles)
       if (total == 0) {
         remove_modal_progress()
-        # showNotification("No spectrum files found!", type = "error", duration = 10)
-        # showModal(modalDialog("No spectrum files found!",
-        #  title = "Error", easyClose = TRUE
-        # ))
         toastr_error("No spectrum files found!", position = "top-center")
         return()
       }
       shift <- read.table(txtfiles[1], header = F, sep = "\t")$V1
       scrs_colnames <- c("ID_Cell", shift)
-      scrs_df <- c()
+      scrs_df <- matrix(nrow = length(scrs_colnames), ncol = total)
       for (filename in txtfiles)
       {
         ID_Cell <- sub(".txt", "", basename(filename))
         dt <- read.table(filename, header = F, sep = "\t")$V2
         # remove Cosmic Rays
         dt2 <- removeCosmic(dt)
-        if (dt2$cosmic) {
-          cat(filename, "contains cosmic ray signal.\n")
-        }
+        # if (dt2$cosmic) {
+        #   cat(filename, "contains cosmic ray signal.\n")
+        # }
         data <- c(ID_Cell, dt2$spc)
-        scrs_df <- cbind(scrs_df, data)
+        scrs_df[, i] <- data
         update_modal_progress(i / total, paste0("Reading ", i, " spectrum (", floor(100 * i / total), "%)"))
         i <- i + 1
       }
@@ -40,13 +36,8 @@ observeEvent(input$unzip, {
       scrs$spc <- sc
       # remove_modal_spinner()
       remove_modal_progress()
-      # showNotification(paste0("Load ", length(txtfiles), " spectrum files."), type = "message", duration = 10)
-      # showModal(modalDialog(paste0("Load ", length(txtfiles), " spectrum files."),
-      #  title = "Message", easyClose = TRUE
-      # ))
       toastr_success(paste0("Load ", length(txtfiles), " spectrum files."), position = "top-center")
     } else {
-      # showModal(modalDialog("No spectra zip file selected!", title = "Error", easyClose = TRUE))
       toastr_error("No spectra zip file selected!", position = "top-center")
     }
   })
@@ -59,17 +50,12 @@ observeEvent(input$load_meta, {
       df <- read.table(isolate(input$meta_file$datapath), header = T, sep = "\t", stringsAsFactors = T)
       # check whether all spectra file have metadata lines
       if (is.null(scrs$spc)) {
-        # showNotification("Please load spectrum files first!", type = "error", duration = 10)
-        # showModal(modalDialog("Please load spectrum files first!",
-        #  title = "Error", easyClose = TRUE
-        # ))
         toastr_error("Please load spectrum files first!", position = "top-center")
         return()
       }
       file_ids <- scrs$spc$ID_Cell
       diffs <- setdiff(file_ids, df$ID_Cell)
       if (length(diffs) > 0) {
-        # showNotification("Metadata does not include all spectrum files!", type = "error", duration = 10)
         toastr_error("Metadata does not include all spectrum files!", position = "top-center")
         return()
       }
@@ -84,13 +70,8 @@ observeEvent(input$load_meta, {
         wavelength = as.numeric(colnames(scrs$spc)[2:ncol(scrs$spc)])
       )
       hs$val[["raw"]] <- hs_raw
-      # showNotification(paste0("Successfully load metadata for ", nrow(meta$tbl), " spectra."), type = "message", duration = 10)
-      # showModal(modalDialog(paste0("Successfully load metadata for ", nrow(meta$tbl), " spectra."),
-      #  title = "Message", easyClose = TRUE
-      # ))
       toastr_success(paste0("Successfully load metadata for ", nrow(meta$tbl), " spectra."), position = "top-center")
     } else {
-      # showModal(modalDialog("No file selected!", title = "Error", easyClose = TRUE))
       toastr_error("No file selected!", position = "top-center")
     }
   })

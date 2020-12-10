@@ -10,10 +10,8 @@ output$hs_select_for_subsample <- renderUI({
 # sabsample scrs on click of button
 observeEvent(input$subsample, {
   withBusyIndicatorServer("subsample", {
-    # shinyjs::disable("subsample")
     if (isolate(input$hs_selector_for_subsample) == "") {
       shinyalert("Oops!", "Please first load your spectra data.", type = "error")
-      # shinyjs::enable("subsample")
       return()
     } else {
       hs_cur <- hs$val[[isolate(input$hs_selector_for_subsample)]]
@@ -23,13 +21,8 @@ observeEvent(input$subsample, {
       index <- tindex[1:max(size, 2)]
       sampled <- hs_cur[index]
       hs$val[["sampled"]] <- sampled
-      # showNotification(paste0("Subsampled ", nrow(sampled), " spectra."), type = "message", duration = 10)
-      # showModal(modalDialog(paste0("Subsampled ", nrow(sampled), " spectra."),
-      #  title = "Message", easyClose = TRUE
-      # ))
       toastr_success(paste0("Subsampled ", nrow(sampled), " spectra."), position = "top-center")
     }
-    # shinyjs::enable("subsample")
   })
 })
 
