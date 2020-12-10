@@ -7,8 +7,8 @@ tabItem(
     box(
       title = "Uploader", status = "info", solidHeader = TRUE, collapsible = FALSE,
       br(),
-      p("If have imported your data from external database, then no need to reload here.", style = "color:red;"),
-      withBusyIndicatorUI(actionLink("load_demo", "Quick start, click to load demo data", class = "primary")),
+      withBusyIndicatorUI(actionLink("load_demo", "Quick start, click here to load a small demo dataset.", class = "primary")),
+      p("You can also import your data from external MongoDB database, please refer to Tools -> Database.", style = "color:red;"),
       br(),
       fluidRow(
         column(6, fileInput("scrs_file", "1. Upload SCRS Zip file", accept = ".zip", placeholder = "SCRS.zip")),
