@@ -76,10 +76,11 @@ observeEvent(input$load_meta, {
       meta$tbl <- df[df$ID_Cell %in% file_ids, ]
       rawdata <- merge(meta$tbl, scrs$spc, by = "ID_Cell")
       ncol_meta <- ncol(meta$tbl)
-      spc <- rawdata[, (ncol_meta + 1):ncol(rawdata)] %>% mutate_if(is.factor, as.character)
+      spc <- rawdata[, (ncol_meta + 1):ncol(rawdata)] %>% mutate_if(is.factor, as.character) %>%
+                              mutate_if(is.character, as.numeric)
       rownames(spc) <- rawdata$ID_Cell
       hs_raw <- new("hyperSpec",
-        data = rawdata[, 1:ncol_meta], spc = data.matrix(spc),
+        data = rawdata[, 1:ncol_meta], spc = as.matrix(spc),
         wavelength = as.numeric(colnames(scrs$spc)[2:ncol(scrs$spc)])
       )
       hs$val[["raw"]] <- hs_raw
