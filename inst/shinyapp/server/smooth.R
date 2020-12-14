@@ -16,6 +16,7 @@ observeEvent(input$smooth, {
       shinyalert("Oops!", "Please first load your spectra data.", type = "error")
       return()
     } else {
+      show_modal_spinner(spin = "flower", color = "red", text = "Processing ....")
       hs_cur <- hs$val[[isolate(input$hs_selector_for_smooth)]]
       wavelength <- wl(hs_cur)
       if (isolate(input$interp)) {
@@ -26,6 +27,7 @@ observeEvent(input$smooth, {
       hs_sm <- spc.loess(hs_cur, wavelength, normalize = F)
       colnames(hs_sm$spc) <- hs_sm@wavelength
       hs$val[["smoothed"]] <- hs_sm
+      remove_modal_spinner()
     }
   })
 })

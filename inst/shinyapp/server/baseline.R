@@ -30,6 +30,7 @@ observeEvent(input$baseline, {
       shinyalert("Oops!", "Please first load your spectra data.", type = "error")
       return()
     } else {
+      show_modal_spinner(spin = "flower", color = "red", text = "Processing ....")
       hs_cur <- hs$val[[input$hs_selector_for_baseline]]
       wavelength <- wl(hs_cur)
       # baseline
@@ -48,6 +49,7 @@ observeEvent(input$baseline, {
         dimnames(hs_bl$spc) <- dimnames(hs_cur$spc)
       } else {
         shinyalert("Oops!", "Baseline method not implemented yet.", type = "error")
+        remove_modal_spinner()
         return()
       }
       # handle negative
@@ -64,6 +66,7 @@ observeEvent(input$baseline, {
         # treat as keep
       }
       hs$val[["baselined"]] <- hs_bl
+      remove_modal_spinner()
     }
   })
 })

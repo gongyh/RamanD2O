@@ -10,7 +10,7 @@ tabItem(
         12,
         fluidRow(
           column(3, uiOutput("hs_select_for_ml_explore")),
-          column(2, numericInput("perplexity", "Perplexity", 3, min = 1, step = 1)),
+          column(2, numericInput("perplexity", "Perplexity", 30, min = 1, step = 1)),
           column(2, numericInput("max_iter", "Iterations", 1000, min = 1, step = 1)),
           column(2, uiOutput("tsneColBy")),
           column(3, withBusyIndicatorUI(actionButton("tsne", "Plot tSNE", class = "btn-success")), class = "top25")

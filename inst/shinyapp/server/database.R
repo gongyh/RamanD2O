@@ -9,7 +9,7 @@ observeEvent(input$connectdb, {
       )
       if (nrow(dbstats$projects) > 0) names(dbstats$projects) <- c("project", "count")
       output$db_message <- renderText({
-        msg <- paste0("MongoDB is connected at ", Sys.time(), "\n\nproject, count\n")
+        msg <- paste0("MongoDB is connected at ", Sys.time(), "\n\nproject, spectra_count\n")
         if (nrow(dbstats$projects) > 0) {
           for (i in 1:nrow(dbstats$projects)) {
             msg <- paste(msg, toString(dbstats$projects[i, ]), "\n")
@@ -47,6 +47,7 @@ observeEvent(input$savedb, {
       shinyalert("Oops!", "Please first load your spectra data.", type = "error")
       return()
     } else {
+      show_modal_spinner(spin = "flower", color = "red", text = "Pushing data ....")
       hs_cur <- hs$val[[isolate(input$hs_selector_for_database)]]
       hs_df <- as.wide.df(hs_cur, wl.prefix = "spc.")
       hs_df$dtype <- isolate(input$hs_selector_for_database)
@@ -64,6 +65,7 @@ observeEvent(input$savedb, {
           })
         }
       )
+      remove_modal_spinner()
     }
   })
 })
@@ -83,6 +85,7 @@ observeEvent(input$load_from_db, {
       shinyalert("Oops!", "Please connect to database first.", type = "error")
       return()
     } else {
+      show_modal_spinner(spin = "flower", color = "red", text = "Pulling data ....")
       prj <- isolate(input$project_selector_for_database)
       tryCatch(
         {
@@ -116,6 +119,7 @@ observeEvent(input$load_from_db, {
           })
         }
       )
+      remove_modal_spinner()
     }
   })
 })

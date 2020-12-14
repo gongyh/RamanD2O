@@ -33,6 +33,7 @@ observeEvent(input$cdr, {
         CD <- spc[i, CD_start:CD_end]
         CH <- spc[i, CH_start:CH_end]
         CDR <- (sum(CD) - sum(Baseline) * 1.25) / (sum(CD) + sum(CH) - sum(Baseline) * 2.5)
+        if (CDR < 0) CDR <- 0
         CDR_All <- rbind(CDR_All, CDR)
       }
       hs_cdr$CDR <- round2(CDR_All)

@@ -16,6 +16,7 @@ observeEvent(input$cartenoid, {
       shinyalert("Oops!", "Please first load your spectra data.", type = "error")
       return()
     } else {
+      show_modal_spinner(spin = "flower", color = "red", text = "Processing ....")
       hs_cur <- hs$val[[isolate(input$hs_selector_for_cartenoid)]]
       wavelength <- wl(hs_cur)
       keep <- c()
@@ -35,6 +36,7 @@ observeEvent(input$cartenoid, {
         hs_bl$Cartenoid <- !keep
       }
       hs$val[["cartenoid"]] <- hs_bl
+      remove_modal_spinner()
     }
   })
 })

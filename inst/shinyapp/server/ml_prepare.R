@@ -30,7 +30,7 @@ observeEvent(input$prepare, {
       tindex <- isample(hs_cur)
       index <- tindex[1:max(size, 2)]
       hs$val[["train"]] <- hs_cur[index]
-      hs$val[["test"]] <- hs_cur[-index]
+      hs$val[["eval"]] <- hs_cur[-index]
     }
   })
 })

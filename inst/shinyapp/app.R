@@ -85,7 +85,8 @@ ui <- dashboardPage(
       source(file.path("ui", "visualize.R"), local = TRUE)$value,
       source(file.path("ui", "database.R"), local = TRUE)$value,
       source(file.path("ui", "ml_prepare.R"), local = TRUE)$value,
-      source(file.path("ui", "ml_explore.R"), local = TRUE)$value
+      source(file.path("ui", "ml_explore.R"), local = TRUE)$value,
+      source(file.path("ui", "ml_rf.R"), local = TRUE)$value
     )
   ),
   # END dashboardBody
@@ -101,7 +102,7 @@ server <- function(input, output, session) {
   output$user <- renderUser({
     dashboardUser(
       name = str_trunc(user_name, 20),
-      image = "https://adminlte.io/themes/AdminLTE/dist/img/user2-160x160.jpg"
+      image = "user.svg"
     )
   })
 
@@ -135,6 +136,7 @@ server <- function(input, output, session) {
   source(file.path("server", "cdr.R"), local = TRUE)$value
   source(file.path("server", "ml_prepare.R"), local = TRUE)$value
   source(file.path("server", "ml_explore.R"), local = TRUE)$value
+  source(file.path("server", "ml_rf.R"), local = TRUE)$value
 }
 
 # Create Shiny object
