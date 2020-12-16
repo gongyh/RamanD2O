@@ -59,33 +59,10 @@ observeEvent(input$train,
         x = hs_train$spc, y = factor(hs_train$D2O), xtest = xtest$spc, ytest = as.factor(ytest[, 1]),
         ntree = isolate(input$rf_ntree), replace = isolate(input$rf_replace), norm.votes = TRUE
       )
-      output$rf_mse_plot <- renderPlot({
-        req(rf, cancelOutput = T)
-        plot(rf)
-      })
-      output$rf_importance_plot <- renderPlot({
-        req(rf, cancelOutput = T)
-        plot(
-          x = rownames(rf$importance), y = rf$importance, type = "h",
-          xlab = "Wavelength", ylab = "Importance"
-        )
-      })
-      output$rf_confusion_oob_plot <- renderDataTable({
-        req(rf, cancelOutput = T)
-        DT::datatable(rf$confusion,
-          escape = FALSE, selection = "single", extensions = list("Responsive", "Scroller"),
-          options = list(deferRender = T, searchHighlight = T, scrollX = T)
-        )
-      })
-      output$rf_confusion_eval_plot <- renderDataTable({
-        req(rf$test, cancelOutput = T)
-        DT::datatable(rf$test$confusion,
-          escape = FALSE, selection = "single", extensions = list("Responsive", "Scroller"),
-          options = list(deferRender = T, searchHighlight = T, scrollX = T)
-        )
-      })
+      ml$results <- rf
       output$rf_test_predicted_plot <- renderDataTable({
-        req(rf$test, cancelOutput = T)
+        validate(need(rf, ""))
+        validate(need(rf$test, ""))
         df <- data.frame(real = ytest[, 1], predicted = rf$test$predicted)
         rownames(df) <- names(rf$test$predicted)
         df <- cbind(df, rf$test$votes)
@@ -96,9 +73,41 @@ observeEvent(input$train,
       })
     })
   },
-  ignoreNULL = F
+  ignoreNULL = T
 )
 
+observeEvent(ml$results,
+  {
+    rf <- ml$results
+    output$rf_mse_plot <- renderPlot({
+      validate(need(rf, ""))
+      plot(rf)
+    })
+    output$rf_importance_plot <- renderPlot({
+      validate(need(rf, ""))
+      plot(
+        x = rownames(rf$importance), y = rf$importance, type = "h",
+        xlab = "Wavelength", ylab = "Importance"
+      )
+    })
+    output$rf_confusion_oob_plot <- renderDataTable({
+      validate(need(rf, ""))
+      DT::datatable(rf$confusion,
+        escape = FALSE, selection = "single", extensions = list("Responsive", "Scroller"),
+        options = list(deferRender = T, searchHighlight = T, scrollX = T)
+      )
+    })
+    output$rf_confusion_eval_plot <- renderDataTable({
+      validate(need(rf, ""))
+      validate(need(rf$test, ""))
+      DT::datatable(rf$test$confusion,
+        escape = FALSE, selection = "single", extensions = list("Responsive", "Scroller"),
+        options = list(deferRender = T, searchHighlight = T, scrollX = T)
+      )
+    })
+  },
+  ignoreNULL = FALSE
+)
 
 observeEvent(input$rf_test_predicted_plot_rows_selected,
   {

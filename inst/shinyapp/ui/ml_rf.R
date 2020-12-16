@@ -49,12 +49,12 @@ tabItem(
             plotOutput("rf_importance_plot") %>% withSpinner()
           ),
           tabPanel(
-            "Confusion matrix (OOB)",
+            "Confusion (OOB)",
             br(),
             DTOutput("rf_confusion_oob_plot") %>% withSpinner()
           ),
           tabPanel(
-            "Confusion matrix (Evaluation)",
+            "Confusion (Evaluation)",
             br(),
             DTOutput("rf_confusion_eval_plot") %>% withSpinner()
           ),

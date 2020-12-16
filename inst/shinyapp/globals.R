@@ -51,3 +51,5 @@ hs <- reactiveValues(val = list())
 
 mongo_connection <- reactiveValues(obj = NULL)
 dbstats <- reactiveValues(projects = NULL)
+
+ml <- reactiveValues(results = NULL)
