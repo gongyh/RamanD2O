@@ -95,7 +95,7 @@ observeEvent(ml$results,
       DT::datatable(rf$confusion,
         escape = FALSE, selection = "single", extensions = list("Responsive", "Scroller"),
         options = list(deferRender = T, searchHighlight = T, scrollX = T)
-      )
+      ) %>% formatPercentage(c("class.error"), 4)
     })
     output$rf_confusion_eval_plot <- renderDataTable({
       validate(need(rf, ""))
@@ -103,7 +103,7 @@ observeEvent(ml$results,
       DT::datatable(rf$test$confusion,
         escape = FALSE, selection = "single", extensions = list("Responsive", "Scroller"),
         options = list(deferRender = T, searchHighlight = T, scrollX = T)
-      )
+      ) %>% formatPercentage(c("class.error"), 4)
     })
   },
   ignoreNULL = FALSE

@@ -25,9 +25,11 @@ tabItem(
     box(
       title = "Notes", status = "info", solidHeader = TRUE, collapsible = FALSE,
       p("randomForest implements Breiman's random forest algorithm (based on Breiman and Cutler's original Fortran code) for classification and regression.
-        It can also be used in unsupervised mode for assessing proximities among data points."),
-      p("1. If you also want to evaluate your model, please change Evaluation dataset to not _ ."),
-      p("2. Change Label to your classifying variable."),
+        The RandomForestClassifier is trained using bootstrap aggregation, where each new tree is fit from a bootstrap sample of the training observations.
+        The out-of-bag (OOB) error is the average error for each observation calculated using predictions from the trees that do not contain this observation in their respective bootstrap sample.
+        This allows the RandomForestClassifier to be fit and validated whilst being trained."),
+      p("1. If you also want to evaluate your model, please change Evaluation dataset to anything except _ ."),
+      p("2. Change Label to your categorical variable."),
       p("3. Number of trees should not be set to too small to ensure that every input row gets predicted at least a few times."),
       p("4. Sampling of cases (replicate) can be done with or without replacement.")
     )
@@ -39,7 +41,7 @@ tabItem(
         12,
         tabsetPanel(
           tabPanel(
-            "MSE",
+            "Error rates",
             br(),
             plotOutput("rf_mse_plot") %>% withSpinner()
           ),
