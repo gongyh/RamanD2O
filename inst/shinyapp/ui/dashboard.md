@@ -26,7 +26,7 @@ To try RamanD2O, you can load a small demo using the link in `Load data` tab, or
 4. `Smooth`: reduce high frequency noise, time consuming but recommended.
 5. `Baseline`: remove baseline for each spectrum, recommended.
 6. `Normalize`: normalize to allow equal comparison between spectrum, recommended.
-7. `Cartenoid`: detect cells with cartenoid peaks, recommended if you need to calculate C-D ratio.
+7. `Carotenoid`: detect cells with carotenoid peaks, recommended if you need to calculate C-D ratio.
 8. `SNR`: calculate signal noise ratio (SNR) and optionally filter dataset based on SNR values (recommended).
 9. `CDR`: calculate C-D ratio for cells incorporated heavy water.
 
