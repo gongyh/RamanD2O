@@ -37,6 +37,10 @@ round2 <- function(x) {
   round(x, digits = 2)
 }
 
+round4 <- function(x) {
+  round(x, digits = 4)
+}
+
 unAsIs <- function(X) {
   if ("AsIs" %in% class(X)) {
     class(X) <- class(X)[-match("AsIs", class(X))]
