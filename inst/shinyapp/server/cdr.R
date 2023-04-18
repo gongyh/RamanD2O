@@ -36,7 +36,7 @@ observeEvent(input$cdr, {
         if (CDR < 0) CDR <- 0
         CDR_All <- rbind(CDR_All, CDR)
       }
-      hs_cdr$CDR <- round2(CDR_All)
+      hs_cdr$CDR <- round4(CDR_All)
       hs_cdr$D2O <- ifelse(CDR_All >= isolate(input$cdr_cutoff), 1, 0)
       hs$val[["cdr"]] <- hs_cdr
     }
