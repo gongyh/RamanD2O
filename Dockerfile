@@ -29,8 +29,23 @@ RUN echo "deb https://cloud.r-project.org/bin/linux/ubuntu bionic-cran35/" > /et
 # note the proxy for gpg
 RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9
 
-ENV R_BASE_VERSION 3.6.1
+# system libraries of general use
+RUN apt-get update && apt-get install -y \
+  sudo \
+  pandoc pandoc-citeproc \
+  libcurl4-gnutls-dev \
+  libcairo2-dev \
+  libxt-dev \
+  libssl-dev libssh2-1-dev libssl1.0.0 \
+  file cmake \
+  libxml2 libxml2-dev \
+  libsasl2-dev \
+  libharfbuzz-dev libfribidi-dev \
+  libgtk-3-dev \
+  libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev \
+  && rm -rf /var/lib/apt/lists/*
 
+ENV R_BASE_VERSION 3.6.1
 # Now install R and littler, and create a link for littler in /usr/local/bin
 # Also set a default CRAN repo, and make sure littler knows about it too
 RUN apt-get update \
@@ -45,38 +60,24 @@ RUN apt-get update \
         && ln -s /usr/share/doc/littler/examples/install2.r /usr/local/bin/install2.r \
         && ln -s /usr/share/doc/littler/examples/installGithub.r /usr/local/bin/installGithub.r \
         && ln -s /usr/share/doc/littler/examples/testInstalled.r /usr/local/bin/testInstalled.r \
-        && install.r docopt \
+        && install.r docopt pak pkgdepends \
         && rm -rf /tmp/downloaded_packages/ /tmp/*.rds \
         && rm -rf /var/lib/apt/lists/*
 
-# system libraries of general use
-RUN apt-get update && apt-get install -y \
-  sudo \
-  pandoc \
-  pandoc-citeproc \
-  libcurl4-gnutls-dev \
-  libcairo2-dev \
-  libxt-dev \
-  libssl-dev \
-  libssh2-1-dev \
-  libssl1.0.0 \
-  file \
-  libxml2 \
-  libxml2-dev \
-  libsasl2-dev
-
 # basic shiny functionality
-RUN R -e "install.packages(c('shiny', 'shinydashboard', 'shinyjs', 'shinyFiles', \
+RUN R -e "library(pak); pkg_install(c('shiny', 'shinydashboard', 'shinyjs', 'shinyFiles', \
   'shinybusy', 'shinyalert', 'shinydisconnect', 'shinycssloaders', 'shinytoastr', \
+  'url::https://cran.r-project.org/src/contrib/Archive/pbkrtest/pbkrtest_0.4-8.6.tar.gz', \
   'DT', 'fresh', 'devtools', 'plotly', 'fs', 'ggpubr', 'ggplot2', 'stringr', \
-  'RColorBrewer', 'dplyr', 'compiler', 'mongolite', 'zip'), \
-  repos='https://cloud.r-project.org/')"
-RUN R -e "devtools::install_github('RinteRface/shinydashboardPlus')"
+  'RColorBrewer', 'dplyr', 'compiler', 'mongolite', 'zip', \
+  'RinteRface/shinydashboardPlus')); cache_clean()" && rm -rf /tmp/*
 
 # install dependencies of the RamanD2O app
-RUN R -e "install.packages(c('baseline', 'permute', 'Rtsne', 'randomForest'), repos='https://cloud.r-project.org/')"
+RUN R -e "library(pak); pkg_install(c('baseline', 'permute', 'Rtsne', \
+  'url::https://cran.r-project.org/src/contrib/Archive/randomForest/randomForest_4.6-14.tar.gz')); cache_clean()" \
+  && rm -rf /tmp/*
 RUN R -e "install.packages(c('hyperSpec', 'hySpc.ggplot2'), \
-  repos=c('https://r-hyperspec.github.io/pkg-repo/', getOption('repos')))"
+  repos=c('https://r-hyperspec.github.io/pkg-repo/', getOption('repos')))" && rm -rf /tmp/*
 
 # copy the app to the image
 RUN mkdir /root/RamanD2O
