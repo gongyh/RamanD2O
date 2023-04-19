@@ -73,7 +73,7 @@ RUN R -e "library(pak); pkg_install(c('shiny', 'shinydashboard', 'shinyjs', 'shi
   'RinteRface/shinydashboardPlus')); cache_clean()" && rm -rf /tmp/*
 
 # install dependencies of the RamanD2O app
-RUN R -e "library(pak); pkg_install(c('baseline', 'permute', 'Rtsne', \
+RUN R -e "library(pak); pkg_install(c('baseline', 'permute', 'Rtsne', 'markdown', \
   'url::https://cran.r-project.org/src/contrib/Archive/randomForest/randomForest_4.6-14.tar.gz')); cache_clean()" \
   && rm -rf /tmp/*
 RUN R -e "install.packages(c('hyperSpec', 'hySpc.ggplot2'), \
