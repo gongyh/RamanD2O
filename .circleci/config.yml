@@ -9,7 +9,11 @@ jobs:
     # Specify the execution environment. You can specify an image from Docker Hub or use one of our convenience images from CircleCI's Developer Hub.
     # See: https://circleci.com/docs/configuration-reference/#executor-job
     docker:
-      - image: ubuntu-2004:2023.04.2
+      - image: cimg/base:2023.05
+        auth:
+          username: mydockerhub-user
+          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
+
     # Add steps to the job
     # See: https://circleci.com/docs/configuration-reference/#steps
     steps:
