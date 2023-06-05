@@ -10,10 +10,10 @@ Encoding: UTF-8
 LazyData: true
 Depends: 
     R (>= 3.5.0),
-    hyperSpec (>= 0.200.0.9000),
+    hyperSpec (>= 0.200.0.9000)
+Imports:
     ggplot2,
-    ggpubr
-Imports: 
+    ggpubr,
     tools,
     methods,
     RColorBrewer,
@@ -43,7 +43,8 @@ Suggests:
     shinytoastr,
     testthat (>= 3.0.0),
     knitr,
-    rmarkdown
+    rmarkdown,
+    qpdf
 RoxygenNote: 7.2.3
 Collate: 
     'SCRS_cdr.R'

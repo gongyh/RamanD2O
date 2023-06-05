@@ -1,6 +1,4 @@
 #' @import hyperSpec
-#' @import ggpubr
-#' @import ggplot2
 #' @importFrom grDevices dev.off pdf
 #' @importFrom graphics par
 #' @importFrom methods new
