@@ -1,5 +1,11 @@
 #' @import hyperSpec
 #' @import ggpubr
+#' @import ggplot2
+#' @importFrom grDevices dev.off pdf
+#' @importFrom graphics par
+#' @importFrom methods new
+#' @importFrom stats filter median runmed sd
+#' @importFrom utils read.table write.csv write.table
 
 required_package <- function(pkg) {
   if (!requireNamespace(pkg, quietly = TRUE)) {

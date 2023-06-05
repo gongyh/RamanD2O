@@ -1,3 +1,7 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^\.github$
+^\.circleci$
+^\.travis\.yml$
+^\Dockerfile.*$
+^Rprofile\.site$

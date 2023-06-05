@@ -92,7 +92,7 @@ Stat_accum <- function(x, permutations = 100, stat = "cumcv", raw = FALSE, colle
 
 #--------------------------------------------------
 StatAccumCurve <- function(x, stat = "cumcv", permutations = 100, Group, Group_name, outdir, width = 7, height = 7, scales = "fixed") {
-  require("ggplot2")
+#  require("ggplot2")
   Get_breaks <- function(Min, Max, perc) {
     int <- (round(Max, -(nchar(Max) - 1))) * perc
     breaks <- c(Min, seq(from = int, to = Max, by = int))

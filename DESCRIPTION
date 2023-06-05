@@ -15,6 +15,7 @@ Depends:
     ggpubr
 Imports: 
     tools,
+    methods,
     RColorBrewer,
     rstatix,
     stringr,
@@ -22,23 +23,24 @@ Imports:
     permute,
     reshape2,
     dplyr,
-    shiny,
     mongolite,
+    DT,
+    hySpc.ggplot2 (>= 0.0.0.9000),
+    fresh,
+    randomForest,
+    baseline,
+    markdown
+Suggests:
+    shiny,
     shinydashboard,
     shinyjs,
     shinyFiles,
-    DT,
-    hySpc.ggplot2 (>= 0.0.0.9000),
     shinybusy,
     shinyalert,
     shinydisconnect,
     shinycssloaders,
-    fresh,
     shinydashboardPlus,
-    shinytoastr,
-    randomForest,
-    baseline,
-    markdown
+    shinytoastr    
 RoxygenNote: 7.2.3
 Collate: 
     'SCRS_cdr.R'
