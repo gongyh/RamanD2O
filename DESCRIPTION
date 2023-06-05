@@ -40,7 +40,10 @@ Suggests:
     shinydisconnect,
     shinycssloaders,
     shinydashboardPlus,
-    shinytoastr    
+    shinytoastr,
+    testthat (>= 3.0.0),
+    knitr,
+    rmarkdown
 RoxygenNote: 7.2.3
 Collate: 
     'SCRS_cdr.R'
@@ -55,3 +58,5 @@ Collate:
 Remotes: 
     r-hyperspec/hyperSpec,
     r-hyperspec/hySpc.ggplot2
+Config/testthat/edition: 3
+VignetteBuilder: knitr

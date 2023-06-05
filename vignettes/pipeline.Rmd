@@ -1,0 +1,23 @@
+---
+title: "pipeline"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{pipeline}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(RamanD2O)
+```
+
+# Introduction
+
+Demonstrate various steps of Raman Spectra data analysis.

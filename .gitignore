@@ -3,3 +3,6 @@
 .RData
 .Ruserdata
 ..Rcheck
+inst/doc
+/doc/
+/Meta/

@@ -5,3 +5,5 @@
 ^\.travis\.yml$
 ^\Dockerfile.*$
 ^Rprofile\.site$
+^doc$
+^Meta$
