@@ -191,7 +191,12 @@ observeEvent(input$plot_agg,
         if (any(is.na(means$spc))) {
           return()
         } else {
-          plot(means, stacked = ".aggregate", fill = ".aggregate", axis.args = list(las = 1))
+          if (length(levels(hs_cur@data[, aggby])) <= 8) {
+            plot(means, stacked = ".aggregate", fill = ".aggregate", axis.args = list(las = 1))
+          } else {
+            plot(means, stacked = ".aggregate", axis.args = list(las = 1))
+          }
+
         }
       })
     })

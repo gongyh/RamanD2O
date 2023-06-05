@@ -8,10 +8,38 @@ Description: Quality control and analyze SCRS data based on C-D ratio.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-Depends: R (>= 3.1.0), hyperSpec, ggpubr
-Imports: tools, ggplot2, RColorBrewer, rstatix, stringr, optparse, permute, reshape2, 
-         dplyr, shiny, mongolite, shinydashboard, shinyjs, shinyFiles, DT
-RoxygenNote: 7.1.1
+Depends: 
+    R (>= 3.5.0),
+    hyperSpec (>= 0.200.0.9000),
+    ggpubr
+Imports: 
+    tools,
+    ggplot2,
+    RColorBrewer,
+    rstatix,
+    stringr,
+    optparse,
+    permute,
+    reshape2,
+    dplyr,
+    shiny,
+    mongolite,
+    shinydashboard,
+    shinyjs,
+    shinyFiles,
+    DT,
+    hySpc.ggplot2 (>= 0.0.0.9000),
+    shinybusy,
+    shinyalert,
+    shinydisconnect,
+    shinycssloaders,
+    fresh,
+    shinydashboardPlus,
+    shinytoastr,
+    randomForest,
+    baseline,
+    markdown
+RoxygenNote: 7.2.3
 Collate: 
     'SCRS_cdr.R'
     'SCRS_cdr_rarefy.R'
@@ -22,3 +50,6 @@ Collate:
     'SCRS_preprocess.R'
     'SCRS_snr.R'
     'runRamanD2O.R'
+Remotes: 
+    r-hyperspec/hyperSpec,
+    r-hyperspec/hySpc.ggplot2
