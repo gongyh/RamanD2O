@@ -46,6 +46,7 @@ ui <- dashboardPage(
         menuItem("Random forest", tabName = "rf", icon = icon("tree")),
         tabName = "ml", icon = icon("robot"), startExpanded = T
       ),
+      menuItem("SessionInfo", tabName = "info", icon = icon("circle-info")),
 
       div(
         class = "hide_when_sidebar_collapsed",
@@ -86,7 +87,8 @@ ui <- dashboardPage(
       source(file.path("ui", "database.R"), local = TRUE)$value,
       source(file.path("ui", "ml_prepare.R"), local = TRUE)$value,
       source(file.path("ui", "ml_explore.R"), local = TRUE)$value,
-      source(file.path("ui", "ml_rf.R"), local = TRUE)$value
+      source(file.path("ui", "ml_rf.R"), local = TRUE)$value,
+      source(file.path("ui", "info.R"), local = TRUE)$value
     )
   ),
   # END dashboardBody
@@ -137,6 +139,7 @@ server <- function(input, output, session) {
   source(file.path("server", "ml_prepare.R"), local = TRUE)$value
   source(file.path("server", "ml_explore.R"), local = TRUE)$value
   source(file.path("server", "ml_rf.R"), local = TRUE)$value
+  source(file.path("server", "info.R"), local = TRUE)$value
 }
 
 # Create Shiny object

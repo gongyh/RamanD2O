@@ -44,7 +44,9 @@ Suggests:
     testthat (>= 3.0.0),
     knitr,
     rmarkdown,
-    qpdf
+    qpdf,
+    plotly,
+    Rtsne
 RoxygenNote: 7.2.3
 Collate: 
     'SCRS_cdr.R'
