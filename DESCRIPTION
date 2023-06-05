@@ -11,10 +11,10 @@ LazyData: true
 Depends: 
     R (>= 3.5.0),
     hyperSpec (>= 0.200.0.9000),
+    ggplot2,
     ggpubr
 Imports: 
     tools,
-    ggplot2,
     RColorBrewer,
     rstatix,
     stringr,

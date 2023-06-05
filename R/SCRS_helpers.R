@@ -1,7 +1,9 @@
 ## Helper functions
 
-# remove cosmic rays for each spectrum
-# spc: a intensities vector
+#' remove cosmic rays for each spectrum
+#'
+#' @param spc an intensities vector
+#'
 #' @export
 removeCosmic <- function(spc) {
   medianFilt <- runmed(spc, 3)
@@ -17,8 +19,12 @@ removeCosmic <- function(spc) {
 }
 
 
-# search peaks for each spectrum
-# size: need to be odd number
+#' search peaks for each spectrum
+#'
+#' @param spc an intensities vector
+#' @param size need to be odd number
+#' @param level adjustable constrain
+#'
 #' @export
 findPeaks <- function(spc, size = 9, level = 0.1) {
   half <- (size - 1) / 2
@@ -32,7 +38,10 @@ findPeaks <- function(spc, size = 9, level = 0.1) {
   peaks
 }
 
-# load SCRS txt files to dataframe
+#' load SCRS txt files to dataframe
+#'
+#' @param files txt files vector
+#'
 #' @export
 SCRS_toDF <- function(files) {
   shift <- read.table(files[1], header = F, sep = "\t")$V1
