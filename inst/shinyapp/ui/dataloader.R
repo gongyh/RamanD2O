@@ -11,12 +11,13 @@ tabItem(
       p("You can also import your data from external MongoDB database, please refer to Tools -> Database.", style = "color:red;"),
       br(),
       fluidRow(
-        column(6, fileInput("scrs_file", "1. Upload SCRS Zip file", accept = ".zip", placeholder = "SCRS.zip")),
-        column(6, withBusyIndicatorUI(actionButton("unzip", "Load SCRS", class = "btn-success")), class = "top25")
+        column(5, fileInput("scrs_file", "1. Upload SCRS Zip file", accept = ".zip", placeholder = "SCRS.zip")),
+        column(2, checkboxInput("align", "Interpolation"), class = "top25"),
+        column(5, withBusyIndicatorUI(actionButton("unzip", "Load SCRS", class = "btn-success")), class = "top25")
       ),
       fluidRow(
-        column(6, fileInput("meta_file", "2. Upload Metadata", accept = ".tsv", placeholder = "meta.tsv")),
-        column(6, withBusyIndicatorUI(actionButton("load_meta", "Load metadata", class = "btn-success")), class = "top25")
+        column(5, fileInput("meta_file", "2. Upload Metadata", accept = ".tsv", placeholder = "meta.tsv")),
+        column(7, withBusyIndicatorUI(actionButton("load_meta", "Load metadata", class = "btn-success")), class = "top25")
       ),
       h5("Notes:"),
       p("The first column of the metadata table should be ID_Cell, which contains spectra file names without suffix."),
