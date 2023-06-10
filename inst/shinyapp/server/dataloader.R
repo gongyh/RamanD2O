@@ -13,33 +13,56 @@ observeEvent(input$unzip, {
         toastr_error("No spectrum files found!", position = "top-center")
         return()
       }
-
-      if (isolate(input$align)) { # intercept
-
+      if (isolate(input$align)) {
+	    # different shift
+        max_min_values <- lapply(files, function(f) {
+        data <- read.table(f, header = FALSE)$V1
+        max_value <- max(data, na.rm = TRUE)
+        min_value <- min(data, na.rm = TRUE)
+        list(max = max_value, min = min_value)
+        })
+        scrs_min <- max(sapply(max_min_values, function(x) x$min))
+        scrs_max <- min(sapply(max_min_values, function(x) x$max))
+        shift <- read.table(txtfiles[1], header = F, sep = "\t")$V1
+        shift <- shift[shift >= scrs_min & shift <= scrs_max]
+        scrs_colnames <- c("ID_Cell", shift)
+        scrs_df <- matrix(nrow = length(scrs_colnames), ncol = total)
+        for (filename in txtfiles) {
+          ID_Cell <- sub(".txt", "", basename(filename))
+          content <- read.table(filename, header = F, sep = "\t")
+          shift_cur <- content$V1
+          dt <- removeCosmic(content$V2)
+          hs_data <- new("hyperSpec", wavelength = shift_cur, spc = dt$spc)
+          hs_align <- spc.loess(hs_data, shift, normalize = F)
+          data <- c(ID_Cell, hs_align$spc)
+          scrs_df[, i] <- data
+          update_modal_progress(i / total, paste0("Reading ", i, " spectrum (", floor(100 * i / total), "%)"))
+          i <- i + 1
+        }
       } else {
-
+	    # same shift
+        shift <- read.table(txtfiles[1], header = F, sep = "\t")$V1
+        scrs_colnames <- c("ID_Cell", shift)
+        scrs_df <- matrix(nrow = length(scrs_colnames), ncol = total)
+        for (filename in txtfiles)
+        {
+          ID_Cell <- sub(".txt", "", basename(filename))
+          content <- read.table(filename, header = F, sep = "\t")
+          cur_shift <- content$V1
+          ## TBD: compare shift with cur_shift, should be same, error if not same
+          dt <- content$V2
+          # remove Cosmic Rays
+          dt2 <- removeCosmic(dt)
+          # if (dt2$cosmic) {
+          #   cat(filename, "contains cosmic ray signal.\n")
+          # }
+          data <- c(ID_Cell, dt2$spc)
+          scrs_df[, i] <- data
+          update_modal_progress(i / total, paste0("Reading ", i, " spectrum (", floor(100 * i / total), "%)"))
+          i <- i + 1
+        }
       }
 
-      shift <- read.table(txtfiles[1], header = F, sep = "\t")$V1
-      scrs_colnames <- c("ID_Cell", shift)
-      scrs_df <- matrix(nrow = length(scrs_colnames), ncol = total)
-      for (filename in txtfiles)
-      {
-        ID_Cell <- sub(".txt", "", basename(filename))
-        content <- read.table(filename, header = F, sep = "\t")
-        cur_shift <- content$V1
-        ## TBD: compare shift with cur_shift, should be same, error if not same
-        dt <- content$V2
-        # remove Cosmic Rays
-        dt2 <- removeCosmic(dt)
-        # if (dt2$cosmic) {
-        #   cat(filename, "contains cosmic ray signal.\n")
-        # }
-        data <- c(ID_Cell, dt2$spc)
-        scrs_df[, i] <- data
-        update_modal_progress(i / total, paste0("Reading ", i, " spectrum (", floor(100 * i / total), "%)"))
-        i <- i + 1
-      }
       sc <- data.frame(t(scrs_df), stringsAsFactors = T)
       colnames(sc) <- scrs_colnames
       rownames(sc) <- NULL
