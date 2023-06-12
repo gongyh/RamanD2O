@@ -14,17 +14,17 @@ observeEvent(input$unzip, {
         return()
       }
       if (isolate(input$align)) {
-	    # different shift
+	# different shift
         max_min_values <- lapply(files, function(f) {
-        data <- read.table(f, header = FALSE)$V1
-        max_value <- max(data, na.rm = TRUE)
-        min_value <- min(data, na.rm = TRUE)
-        list(max = max_value, min = min_value)
+          data <- read.table(f, header = FALSE)$V1
+          max_value <- max(data, na.rm = TRUE)
+          min_value <- min(data, na.rm = TRUE)
+          list(max = max_value, min = min_value)
         })
         scrs_min <- max(sapply(max_min_values, function(x) x$min))
         scrs_max <- min(sapply(max_min_values, function(x) x$max))
         shift <- read.table(txtfiles[1], header = F, sep = "\t")$V1
-        shift <- shift[shift >= scrs_min & shift <= scrs_max]
+        shift <- round(shift[shift >= scrs_min & shift <= scrs_max])
         scrs_colnames <- c("ID_Cell", shift)
         scrs_df <- matrix(nrow = length(scrs_colnames), ncol = total)
         for (filename in txtfiles) {
@@ -40,7 +40,7 @@ observeEvent(input$unzip, {
           i <- i + 1
         }
       } else {
-	    # same shift
+	# same shift
         shift <- read.table(txtfiles[1], header = F, sep = "\t")$V1
         scrs_colnames <- c("ID_Cell", shift)
         scrs_df <- matrix(nrow = length(scrs_colnames), ncol = total)
@@ -49,7 +49,12 @@ observeEvent(input$unzip, {
           ID_Cell <- sub(".txt", "", basename(filename))
           content <- read.table(filename, header = F, sep = "\t")
           cur_shift <- content$V1
-          ## TBD: compare shift with cur_shift, should be same, error if not same
+          # compare shift with cur_shift, should be same, error if not same
+          if (!identical(shift, cur_shift)) {
+            remove_modal_progress()
+            toastr_error("Wavelength differences found, please double check!", position = "top-center")
+            return()
+          }
           dt <- content$V2
           # remove Cosmic Rays
           dt2 <- removeCosmic(dt)
