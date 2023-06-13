@@ -6,16 +6,17 @@ tabItem(
   fluidRow(
     box(
       title = "Settings", status = "info", solidHeader = TRUE, collapsible = FALSE,
-      column(
-        12,
-        sliderInput("trim_range", " Selecting Wavelength Ranges:",
-          min = 0, max = 4000, value = c(400, 3400),
-          step = 1, dragRange = F, width = "100%"
-        ),
-        fluidRow(
-          column(6, uiOutput("hs_select_for_trim")),
-          column(6, withBusyIndicatorUI(actionButton("trim", "Trim", class = "btn-success")), class = "top25")
-        )
+      fluidRow(
+        column(10,
+          sliderInput("trim_range", " Selecting Wavelength Ranges:", 
+            min = 0, max = 4000, value = c(400, 3400), step = 1, dragRange = F, width = "100%")),
+        column(2, 
+          numericInput("trim_min", "Min", min = 0, max = 4000, step = 1, value = 400, width = "100%"),
+          numericInput("trim_max", "Max",min = 0, max = 4000, step = 1, value = 3400, width = "100%"))
+      ),
+      fluidRow(
+        column(6, uiOutput("hs_select_for_trim")),
+        column(6, withBusyIndicatorUI(actionButton("trim", "Trim", class = "btn-success")), class = "top25")
       )
     ),
     box(

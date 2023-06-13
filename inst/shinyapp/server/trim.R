@@ -7,6 +7,15 @@ output$hs_select_for_trim <- renderUI({
   selectInput("hs_selector_for_trim", "Choose target", choices = hs_all, selected = selected)
 })
 
+# convert trim_range and trim_min/trim_max
+observeEvent(c(input$trim_min, input$trim_max), {
+  updateSliderInput(session, "trim_range", value = c(input$trim_min, input$trim_max))
+})
+observeEvent(c(input$trim_range[1], input$trim_range[2]), {
+  updateNumericInput(session, "trim_min", value = input$trim_range[1])
+  updateNumericInput(session, "trim_max", value = input$trim_range[2])
+})
+
 # trim scrs on click of button
 observeEvent(input$trim, {
   withBusyIndicatorServer("trim", {
