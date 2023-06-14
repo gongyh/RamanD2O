@@ -9,11 +9,13 @@ tabItem(
       column(
         12,
         fluidRow(
-          column(2, checkboxInput("prepare_trim", "Trim", value = TRUE), class = "top25"),
-          column(10, sliderInput("ptrim_range", " Selecting Wavelength Ranges:",
+          column(1, checkboxInput("prepare_trim", "Trim", value = TRUE), class = "top25"),
+          column(2, numericInput("ptrim_min", "Min", min = 0, max = 4000, step = 1, value = 2000, width = "100%")),
+          column(7, sliderInput("ptrim_range", " Selecting Wavelength Ranges:",
             min = 0, max = 4000, value = c(2000, 2350),
             step = 1, dragRange = F, width = "100%"
-          ))
+          )),
+          column(2, numericInput("ptrim_max", "Max", min = 0, max = 4000, step = 1, value = 2350, width = "100%"))
         ),
         fluidRow(
           column(3, uiOutput("hs_select_for_ml_prepare")),

@@ -11,6 +11,15 @@ output$hs_select_for_ml_prepare <- renderUI({
   selectInput("hs_selector_for_ml_prepare", "Choose target", choices = hs_all, selected = selected)
 })
 
+# convert prepare_trim_range and prepare_trim_min/max
+observeEvent(c(input$ptrim_min, input$ptrim_max), {
+  updateSliderInput(session, "ptrim_range", value = c(input$ptrim_min, input$ptrim_max))
+})
+observeEvent(c(input$ptrim_range[1], input$ptrim_range[2]), {
+  updateNumericInput(session, "ptrim_min", value = input$ptrim_range[1])
+  updateNumericInput(session, "ptrim_max", value = input$ptrim_range[2])
+})
+
 # prepare training datasets for scrs on click of button
 observeEvent(input$prepare, {
   withBusyIndicatorServer("prepare", {
