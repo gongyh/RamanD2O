@@ -57,7 +57,7 @@ RUN apt-get update \
 
 # install dependencies of the RamanD2O app
 RUN R -e "install.packages(c('docopt', 'pkgdepends', 'pak'))" && rm -rf /tmp/*
-RUN R -e "library(pak); pkg_install(c('shiny', 'shinydashboard', 'shinyjs', 'shinyFiles', \
+RUN R -e "options(Ncpus=4); library(pak); pkg_install(c('shiny', 'shinydashboard', 'shinyjs', 'shinyFiles', \
   'shinybusy', 'shinyalert', 'shinydisconnect', 'shinycssloaders', 'shinytoastr', \
   'DT', 'fresh', 'devtools', 'plotly', 'fs', 'ggpubr', 'ggplot2', 'stringr', \
   'RColorBrewer', 'dplyr', 'compiler', 'mongolite', 'zip', \
