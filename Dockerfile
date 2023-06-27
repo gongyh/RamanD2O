@@ -50,22 +50,13 @@ ENV R_BASE_VERSION 4.2.3
 # Also set a default CRAN repo, and make sure littler knows about it too
 RUN apt-get update \
         && apt-get install -y --no-install-recommends \
-                littler r-cran-littler \
                 r-base=${R_BASE_VERSION}* \
                 r-base-dev=${R_BASE_VERSION}* \
                 r-recommended=${R_BASE_VERSION}* \
-        && echo 'options(repos = c(CRAN = "https://cloud.r-project.org/"), download.file.method = "libcurl")' >> /etc/R/Rprofile.site \
-        && echo 'source("/etc/R/Rprofile.site")' >> /etc/littler.r \
-        && ln -s /usr/share/doc/littler/examples/install.r /usr/local/bin/install.r \
-        && ln -s /usr/share/doc/littler/examples/install2.r /usr/local/bin/install2.r \
-        && ln -s /usr/share/doc/littler/examples/installGithub.r /usr/local/bin/installGithub.r \
-        && ln -s /usr/share/doc/littler/examples/testInstalled.r /usr/local/bin/testInstalled.r \
-        && rm -rf /tmp/downloaded_packages/ /tmp/*.rds \
         && rm -rf /var/lib/apt/lists/*
 
-RUN install.r docopt pak pkgdepends && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
-
 # install dependencies of the RamanD2O app
+RUN R -e "install.packages(c('docopt', 'pkgdepends', 'pak'))" && rm -rf /tmp/*
 RUN R -e "library(pak); pkg_install(c('shiny', 'shinydashboard', 'shinyjs', 'shinyFiles', \
   'shinybusy', 'shinyalert', 'shinydisconnect', 'shinycssloaders', 'shinytoastr', \
   'DT', 'fresh', 'devtools', 'plotly', 'fs', 'ggpubr', 'ggplot2', 'stringr', \
