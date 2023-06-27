@@ -56,12 +56,12 @@ RUN apt-get update \
         && rm -rf /var/lib/apt/lists/*
 
 # install dependencies of the RamanD2O app
-RUN R -e "install.packages(c('docopt', 'pkgdepends', 'pak')); library(pak); pkg_install(rownames(old.packages())); cache_clean()" \
-  && rm -rf /tmp/*
+RUN R -e "install.packages(c('docopt', 'pkgdepends', 'pak'))" && rm -rf /tmp/*
 
-RUN R -e "library(pak); pkg_install(c('shiny', 'shinydashboard', 'shinyjs', 'shinyFiles', 'shinybusy', \
+RUN R -e "library(pak); pkg_install(c('shiny', 'plotly', 'ggpubr', 'ggplot2', 'RColorBrewer')); cache_clean()" && rm -rf /tmp/*
+
+RUN R -e "library(pak); pkg_install(c('shinydashboard', 'shinyjs', 'shinyFiles', 'shinybusy', \
   'shinyalert', 'shinydisconnect', 'shinycssloaders', 'shinytoastr', \
-  'plotly', 'ggpubr', 'ggplot2', 'RColorBrewer', \
   'RinteRface/shinydashboardPlus')); cache_clean()" && rm -rf /tmp/*
 
 RUN R -e "library(pak); pkg_install(c('DT', 'fresh', 'devtools', 'fs', 'stringr', 'dplyr', 'compiler', \
