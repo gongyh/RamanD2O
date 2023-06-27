@@ -60,9 +60,10 @@ RUN apt-get update \
         && ln -s /usr/share/doc/littler/examples/install2.r /usr/local/bin/install2.r \
         && ln -s /usr/share/doc/littler/examples/installGithub.r /usr/local/bin/installGithub.r \
         && ln -s /usr/share/doc/littler/examples/testInstalled.r /usr/local/bin/testInstalled.r \
-        && install.r docopt pak pkgdepends \
         && rm -rf /tmp/downloaded_packages/ /tmp/*.rds \
         && rm -rf /var/lib/apt/lists/*
+
+RUN install.r docopt pak pkgdepends && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
 
 # install dependencies of the RamanD2O app
 RUN R -e "library(pak); pkg_install(c('shiny', 'shinydashboard', 'shinyjs', 'shinyFiles', \
