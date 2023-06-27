@@ -57,13 +57,14 @@ RUN apt-get update \
 
 # install dependencies of the RamanD2O app
 RUN R -e "install.packages(c('docopt', 'pkgdepends', 'pak'))" && rm -rf /tmp/*
-RUN R -e "options(Ncpus=4); library(pak); pkg_install(c('shiny', 'shinydashboard', 'shinyjs', 'shinyFiles', \
-  'shinybusy', 'shinyalert', 'shinydisconnect', 'shinycssloaders', 'shinytoastr', \
-  'DT', 'fresh', 'devtools', 'plotly', 'fs', 'ggpubr', 'ggplot2', 'stringr', \
-  'RColorBrewer', 'dplyr', 'compiler', 'mongolite', 'zip', \
-  'baseline', 'permute', 'Rtsne', 'markdown', 'randomForest', \
-  'r-hyperspec/hyperSpec', 'r-hyperspec/hySpc.ggplot2', \
-  'RinteRface/shinydashboardPlus')); cache_clean()" && rm -rf /tmp/*
+
+RUN R -e "library(pak); pkg_install(c('shiny', 'shinydashboard', 'shinyjs', 'shinyFiles', 'shinybusy', \
+  'shinyalert', 'shinydisconnect', 'shinycssloaders', 'shinytoastr', 'plotly', \
+  'ggpubr', 'ggplot2', 'RColorBrewer', 'RinteRface/shinydashboardPlus')); cache_clean()" && rm -rf /tmp/*
+
+RUN R -e "library(pak); pkg_install(c('DT', 'fresh', 'devtools', 'fs', 'stringr', 'dplyr', 'compiler', \
+  'mongolite', 'zip', 'baseline', 'permute', 'Rtsne', 'markdown', 'randomForest', \
+  'r-hyperspec/hyperSpec', 'r-hyperspec/hySpc.ggplot2')); cache_clean()" && rm -rf /tmp/*
 
 # copy the app to the image
 RUN mkdir /root/RamanD2O
