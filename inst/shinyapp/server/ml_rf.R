@@ -54,9 +54,10 @@ observeEvent(input$train,
       if (!is.null(eval) && (eval != "_")) {
         xtest <- hs$val[[isolate(input$hs_selector_for_ml_eval)]]
         ytest <- xtest@data[isolate(input$ml_select_label)]
+        ytrain <- hs_train@data[isolate(input$ml_select_label)]
       }
       rf <- randomForest(
-        x = hs_train$spc, y = factor(hs_train$D2O), xtest = xtest$spc, ytest = as.factor(ytest[, 1]),
+        x = hs_train$spc, y = factor(ytrain[, 1]), xtest = xtest$spc, ytest = as.factor(ytest[, 1]),
         ntree = isolate(input$rf_ntree), replace = isolate(input$rf_replace), norm.votes = TRUE
       )
       ml$results <- rf

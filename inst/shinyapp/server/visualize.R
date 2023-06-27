@@ -189,6 +189,7 @@ observeEvent(input$plot_agg,
         hs_cur <- hs$val[[isolate(input$hs_selector_for_export)]]
         means <- aggregate(hs_cur, by = hs_cur@data[, aggby], mean_pm_sd)
         if (any(is.na(means$spc))) {
+          toastr_error("This data type does not require aggregation!", position = "top-center")
           return()
         } else {
           if (length(levels(hs_cur@data[, aggby])) <= 8) {
