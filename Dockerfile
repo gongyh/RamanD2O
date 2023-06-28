@@ -56,7 +56,7 @@ RUN apt-get update \
         && rm -rf /var/lib/apt/lists/*
 
 # install dependencies of the RamanD2O app
-RUN R -e "install.packages(c('docopt', 'pkgdepends', 'pak'))" && rm -rf /tmp/*
+RUN R -e "install.packages(c('docopt', 'httpuv', 'pkgdepends', 'pak'))" && rm -rf /tmp/*
 
 RUN R -e "library(pak); pkg_install(c('shiny')); cache_clean()" && rm -rf /tmp/*
 RUN R -e "library(pak); pkg_install(c('ggplot2')); cache_clean()" && rm -rf /tmp/*
