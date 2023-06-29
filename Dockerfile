@@ -16,7 +16,7 @@ RUN apt-get update \
            apt-transport-https gsfonts gnupg2 \
         && rm -rf /var/lib/apt/lists/*
 
-# Configure default locale, see https://github.com/rocker-org/rocker/issues/19
+# Configure default locale, see https://kgithub.com/rocker-org/rocker/issues/19
 RUN echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen \
         && locale-gen en_US.utf8 \
         && /usr/sbin/update-locale LANG=en_US.UTF-8
@@ -50,27 +50,28 @@ ENV R_BASE_VERSION 4.2.3
 # Also set a default CRAN repo, and make sure littler knows about it too
 RUN apt-get update \
         && apt-get install -y --no-install-recommends \
+                littler r-cran-littler \
                 r-base=${R_BASE_VERSION}* \
                 r-base-dev=${R_BASE_VERSION}* \
                 r-recommended=${R_BASE_VERSION}* \
+        && echo 'options(repos = c(CRAN = "https://cloud.r-project.org/"), download.file.method = "libcurl")' >> /etc/R/Rprofile.site \
+        && echo 'source("/etc/R/Rprofile.site")' >> /etc/littler.r \
+        && ln -s /usr/share/doc/littler/examples/install.r /usr/local/bin/install.r \
+        && ln -s /usr/share/doc/littler/examples/install2.r /usr/local/bin/install2.r \
+        && ln -s /usr/share/doc/littler/examples/installGithub.r /usr/local/bin/installGithub.r \
+        && ln -s /usr/share/doc/littler/examples/testInstalled.r /usr/local/bin/testInstalled.r \
+        && install.r docopt pak pkgdepends \
+        && rm -rf /tmp/downloaded_packages/ /tmp/*.rds \
         && rm -rf /var/lib/apt/lists/*
 
 # install dependencies of the RamanD2O app
-# httpuv,sass,lme4 need long time to compile, not suitable for pak
-RUN R -e "install.packages(c('docopt','httpuv','sass','lme4','pkgdepends','pak'))" && rm -rf /tmp/*
-
-RUN R -e "library(pak); pkg_install(c('shiny')); cache_clean()" && rm -rf /tmp/*
-RUN R -e "library(pak); pkg_install(c('ggplot2')); cache_clean()" && rm -rf /tmp/*
-RUN R -e "library(pak); pkg_install(c('plotly')); cache_clean()" && rm -rf /tmp/*
-RUN R -e "library(pak); pkg_install(c('ggpubr')); cache_clean()" && rm -rf /tmp/*
-
-RUN R -e "library(pak); pkg_install(c('shinydashboard', 'shinyjs', 'shinyFiles', 'shinybusy', \
-  'shinyalert', 'shinydisconnect', 'shinycssloaders', 'shinytoastr', \
+RUN R -e "library(pak); pkg_install(c('shiny', 'shinydashboard', 'shinyjs', 'shinyFiles', \
+  'shinybusy', 'shinyalert', 'shinydisconnect', 'shinycssloaders', 'shinytoastr', \
+  'DT', 'fresh', 'devtools', 'plotly', 'fs', 'ggpubr', 'ggplot2', 'stringr', \
+  'RColorBrewer', 'dplyr', 'compiler', 'mongolite', 'zip', \
+  'baseline', 'permute', 'Rtsne', 'markdown', 'randomForest', \
+  'r-hyperspec/hyperSpec', 'r-hyperspec/hySpc.ggplot2', \
   'RinteRface/shinydashboardPlus')); cache_clean()" && rm -rf /tmp/*
-
-RUN R -e "library(pak); pkg_install(c('DT', 'fresh', 'devtools', 'fs', 'stringr', 'dplyr', 'compiler', \
-  'mongolite', 'zip', 'baseline', 'permute', 'Rtsne', 'markdown', 'randomForest', \
-  'r-hyperspec/hyperSpec', 'r-hyperspec/hySpc.ggplot2')); cache_clean()" && rm -rf /tmp/*
 
 # copy the app to the image
 RUN mkdir /root/RamanD2O
