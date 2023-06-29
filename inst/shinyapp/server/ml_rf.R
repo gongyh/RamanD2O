@@ -56,8 +56,10 @@ observeEvent(input$train,
         ytest <- xtest@data[isolate(input$ml_select_label)]
         ytrain <- hs_train@data[isolate(input$ml_select_label)]
       }
+      ytrain_factor <- factor(ytrain[, 1])
+      ytest_factor <- factor(as.character(ytest[, 1]),levels=levels(ytrain_factor))
       rf <- randomForest(
-        x = hs_train$spc, y = factor(ytrain[, 1]), xtest = xtest$spc, ytest = as.factor(ytest[, 1]),
+        x = hs_train$spc, y = ytrain_factor, xtest = xtest$spc, ytest = ytest_factor,
         ntree = isolate(input$rf_ntree), replace = isolate(input$rf_replace), norm.votes = TRUE
       )
       ml$results <- rf
