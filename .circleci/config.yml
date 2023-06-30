@@ -13,7 +13,7 @@ jobs:
         auth:
           username: mydockerhub-user
           password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
-
+    resource_class: small
     # Add steps to the job
     # See: https://circleci.com/docs/configuration-reference/#steps
     steps:
