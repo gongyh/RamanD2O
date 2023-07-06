@@ -12,13 +12,17 @@ tabItem(
           column(3, uiOutput("hs_select_for_ml_train")),
           column(3, uiOutput("hs_select_for_ml_eval")),
           column(3, uiOutput("hs_select_for_ml_label")),
-          column(3, withBusyIndicatorUI(actionButton("train", "Train", class = "btn-success")), class = "top25")
+          column(3, uiOutput("hs_select_for_ml_test"))
         ),
-        hr(),
         h4("Parameters for Random forest classifier:"),
         fluidRow(
           column(3, numericInput("rf_ntree", "Number of trees", 100, min = 1, step = 1)),
           column(3, checkboxInput("rf_replace", "Replacement", value = TRUE), class = "top25")
+        ),
+        fluidRow(
+          column(3, withBusyIndicatorUI(actionButton("train", "Train & Eval", class = "btn-success")), class = "top25"),
+          column(3, withBusyIndicatorUI(actionButton("eval", "Eval", class = "btn-success")), class = "top25"),
+          column(3, withBusyIndicatorUI(actionButton("test", "Test", class = "btn-success")), class = "top25")
         )
       )
     ),

@@ -22,6 +22,17 @@ output$hs_select_for_ml_eval <- renderUI({
   selectInput("hs_selector_for_ml_eval", "Evaluation dataset", choices = hs_all, selected = selected)
 })
 
+output$hs_select_for_ml_test <- renderUI({
+  hs_all <- c("_", names(hs$val))
+  selected <- NULL
+  if ("test" %in% hs_all) {
+    selected <- "test"
+  } else {
+    selected <- "_"
+  }
+  selectInput("hs_selector_for_ml_test", "Test dataset", choices = hs_all, selected = selected)
+})
+
 observeEvent(input$hs_selector_for_ml_train,
   {
     hs_cur <- NULL
