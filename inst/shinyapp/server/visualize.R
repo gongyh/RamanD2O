@@ -158,7 +158,7 @@ observeEvent(input$plot_pca,
         nclusters <- isolate(input$num_clusters)
         colby <- isolate(input$select_pcaColBy)
         hs_cur <- hs$val[[isolate(input$hs_selector_for_export)]]
-        pca <- prcomp(~spc, data = hs_cur, center = FALSE)
+        pca <- prcomp(~spc, data = hs_cur@data, center = FALSE)
         scores <- pca$x
         rownames(scores) <- rownames(hs_cur$spc)
         HC <- hclust(dist(scores), method = "ward.D2")
