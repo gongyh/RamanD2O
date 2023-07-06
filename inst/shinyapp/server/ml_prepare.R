@@ -1,3 +1,15 @@
+ml_trim_num <- reactiveVal(1)
+ml_trim_min1 <- reactiveVal(0)
+ml_trim_max1 <- reactiveVal(4000)
+ml_trim_min2 <- reactiveVal(0)
+ml_trim_max2 <- reactiveVal(4000)
+ml_trim_min3 <- reactiveVal(0)
+ml_trim_max3 <- reactiveVal(4000)
+ml_trim_min4 <- reactiveVal(0)
+ml_trim_max4 <- reactiveVal(4000)
+ml_trim_min5 <- reactiveVal(0)
+ml_trim_max5 <- reactiveVal(4000)
+
 output$hs_select_for_ml_prepare <- renderUI({
   hs_all <- names(hs$val)
   selected <- NULL
@@ -11,19 +23,19 @@ output$hs_select_for_ml_prepare <- renderUI({
   selectInput("hs_selector_for_ml_prepare", "Choose target", choices = hs_all, selected = selected)
 })
 
-ml_trim_num <- reactiveVal(1)
-
-output$ml_trim_multi <- renderUI({
-  inputs <- lapply(1:ml_trim_num(), function(i) {
-    fluidRow(
-      column(2, numericInput(inputId = paste0("ml_trim_min", i), "Min", min = 0, max = 4000, step = 1, value = 400, width = "100%")),
-      column(8,
-             sliderInput(inputId = paste0("ml_trim_range", i), label = paste0("Selecting Wavelength Ranges: ", i), 
-                         min = 0, max = 4000, value = c(400, 3400), step = 1, dragRange = F, width = "100%")),
-      column(2, numericInput(inputId = paste0("ml_trim_max", i), "Max", min = 0, max = 4000, step = 1, value = 3400, width = "100%"))
-    )
+observeEvent(ml_trim_num(), {
+  output$ml_trim_multi <- renderUI({
+    inputs <- lapply(1:ml_trim_num(), function(i) {
+      fluidRow(
+        column(2, numericInput(inputId = paste0("ml_trim_min", i), "Min", min = 0, max = 4000, step = 1, value = eval(parse(text = paste0("ml_trim_min", i, "()"))), width = "100%")),
+        column(8,
+               sliderInput(inputId = paste0("ml_trim_range", i), label = paste0("Selecting Wavelength Ranges: ", i), 
+                           min = 0, max = 4000, value = c(eval(parse(text = paste0("ml_trim_min", i, "()"))), eval(parse(text = paste0("ml_trim_max", i, "()")))), step = 1, dragRange = F, width = "100%")),
+        column(2, numericInput(inputId = paste0("ml_trim_max", i), "Max", min = 0, max = 4000, step = 1, value = eval(parse(text = paste0("ml_trim_max", i, "()"))), width = "100%"))
+      )
+    })
+    # tagList(inputs)
   })
-  # tagList(inputs)
 })
 
 # reactivate trim range number and limit in 1-5
@@ -38,10 +50,14 @@ observeEvent(input$ml_minusButton, {
 lapply(1:5, function(i) {
   observeEvent(c(input[[paste0("ml_trim_min", i)]], input[[paste0("ml_trim_max", i)]]), {
     updateSliderInput(session, paste0("ml_trim_range", i), value = c(input[[paste0("ml_trim_min", i)]], input[[paste0("ml_trim_max", i)]]))
+    eval(parse(text = paste0("ml_trim_min", i, "(", input[[paste0("ml_trim_min", i)]], ")")))
+    eval(parse(text = paste0("ml_trim_max", i, "(", input[[paste0("ml_trim_max", i)]], ")")))
   })
   observeEvent(c(input[[paste0("ml_trim_range", i)]][1], input[[paste0("ml_trim_range", i)]][2]), {
     updateNumericInput(session, paste0("ml_trim_min", i), value = input[[paste0("ml_trim_range", i)]][1])
     updateNumericInput(session, paste0("ml_trim_max", i), value = input[[paste0("ml_trim_range", i)]][2])
+    eval(parse(text = paste0("ml_trim_min", i, "(", input[[paste0("ml_trim_min", i)]], ")")))
+    eval(parse(text = paste0("ml_trim_max", i, "(", input[[paste0("ml_trim_max", i)]], ")")))
   })
 })
 
