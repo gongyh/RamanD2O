@@ -11,7 +11,7 @@ tabItem(
         fluidRow(
           column(3, uiOutput("hs_select_for_ml_prepare")),
           column(3, selectInput("datatype_for_ml_prepare", "Data Type", choices = c("Train set","Eval set","Test set","Train&Eval"), selected = "Train&Eval")),
-          column(3, numericInput("train_pct", "Percent for training", 80, min = 50, max = 95, step = 1)),
+          column(3, numericInput("train_pct", "Percent of set", 80, min = 50, max = 95, step = 1)),
           column(2, withBusyIndicatorUI(actionButton("prepare", "Prepare datasets", class = "btn-success")), class = "top25")
         ),
         hr(),

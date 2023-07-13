@@ -23,6 +23,13 @@ output$hs_select_for_ml_prepare <- renderUI({
   selectInput("hs_selector_for_ml_prepare", "Choose target", choices = hs_all, selected = selected)
 })
 
+# different sets with different parameters
+observeEvent(input$datatype_for_ml_prepare, {
+  if (input$datatype_for_ml_prepare %in% c("Train set","Eval set","Test set")) {
+    updateNumericInput(session, "train_pct", label = "Percent of set (100)", value = 100, min = 100, max = 100)}
+  else {updateNumericInput(session, "train_pct", label = "Percent of set (50~95)", value = 80, min = 50, max = 95)}
+})
+
 observeEvent(ml_trim_num(), {
   output$ml_trim_multi <- renderUI({
     inputs <- lapply(1:ml_trim_num(), function(i) {
@@ -67,7 +74,11 @@ observeEvent(input$prepare, {
     if (isolate(input$hs_selector_for_ml_prepare) == "") {
       shinyalert("Oops!", "Please first load your spectra data.", type = "error")
       return()
-    } else {
+    }
+    else {
+      hs$val[["train"]] <- NULL
+      hs$val[["eval"]] <- NULL
+      hs$val[["test"]] <- NULL
       hs_cur <- hs$val[[isolate(input$hs_selector_for_ml_prepare)]]
       if (isolate(input$ml_trim)) {
         text_range <- NULL
@@ -85,8 +96,23 @@ observeEvent(input$prepare, {
       size <- floor(isolate(input$train_pct) / 100.0 * total)
       tindex <- isample(hs_cur)
       index <- tindex[1:max(size, 2)]
-      hs$val[["train"]] <- hs_cur[index]
-      hs$val[["eval"]] <- hs_cur[-index]
+      # Train&Eval set
+      if (isolate(input$datatype_for_ml_prepare) == "Train&Eval") {
+        hs$val[["train"]] <- hs_cur[index]
+        hs$val[["eval"]] <- hs_cur[-index]
+      }
+      # Train set
+      else if (isolate(input$datatype_for_ml_prepare) == "Train set") {
+        hs$val[["train"]] <- hs_cur[index]
+      }
+      # Eval set
+      else if (isolate(input$datatype_for_ml_prepare) == "Eval set") {
+        hs$val[["eval"]] <- hs_cur[index]
+      }
+      # Test set
+      else if (isolate(input$datatype_for_ml_prepare) == "Test set") {
+        hs$val[["test"]] <- hs_cur[index]
+      }
     }
   })
 })
@@ -104,14 +130,53 @@ observeEvent(hs$val[["train"]],
   ignoreNULL = FALSE
 )
 
-observeEvent(input$after_prepare_rows_selected,
-  {
-    output$after_prepare_plot <- renderPlotly({
-      validate(need(input$after_prepare_rows_selected, ""))
-      index <- input$after_prepare_rows_selected
-      item <- hs$val[["train"]][index]
-      p <- qplotspc(item) + xlab(TeX("\\Delta \\tilde{\\nu }/c{{m}^{-1}}")) + ylab("I / a.u.")
-      ggplotly(p) %>% config(mathjax = "cdn")
+observeEvent(hs$val[["train"]], {
+  if (!is.null(hs$val[["train"]])) {
+    hs_train <- hs$val[["train"]]
+    output$after_prepare <- renderDataTable({
+      DT::datatable(if (is.null(hs_train)) NULL else hs_train@data %>% select(!matches("spc")),
+                    escape = FALSE, selection = "single", extensions = list("Responsive", "Scroller"),
+                    options = list(searchHighlight = TRUE, scrollX = TRUE))
+    })
+  }
+}, ignoreNULL = FALSE
+)
+
+observeEvent(hs$val[["eval"]], {
+  if (!is.null(hs$val[["eval"]]) && is.null(hs$val[["train"]])) {
+    hs_eval <- hs$val[["eval"]]
+    output$after_prepare <- renderDataTable({
+      DT::datatable(if (is.null(hs_eval)) NULL else hs_eval@data %>% select(!matches("spc")),
+                    escape = FALSE, selection = "single", extensions = list("Responsive", "Scroller"),
+                    options = list(searchHighlight = TRUE, scrollX = TRUE))
+    })
+  }
+}, ignoreNULL = FALSE
+)
+
+observeEvent(hs$val[["test"]], {
+  if (!is.null(hs$val[["test"]])) {
+    hs_test <- hs$val[["test"]]
+    output$after_prepare <- renderDataTable({
+      DT::datatable(if (is.null(hs_test)) NULL else hs_test@data %>% select(!matches("spc")),
+                    escape = FALSE, selection = "single", extensions = list("Responsive", "Scroller"),
+                    options = list(searchHighlight = TRUE, scrollX = TRUE))
+    })
+  }
+}, ignoreNULL = FALSE
+)
+
+# plot
+observeEvent(input$after_prepare_rows_selected, {
+  if (!is.null(hs$val[["train"]])) {hs_plot <- hs$val[["train"]]}
+  else if (!is.null(hs$val[["eval"]])) {hs_plot <- hs$val[["eval"]]}
+  else if (!is.null(hs$val[["test"]])) {hs_plot <- hs$val[["test"]]}
+  output$after_prepare_plot <- renderPlotly({
+    validate(need(input$after_prepare_rows_selected, ""))
+    index <- input$after_prepare_rows_selected
+    item <- hs_plot[index]
+    p <- qplotspc(item) + xlab(TeX("\\Delta \\tilde{\\nu }/c{{m}^{-1}}")) + ylab("I / a.u.")
+    ggplotly(p) %>% config(mathjax = "cdn")
     })
   },
   ignoreNULL = FALSE

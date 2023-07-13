@@ -61,17 +61,20 @@ observeEvent(input$train,
       hs_train <- hs$val[[isolate(input$hs_selector_for_ml_train)]]
       xtest <- NULL
       ytest <- NULL
+      ytest_factor <- NULL
       eval <- isolate(input$hs_selector_for_ml_eval)
       if (!is.null(eval) && (eval != "_")) {
         xtest <- hs$val[[isolate(input$hs_selector_for_ml_eval)]]
         ytest <- xtest@data[isolate(input$ml_select_label)]
         ytrain <- hs_train@data[isolate(input$ml_select_label)]
+        ytrain_factor <- factor(ytrain[, 1])
+        ytest_factor <- factor(as.character(ytest[, 1]),levels=levels(ytrain_factor))
       }
+      ytrain <- hs_train@data[isolate(input$ml_select_label)]
       ytrain_factor <- factor(ytrain[, 1])
-      ytest_factor <- factor(as.character(ytest[, 1]),levels=levels(ytrain_factor))
       rf <- randomForest(
         x = hs_train$spc, y = ytrain_factor, xtest = xtest$spc, ytest = ytest_factor,
-        ntree = isolate(input$rf_ntree), replace = isolate(input$rf_replace), norm.votes = TRUE
+        ntree = isolate(input$rf_ntree), replace = isolate(input$rf_replace), norm.votes = TRUE, keep.forest = TRUE
       )
       ml$results <- rf
       output$rf_test_predicted_plot <- renderDataTable({
@@ -90,6 +93,65 @@ observeEvent(input$train,
   ignoreNULL = T
 )
 
+observeEvent(input$eval,
+  {
+    withBusyIndicatorServer("eval", {
+      validate(need(isolate(input$hs_selector_for_ml_eval), ""))
+      if (is.null(ml$results)) {
+        toastr_error("Please train the model first!", position = "top-center")
+        return()
+      }
+      eval <- isolate(input$hs_selector_for_ml_eval)
+      if (!is.null(eval) && (eval != "_")) {
+        hs_eval <- hs$val[[isolate(input$hs_selector_for_ml_eval)]]
+        eval_predict <- predict(ml$results, hs_eval$spc)
+      } else {
+        toastr_error("Eval set not selected!", position = "top-center")
+        return()
+      }
+      output$rf_test_predicted_plot <- renderDataTable({
+        df <- data.frame(real = hs_eval@data[isolate(input$ml_select_label)][, 1], predicted = eval_predict)
+        rownames(df) <- names(eval_predict)
+        DT::datatable(df,
+          escape = FALSE, selection = "single", extensions = list("Responsive", "Scroller"),
+          options = list(deferRender = T, searchHighlight = T, scrollX = T)
+        )
+      })
+    })
+  },
+  ignoreNULL = T
+)
+
+observeEvent(input$test,
+  {
+    withBusyIndicatorServer("test", {
+      validate(need(isolate(input$hs_selector_for_ml_test), ""))
+      if (is.null(ml$results)) {
+        toastr_error("Please train the model first!", position = "top-center")
+        return()
+      }
+      test <- isolate(input$hs_selector_for_ml_test)
+      if (!is.null(test) && (test != "_")) {
+        hs_test <- hs$val[[isolate(input$hs_selector_for_ml_test)]]
+        test_predict <- predict(ml$results, hs_test$spc)
+      } else {
+        toastr_error("Test set not selected!", position = "top-center")
+        return()
+      }
+      output$rf_test_predicted_plot <- renderDataTable({
+        df <- data.frame(predicted = test_predict)
+        rownames(df) <- names(test_predict)
+        DT::datatable(df,
+          escape = FALSE, selection = "single", extensions = list("Responsive", "Scroller"),
+          options = list(deferRender = T, searchHighlight = T, scrollX = T)
+        )
+      })
+    })
+  },
+  ignoreNULL = T
+)
+
+# training model plot
 observeEvent(ml$results,
   {
     rf <- ml$results
@@ -134,4 +196,29 @@ observeEvent(input$rf_test_predicted_plot_rows_selected,
     })
   },
   ignoreNULL = FALSE
+)
+
+# upload and download training model
+observeEvent(input$upload_model, {
+  withBusyIndicatorServer("upload_model", {
+    if (!is.null(isolate(input$upload_model_file$datapath))) {
+      ml$results <- readRDS(isolate(input$upload_model_file$datapath))
+      if (is.null(ml$results$call) | is.null(ml$results$predicted) | is.null(ml$results$importance)) {
+        toastr_error("Please load valid model!", position = "top-center")
+        return()
+      }
+    } else {
+      toastr_error("No file selected!", position = "top-center")
+    }
+  })
+})
+
+output$download_model <- downloadHandler(
+  filename = paste0("model-", format(Sys.time(), "%Y%m%d%H%M%S"), ".rds"), 
+  content = function(file) {
+    if (is.null(ml$results)) {
+      shinyalert("Oops!", "Please train the model first.", type = "error")
+      return()
+    } else {saveRDS(ml$results, file)}
+  }
 )

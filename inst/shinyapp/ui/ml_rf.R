@@ -19,10 +19,17 @@ tabItem(
           column(3, numericInput("rf_ntree", "Number of trees", 100, min = 1, step = 1)),
           column(3, checkboxInput("rf_replace", "Replacement", value = TRUE), class = "top25")
         ),
+        hr(),
         fluidRow(
-          column(3, withBusyIndicatorUI(actionButton("train", "Train & Eval", class = "btn-success")), class = "top25"),
-          column(3, withBusyIndicatorUI(actionButton("eval", "Eval", class = "btn-success")), class = "top25"),
-          column(3, withBusyIndicatorUI(actionButton("test", "Test", class = "btn-success")), class = "top25")
+          column(3, withBusyIndicatorUI(actionButton("train", "Train & Eval", class = "btn-success"))),
+          column(3, withBusyIndicatorUI(actionButton("eval", "Eval", class = "btn-success"))),
+          column(3, withBusyIndicatorUI(actionButton("test", "Test", class = "btn-success")))
+        ),
+        hr(),
+        fluidRow(
+          column(5, fileInput("upload_model_file", "Upload Existing Model", accept = ".rds", placeholder = "model.rds")),
+          column(3, withBusyIndicatorUI(actionButton("upload_model", "Upload", class = "btn-success")), class = "top25"),
+          column(3, withBusyIndicatorUI(downloadButton("download_model", "Download", class = "btn-success")), class = "top25")
         )
       )
     ),
