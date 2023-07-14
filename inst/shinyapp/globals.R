@@ -53,5 +53,3 @@ mongo_connection <- reactiveValues(obj = NULL)
 dbstats <- reactiveValues(projects = NULL)
 
 ml <- reactiveValues(results = NULL)
-
-result <- reactiveValues(predict = NULL, prepare = NULL)
