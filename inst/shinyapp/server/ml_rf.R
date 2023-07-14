@@ -83,6 +83,7 @@ observeEvent(input$train,
         df <- data.frame(real = ytest[, 1], predicted = rf$test$predicted)
         rownames(df) <- names(rf$test$predicted)
         df <- cbind(df, rf$test$votes)
+        result$predict <- df
         DT::datatable(df,
           escape = FALSE, selection = "single", extensions = list("Responsive", "Scroller"),
           options = list(deferRender = T, searchHighlight = T, scrollX = T)
@@ -104,14 +105,30 @@ observeEvent(input$eval,
       eval <- isolate(input$hs_selector_for_ml_eval)
       if (!is.null(eval) && (eval != "_")) {
         hs_eval <- hs$val[[isolate(input$hs_selector_for_ml_eval)]]
-        eval_predict <- predict(ml$results, hs_eval$spc)
+        if (identical(names(ml$results$importance[,]), colnames(hs_eval$spc))) {
+          result_predict <- predict(ml$results, hs_eval$spc)
+          cur_levels <- levels(hs_eval@data[isolate(input$ml_select_label)][,1])
+          factor_predict <- factor(result_predict, levels = cur_levels)
+          result_confusion <- table(factor_predict, hs_eval@data[isolate(input$ml_select_label)][,1])
+          result_confusion <- as.data.frame.matrix(result_confusion)
+        } else {
+          toastr_error("Inconsistent spectra of the data set and model.", position = "top-center")
+          return()
+        }
       } else {
         toastr_error("Eval set not selected!", position = "top-center")
         return()
       }
+      output$rf_confusion_eval_plot <- renderDataTable({
+        DT::datatable(result_confusion,
+          escape = FALSE, selection = "single", extensions = list("Responsive", "Scroller"),
+          options = list(deferRender = T, searchHighlight = T, scrollX = T)
+        )
+      })
       output$rf_test_predicted_plot <- renderDataTable({
-        df <- data.frame(real = hs_eval@data[isolate(input$ml_select_label)][, 1], predicted = eval_predict)
-        rownames(df) <- names(eval_predict)
+        df <- data.frame(real = hs_eval@data[isolate(input$ml_select_label)][, 1], predicted = result_predict)
+        rownames(df) <- names(result_predict)
+        result$predict <- df
         DT::datatable(df,
           escape = FALSE, selection = "single", extensions = list("Responsive", "Scroller"),
           options = list(deferRender = T, searchHighlight = T, scrollX = T)
@@ -133,14 +150,30 @@ observeEvent(input$test,
       test <- isolate(input$hs_selector_for_ml_test)
       if (!is.null(test) && (test != "_")) {
         hs_test <- hs$val[[isolate(input$hs_selector_for_ml_test)]]
-        test_predict <- predict(ml$results, hs_test$spc)
+        if (identical(names(ml$results$importance[,]), colnames(hs_test$spc))) {
+          result_predict <- predict(ml$results, hs_test$spc)
+          cur_levels <- levels(hs_test@data[isolate(input$ml_select_label)][,1])
+          factor_predict <- factor(result_predict, levels = cur_levels)
+          result_confusion <- table(factor_predict, hs_test@data[isolate(input$ml_select_label)][,1])
+          result_confusion <- as.data.frame.matrix(result_confusion)
+        } else {
+          toastr_error("Inconsistent spectra of the data set and model.", position = "top-center")
+          return()
+        }
       } else {
         toastr_error("Test set not selected!", position = "top-center")
         return()
       }
+      output$rf_confusion_eval_plot <- renderDataTable({
+        DT::datatable(result_confusion,
+          escape = FALSE, selection = "single", extensions = list("Responsive", "Scroller"),
+          options = list(deferRender = T, searchHighlight = T, scrollX = T)
+        )
+      })
       output$rf_test_predicted_plot <- renderDataTable({
-        df <- data.frame(predicted = test_predict)
-        rownames(df) <- names(test_predict)
+        df <- data.frame(predicted = result_predict)
+        rownames(df) <- names(result_predict)
+        result$predict <- df
         DT::datatable(df,
           escape = FALSE, selection = "single", extensions = list("Responsive", "Scroller"),
           options = list(deferRender = T, searchHighlight = T, scrollX = T)
@@ -220,5 +253,15 @@ output$download_model <- downloadHandler(
       shinyalert("Oops!", "Please train the model first.", type = "error")
       return()
     } else {saveRDS(ml$results, file)}
+  }
+)
+
+output$download_result <- downloadHandler(
+  filename = paste0("predict-", format(Sys.time(), "%Y%m%d%H%M%S"), ".csv"), 
+  content = function(file) {
+    if (is.null(result$predict)) {
+      shinyalert("Oops!", "No results yet.", type = "error")
+      return()
+    } else {write.csv(result$predict, file)}
   }
 )

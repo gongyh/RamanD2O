@@ -100,28 +100,33 @@ observeEvent(input$prepare, {
       if (isolate(input$datatype_for_ml_prepare) == "Train&Eval") {
         hs$val[["train"]] <- hs_cur[index]
         hs$val[["eval"]] <- hs_cur[-index]
+        result$prepare <- hs$val[["train"]]
       }
       # Train set
       else if (isolate(input$datatype_for_ml_prepare) == "Train set") {
         hs$val[["train"]] <- hs_cur[index]
+        result$prepare <- hs$val[["train"]]
       }
       # Eval set
       else if (isolate(input$datatype_for_ml_prepare) == "Eval set") {
         hs$val[["eval"]] <- hs_cur[index]
+        result$prepare <- hs$val[["eval"]]
       }
       # Test set
       else if (isolate(input$datatype_for_ml_prepare) == "Test set") {
         hs$val[["test"]] <- hs_cur[index]
+        result$prepare <- hs$val[["test"]]
       }
     }
   })
 })
 
-observeEvent(hs$val[["train"]],
+# show data set
+observeEvent(result$prepare,
   {
-    hs_train <- hs$val[["train"]]
+    hs_prepare <- result$prepare
     output$after_prepare <- renderDataTable({
-      DT::datatable(if (is.null(hs_train)) NULL else hs_train@data %>% select(!matches("spc")),
+      DT::datatable(if (is.null(hs_prepare)) NULL else hs_prepare@data %>% select(!matches("spc")),
         escape = FALSE, selection = "single", extensions = list("Responsive", "Scroller"),
         options = list(searchHighlight = TRUE, scrollX = TRUE)
       )
@@ -130,51 +135,12 @@ observeEvent(hs$val[["train"]],
   ignoreNULL = FALSE
 )
 
-observeEvent(hs$val[["train"]], {
-  if (!is.null(hs$val[["train"]])) {
-    hs_train <- hs$val[["train"]]
-    output$after_prepare <- renderDataTable({
-      DT::datatable(if (is.null(hs_train)) NULL else hs_train@data %>% select(!matches("spc")),
-                    escape = FALSE, selection = "single", extensions = list("Responsive", "Scroller"),
-                    options = list(searchHighlight = TRUE, scrollX = TRUE))
-    })
-  }
-}, ignoreNULL = FALSE
-)
-
-observeEvent(hs$val[["eval"]], {
-  if (!is.null(hs$val[["eval"]]) && is.null(hs$val[["train"]])) {
-    hs_eval <- hs$val[["eval"]]
-    output$after_prepare <- renderDataTable({
-      DT::datatable(if (is.null(hs_eval)) NULL else hs_eval@data %>% select(!matches("spc")),
-                    escape = FALSE, selection = "single", extensions = list("Responsive", "Scroller"),
-                    options = list(searchHighlight = TRUE, scrollX = TRUE))
-    })
-  }
-}, ignoreNULL = FALSE
-)
-
-observeEvent(hs$val[["test"]], {
-  if (!is.null(hs$val[["test"]])) {
-    hs_test <- hs$val[["test"]]
-    output$after_prepare <- renderDataTable({
-      DT::datatable(if (is.null(hs_test)) NULL else hs_test@data %>% select(!matches("spc")),
-                    escape = FALSE, selection = "single", extensions = list("Responsive", "Scroller"),
-                    options = list(searchHighlight = TRUE, scrollX = TRUE))
-    })
-  }
-}, ignoreNULL = FALSE
-)
-
-# plot
 observeEvent(input$after_prepare_rows_selected, {
-  if (!is.null(hs$val[["train"]])) {hs_plot <- hs$val[["train"]]}
-  else if (!is.null(hs$val[["eval"]])) {hs_plot <- hs$val[["eval"]]}
-  else if (!is.null(hs$val[["test"]])) {hs_plot <- hs$val[["test"]]}
+  if (!is.null(result$prepare)) {hs_prepare_plot <- result$prepare}
   output$after_prepare_plot <- renderPlotly({
     validate(need(input$after_prepare_rows_selected, ""))
     index <- input$after_prepare_rows_selected
-    item <- hs_plot[index]
+    item <- hs_prepare_plot[index]
     p <- qplotspc(item) + xlab(TeX("\\Delta \\tilde{\\nu }/c{{m}^{-1}}")) + ylab("I / a.u.")
     ggplotly(p) %>% config(mathjax = "cdn")
     })
