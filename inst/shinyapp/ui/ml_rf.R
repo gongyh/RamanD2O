@@ -27,9 +27,10 @@ tabItem(
         ),
         hr(),
         fluidRow(
-          column(5, fileInput("upload_model_file", "Upload Existing Model", accept = ".rds", placeholder = "model.rds")),
-          column(3, withBusyIndicatorUI(actionButton("upload_model", "Upload", class = "btn-success")), class = "top25"),
-          column(3, withBusyIndicatorUI(downloadButton("download_model", "Download", class = "btn-success")), class = "top25")
+          column(4, fileInput("upload_model_file", "Select Existing Model", accept = ".rds", placeholder = "model.rds")),
+          column(2, withBusyIndicatorUI(actionButton("upload_model", "Upload Model", class = "btn-success")), class = "top25"),
+          column(3, withBusyIndicatorUI(downloadButton("download_model", "Download Model", class = "btn-success")), class = "top25"),
+          column(3, withBusyIndicatorUI(downloadButton("download_result", "Download Result", class = "btn-success")), class = "top25")
         )
       )
     ),
@@ -67,12 +68,12 @@ tabItem(
             DTOutput("rf_confusion_oob_plot") %>% withSpinner()
           ),
           tabPanel(
-            "Confusion (Evaluation)",
+            "Confusion (Eval/Test)",
             br(),
             DTOutput("rf_confusion_eval_plot") %>% withSpinner()
           ),
           tabPanel(
-            "Evaluation results",
+            "Eval/Test results",
             br(),
             DTOutput("rf_test_predicted_plot") %>% withSpinner()
           )
