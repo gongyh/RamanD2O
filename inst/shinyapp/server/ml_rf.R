@@ -160,7 +160,6 @@ observeEvent(input$test,
         toastr_error("Test set not selected!", position = "top-center")
         return()
       }
-      output$rf_confusion_eval_plot <- NULL
       output$rf_test_predicted_plot <- renderDataTable({
         df <- data.frame(predicted = result_predict)
         rownames(df) <- names(result_predict)

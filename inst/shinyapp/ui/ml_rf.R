@@ -55,31 +55,36 @@ tabItem(
             "Error rates",
             br(),
             plotOutput("rf_mse_plot") %>% withSpinner(),
-            downloadButton("download_result1", "Download")
+            tags$div(style = "text-align: right; margin-right: 20px;",
+              downloadButton("download_result1", "Download", class = "btn-primary"))
           ),
           tabPanel(
             "Importance",
             br(),
             plotOutput("rf_importance_plot") %>% withSpinner(),
-            downloadButton("download_result2", "Download")
+            tags$div(style = "text-align: right; margin-right: 20px;",
+              downloadButton("download_result2", "Download", class = "btn-primary"))
           ),
           tabPanel(
             "Confusion (OOB)",
             br(),
             DTOutput("rf_confusion_oob_plot") %>% withSpinner(),
-            downloadButton("download_result3", "Download")
+            tags$div(style = "text-align: right; margin-right: 20px; margin-top: 20px;",
+              downloadButton("download_result3", "Download", class = "btn-primary"))
           ),
           tabPanel(
-            "Confusion (Eval/Test)",
+            "Confusion (Evaluation)",
             br(),
             DTOutput("rf_confusion_eval_plot") %>% withSpinner(),
-            downloadButton("download_result4", "Download")
+            tags$div(style = "text-align: right; margin-right: 20px; margin-top: 20px;",
+              downloadButton("download_result4", "Download", class = "btn-primary"))
           ),
           tabPanel(
             "Eval/Test results",
             br(),
             DTOutput("rf_test_predicted_plot") %>% withSpinner(),
-            downloadButton("download_result5", "Download")
+            tags$div(style = "text-align: right; margin-right: 20px; margin-top: 20px;",
+              downloadButton("download_result5", "Download", class = "btn-primary"))
           )
         )
       )
