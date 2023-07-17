@@ -109,8 +109,10 @@ observeEvent(input$eval,
           result_predict <- predict(ml$results, hs_eval$spc)
           cur_levels <- levels(hs_eval@data[isolate(input$ml_select_label)][,1])
           factor_predict <- factor(result_predict, levels = cur_levels)
-          result_confusion <- table(factor_predict, hs_eval@data[isolate(input$ml_select_label)][,1])
-          result_confusion <- as.data.frame.matrix(result_confusion)
+          result_confusion_raw <- confusionMatrix(hs_eval@data[isolate(input$ml_select_label)][,1], factor_predict)
+          class.error <- (1-result_confusion_raw$byClass[,3])
+          result_confusion <- cbind(result_confusion_raw$table, class.error)
+          result_confusion <- data.frame(result_confusion)
         } else {
           toastr_error("Inconsistent spectra of the data set and model.", position = "top-center")
           return()
@@ -123,7 +125,7 @@ observeEvent(input$eval,
         DT::datatable(result_confusion,
           escape = FALSE, selection = "single", extensions = list("Responsive", "Scroller"),
           options = list(deferRender = T, searchHighlight = T, scrollX = T)
-        )
+        ) %>% formatPercentage(c("class.error"), 4)
       })
       output$rf_test_predicted_plot <- renderDataTable({
         df <- data.frame(real = hs_eval@data[isolate(input$ml_select_label)][, 1], predicted = result_predict)
@@ -152,10 +154,6 @@ observeEvent(input$test,
         hs_test <- hs$val[[isolate(input$hs_selector_for_ml_test)]]
         if (identical(names(ml$results$importance[,]), colnames(hs_test$spc))) {
           result_predict <- predict(ml$results, hs_test$spc)
-          cur_levels <- levels(hs_test@data[isolate(input$ml_select_label)][,1])
-          factor_predict <- factor(result_predict, levels = cur_levels)
-          result_confusion <- table(factor_predict, hs_test@data[isolate(input$ml_select_label)][,1])
-          result_confusion <- as.data.frame.matrix(result_confusion)
         } else {
           toastr_error("Inconsistent spectra of the data set and model.", position = "top-center")
           return()
@@ -164,12 +162,7 @@ observeEvent(input$test,
         toastr_error("Test set not selected!", position = "top-center")
         return()
       }
-      output$rf_confusion_eval_plot <- renderDataTable({
-        DT::datatable(result_confusion,
-          escape = FALSE, selection = "single", extensions = list("Responsive", "Scroller"),
-          options = list(deferRender = T, searchHighlight = T, scrollX = T)
-        )
-      })
+      output$rf_confusion_eval_plot <- NULL
       output$rf_test_predicted_plot <- renderDataTable({
         df <- data.frame(predicted = result_predict)
         rownames(df) <- names(result_predict)
@@ -256,12 +249,67 @@ output$download_model <- downloadHandler(
   }
 )
 
-output$download_result <- downloadHandler(
-  filename = paste0("predict-", format(Sys.time(), "%Y%m%d%H%M%S"), ".csv"), 
+output$download_result1 <- downloadHandler(
+  filename = paste0("result1-", format(Sys.time(), "%Y%m%d%H%M%S"), ".pdf"), 
+  content = function(file) {
+    if (is.null(ml$results)) {
+      shinyalert("Oops!", "No result yet.", type = "error")
+      return()
+    } else {
+      pdf(file)
+      plot(ml$results)
+      dev.off()}
+  }
+)
+
+output$download_result2 <- downloadHandler(
+  filename = paste0("result2-", format(Sys.time(), "%Y%m%d%H%M%S"), ".png"), 
+  content = function(file) {
+    if (is.null(ml$results)) {
+      shinyalert("Oops!", "No result yet.", type = "error")
+      return()
+    } else {
+      png(file)
+      plot(
+        x = rownames(ml$results$importance), y = ml$results$importance, type = "h",
+        xlab = "Wavelength", ylab = "Importance"
+      )
+      dev.off()
+    }
+  }
+)
+
+output$download_result3 <- downloadHandler(
+  filename = paste0("result3-", format(Sys.time(), "%Y%m%d%H%M%S"), ".csv"), 
+  content = function(file) {
+    if (is.null(ml$results$confusion)) {
+      shinyalert("Oops!", "No result yet.", type = "error")
+      return()
+    } else {write.csv(ml$results$confusion, file)}
+  }
+)
+
+output$download_result4 <- downloadHandler(
+  filename = paste0("result4-", format(Sys.time(), "%Y%m%d%H%M%S"), ".csv"), 
+  content = function(file) {
+    if (!is.null(result$confusion)) {
+      write.csv(result$confusion, file)
+    } else if (!is.null(ml$results$test$confusion)) {
+      write.csv(ml$results$test$confusion, file)
+    } else {
+      shinyalert("Oops!", "No result yet.", type = "error")
+      return()
+    }
+  }
+)
+
+output$download_result5 <- downloadHandler(
+  filename = paste0("result5-", format(Sys.time(), "%Y%m%d%H%M%S"), ".csv"), 
   content = function(file) {
     if (is.null(result$predict)) {
-      shinyalert("Oops!", "No results yet.", type = "error")
+      shinyalert("Oops!", "No result yet.", type = "error")
       return()
     } else {write.csv(result$predict, file)}
   }
 )
+

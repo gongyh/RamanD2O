@@ -29,8 +29,7 @@ tabItem(
         fluidRow(
           column(4, fileInput("upload_model_file", "Select Existing Model", accept = ".rds", placeholder = "model.rds")),
           column(2, withBusyIndicatorUI(actionButton("upload_model", "Upload Model", class = "btn-success")), class = "top25"),
-          column(3, withBusyIndicatorUI(downloadButton("download_model", "Download Model", class = "btn-success")), class = "top25"),
-          column(3, withBusyIndicatorUI(downloadButton("download_result", "Download Result", class = "btn-success")), class = "top25")
+          column(3, withBusyIndicatorUI(downloadButton("download_model", "Download Model", class = "btn-success")), class = "top25")
         )
       )
     ),
@@ -55,27 +54,32 @@ tabItem(
           tabPanel(
             "Error rates",
             br(),
-            plotOutput("rf_mse_plot") %>% withSpinner()
+            plotOutput("rf_mse_plot") %>% withSpinner(),
+            downloadButton("download_result1", "Download")
           ),
           tabPanel(
             "Importance",
             br(),
-            plotOutput("rf_importance_plot") %>% withSpinner()
+            plotOutput("rf_importance_plot") %>% withSpinner(),
+            downloadButton("download_result2", "Download")
           ),
           tabPanel(
             "Confusion (OOB)",
             br(),
-            DTOutput("rf_confusion_oob_plot") %>% withSpinner()
+            DTOutput("rf_confusion_oob_plot") %>% withSpinner(),
+            downloadButton("download_result3", "Download")
           ),
           tabPanel(
             "Confusion (Eval/Test)",
             br(),
-            DTOutput("rf_confusion_eval_plot") %>% withSpinner()
+            DTOutput("rf_confusion_eval_plot") %>% withSpinner(),
+            downloadButton("download_result4", "Download")
           ),
           tabPanel(
             "Eval/Test results",
             br(),
-            DTOutput("rf_test_predicted_plot") %>% withSpinner()
+            DTOutput("rf_test_predicted_plot") %>% withSpinner(),
+            downloadButton("download_result5", "Download")
           )
         )
       )
