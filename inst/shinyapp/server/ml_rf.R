@@ -68,7 +68,7 @@ observeEvent(input$train,
         ytest <- xtest@data[isolate(input$ml_select_label)]
         ytrain <- hs_train@data[isolate(input$ml_select_label)]
         ytrain_factor <- factor(ytrain[, 1])
-        ytest_factor <- factor(as.character(ytest[, 1]),levels=levels(ytrain_factor))
+        ytest_factor <- factor(as.character(ytest[, 1]), levels=levels(ytrain_factor))
       }
       ytrain <- hs_train@data[isolate(input$ml_select_label)]
       ytrain_factor <- factor(ytrain[, 1])
@@ -107,9 +107,7 @@ observeEvent(input$eval,
         hs_eval <- hs$val[[isolate(input$hs_selector_for_ml_eval)]]
         if (identical(names(ml$results$importance[,]), colnames(hs_eval$spc))) {
           result_predict <- predict(ml$results, hs_eval$spc)
-          cur_levels <- levels(hs_eval@data[isolate(input$ml_select_label)][,1])
-          factor_predict <- factor(result_predict, levels = cur_levels)
-          result_confusion_raw <- confusionMatrix(hs_eval@data[isolate(input$ml_select_label)][,1], factor_predict)
+          result_confusion_raw <- confusionMatrix(hs_eval@data[isolate(input$ml_select_label)][,1], result_predict)
           class.error <- (1-result_confusion_raw$byClass[,3])
           result_confusion <- cbind(result_confusion_raw$table, class.error)
           result_confusion <- data.frame(result_confusion)
