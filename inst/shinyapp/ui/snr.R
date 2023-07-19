@@ -2,6 +2,7 @@
 tabItem(
   tabName = "snr",
   h2("SNR"),
+  br(),
   fluidRow(
     box(
       title = "Settings", status = "info", solidHeader = TRUE, collapsible = FALSE,
