@@ -31,10 +31,12 @@ observeEvent(input$average, {
   withBusyIndicatorServer("average", {
     hs_cur <- hs$val[[isolate(input$hs_selector_for_average)]]
     average_label <- isolate(input$average_select_label)
-    hs_cur <- aggregate(hs_cur, hs_cur@data[average_label][,1], FUN = mean)
-    row.names(hs_cur@data) <- 1:nrow(hs_cur@data)
-    if (any(is.na(hs_cur@data$ID_Cell))) {hs_cur@data$ID_Cell <- 1:nrow(hs_cur@data)}
-    hs$val[["average"]] <- hs_cur
+    hs_avr <- aggregate(hs_cur, hs_cur@data[average_label][,1], FUN = mean)
+    groupBy <- hs_avr@data[average_label][,1]
+    row.names(hs_avr@data) <- groupBy
+    hs_avr@data$ID_Cell <- groupBy
+    row.names(hs_avr$spc) <- groupBy
+    hs$val[["average"]] <- hs_avr
   })
 })
 
