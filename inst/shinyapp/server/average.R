@@ -32,7 +32,7 @@ observeEvent(input$average, {
     hs_cur <- hs$val[[isolate(input$hs_selector_for_average)]]
     average_label <- isolate(input$average_select_label)
     hs_avr <- aggregate(hs_cur, hs_cur@data[average_label][,1], FUN = mean)
-    groupBy <- hs_avr@data[average_label][,1]
+    groupBy <- hs_avr$.aggregate
     row.names(hs_avr@data) <- groupBy
     hs_avr@data$ID_Cell <- groupBy
     row.names(hs_avr$spc) <- groupBy
