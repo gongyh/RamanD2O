@@ -24,7 +24,7 @@ output$download <- downloadHandler(
   content = function(file) {
     data <- hs$val[[isolate(input$hs_selector_for_export)]]
     if (isolate(input$select_type == "csv")) {
-      write.csv(data@data, file)
+      write.csv(data@data, file, quote=F, row.names=F)
     } else if (isolate(input$select_type == "zip")) {
       setwd(tempdir())
       zip_dir <- isolate(input$hs_selector_for_export)
