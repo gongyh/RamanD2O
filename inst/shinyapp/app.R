@@ -47,6 +47,11 @@ ui <- dashboardPage(
         menuItem("Random forest", tabName = "rf", icon = icon("tree")),
         tabName = "ml", icon = icon("robot"), startExpanded = T
       ),
+      menuItem("Integration analysis",
+               menuItem("Integrate", tabName = "integrate", icon = icon("share-nodes")),
+               menuItem("Integrate2", tabName = "integrate2", icon = icon("vials")),
+               tabName = "ig", icon = icon("shuffle"), startExpanded = T
+      ),
       menuItem("SessionInfo", tabName = "info", icon = icon("circle-info")),
 
       div(
@@ -90,6 +95,7 @@ ui <- dashboardPage(
       source(file.path("ui", "ml_prepare.R"), local = TRUE)$value,
       source(file.path("ui", "ml_explore.R"), local = TRUE)$value,
       source(file.path("ui", "ml_rf.R"), local = TRUE)$value,
+      source(file.path("ui", "integrate.R"), local = TRUE)$value,
       source(file.path("ui", "info.R"), local = TRUE)$value
     )
   ),
@@ -142,6 +148,7 @@ server <- function(input, output, session) {
   source(file.path("server", "ml_prepare.R"), local = TRUE)$value
   source(file.path("server", "ml_explore.R"), local = TRUE)$value
   source(file.path("server", "ml_rf.R"), local = TRUE)$value
+  source(file.path("server", "integrate.R"), local = TRUE)$value
   source(file.path("server", "info.R"), local = TRUE)$value
 }
 
