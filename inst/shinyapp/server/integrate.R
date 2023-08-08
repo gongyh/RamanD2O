@@ -52,10 +52,12 @@ observeEvent(input$upload_Y, {
   })
 })
 
-observeEvent(input$integrate,
-  {
-  }
-)
+observeEvent(input$crossval,{
+  withBusyIndicatorServer("crossval",{
+    ig$crossval <- crossval_o2m(ig$upload_X, ig$upload_Y, 1:isolate(input$pars_N_max),
+      0:isolate(input$pars_Nx_max), 0:isolate(input$pars_Ny_max), nr_folds=6, nr_cores=5)
+  })
+})
 
 
 # prepare training datasets for scrs on click of button

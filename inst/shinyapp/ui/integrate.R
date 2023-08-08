@@ -9,7 +9,7 @@ tabItem(
       column(
         12,
         fluidRow(
-          column(6, radioButtons("ig_choice", label = "Choose X dataset source:", choices = c("Use existing dataset (a)", "Upload new dataset (b)"),
+          column(12, radioButtons("ig_choice", label = "Choose X dataset source:", choices = c("Use existing dataset (a)", "Upload new dataset (b)"),
             selected = "Use existing dataset (a)", inline = TRUE))
         ),
         fluidRow(
@@ -23,11 +23,11 @@ tabItem(
           column(2, withBusyIndicatorUI(actionButton("upload_Y", "Upload", class = "btn-success")), class = "top25")
         ),
         fluidRow(
-          column(2, numericInput("pars_1", "p1", 10, min = 1, step = 1)),
-          column(2, numericInput("pars_2", "p2", 10, min = 1, step = 1)),
-          column(2, numericInput("pars_3", "p3", 10, min = 1, step = 1)),
+          column(2, numericInput("pars_N_max", "N_max", 10, min = 1, step = 1)),
+          column(2, numericInput("pars_Nx_max", "Nx_max", 5, min = 1, step = 1)),
+          column(2, numericInput("pars_Ny_max", "Ny_max", 5, min = 1, step = 1)),
           column(2, numericInput("pars_4", "p4", 10, min = 1, step = 1)),
-          column(3, withBusyIndicatorUI(actionButton("integrate", "Integrate", class = "btn-success")))
+          column(3, withBusyIndicatorUI(actionButton("crossval", "Crossval", class = "btn-success")), class = "top25")
         ),
         h4("Parameters for Integration analysis:"),
         fluidRow(
@@ -35,7 +35,7 @@ tabItem(
           column(2, numericInput("pars_Nx", "Nx", 10, min = 1, step = 1)),
           column(2, numericInput("pars_Ny", "Ny", 10, min = 1, step = 1)),
           column(2, numericInput("pars_top", "top", 10, min = 1, step = 1)),
-          column(3, withBusyIndicatorUI(actionButton("integrate", "Integrate", class = "btn-success")))
+          column(3, withBusyIndicatorUI(actionButton("integrate", "Integrate", class = "btn-success")), class = "top25")
         )
       )
     ),
@@ -96,7 +96,7 @@ tabItem(
       )
     ),
     box(
-      title = "aRaman spectra", status = "warning", solidHeader = TRUE, collapsible = FALSE,
+      title = "Raman spectra", status = "warning", solidHeader = TRUE, collapsible = FALSE,
       plotlyOutput("aselected_predicted_plot") %>% withSpinner()
     )
   )
