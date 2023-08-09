@@ -52,19 +52,49 @@ observeEvent(input$upload_Y, {
   })
 })
 
+observeEvent(input$cvadjr, {
+  withBusyIndicatorServer("cvadjr", {
+    ig$cvadjr <- crossval_o2m_adjR2(ig$upload_X, ig$upload_Y, 1:isolate(input$pars_N_max1),
+      0:isolate(input$pars_Nx_max1), 0:isolate(input$pars_Ny_max1), nr_folds=2, nr_cores=1)
+  })
+},
+ignoreNULL = T
+)
+
 observeEvent(input$crossval,{
   withBusyIndicatorServer("crossval",{
-    ig$crossval <- crossval_o2m(ig$upload_X, ig$upload_Y, 1:isolate(input$pars_N_max),
-      0:isolate(input$pars_Nx_max), 0:isolate(input$pars_Ny_max), nr_folds=6, nr_cores=5)
+    ig$crossval <- crossval_o2m(ig$upload_X, ig$upload_Y, 1:isolate(input$pars_N_max2),
+      0:isolate(input$pars_Nx_max2), 0:isolate(input$pars_Ny_max2), nr_folds=isolate(input$pars_fold), nr_cores=5)
+    index <- which(ig$crossval$Original == min(ig$crossval$Original, na.rm = T), arr.ind = TRUE)
+    Nx <- dimnames(ig$crossval$Original)[[1]][index[1]]
+    Ny <- dimnames(ig$crossval$Original)[[2]][index[2]]
+    N <- dimnames(ig$crossval$Original)[[3]][index[3]]
+    Nx <- as.numeric(str_extract(Nx, "(?<=ax=)\\d+"))
+    Ny <- as.numeric(str_extract(Ny, "(?<=ay=)\\d+"))
+    N <- as.numeric(str_extract(N, "(?<=a=)\\d+"))
+    ig$number <- c(N, Nx, Ny)
+    updateNumericInput(session, "pars_N", value = ig$number[1])
+    updateNumericInput(session, "pars_Nx", value = ig$number[2])
+    updateNumericInput(session, "pars_Ny", value = ig$number[3])
   })
 })
 
-
-# prepare training datasets for scrs on click of button
-observeEvent(input$integrate,
-  {
-  },
-  ignoreNULL = T
+observeEvent(input$integrate, {
+  withBusyIndicatorServer("cvadjr", {
+    ig$result <- o2m(ig$upload_X, ig$upload_Y, ig$number[1], ig$number[2], ig$number[3])
+  })
+},
+ignoreNULL = T
 )
 
-
+observeEvent(ig$cvadjr, {
+  output$cvadjr_result <- renderDataTable({
+    validate(need(ig$cvadjr, ""))
+    DT::datatable(ig$cvadjr,
+      escape = FALSE, selection = "single", extensions = list("Responsive", "Scroller"),
+      options = list(deferRender = T, searchHighlight = T, scrollX = T)
+    )
+  })
+},
+ignoreNULL = FALSE
+)

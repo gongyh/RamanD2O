@@ -23,13 +23,19 @@ tabItem(
           column(2, withBusyIndicatorUI(actionButton("upload_Y", "Upload", class = "btn-success")), class = "top25")
         ),
         fluidRow(
-          column(2, numericInput("pars_N_max", "N_max", 10, min = 1, step = 1)),
-          column(2, numericInput("pars_Nx_max", "Nx_max", 5, min = 1, step = 1)),
-          column(2, numericInput("pars_Ny_max", "Ny_max", 5, min = 1, step = 1)),
-          column(2, numericInput("pars_4", "p4", 10, min = 1, step = 1)),
-          column(3, withBusyIndicatorUI(actionButton("crossval", "Crossval", class = "btn-success")), class = "top25")
+          column(2, numericInput("pars_N_max1", "N_max", 10, min = 1, step = 1)),
+          column(2, numericInput("pars_Nx_max1", "Nx_max", 5, min = 1, step = 1)),
+          column(2, numericInput("pars_Ny_max1", "Ny_max", 5, min = 1, step = 1)),
+          column(2, ),
+          column(3, withBusyIndicatorUI(actionButton("cvadjr", "CV_adjR2", class = "btn-success")), class = "top25")
         ),
-        h4("Parameters for Integration analysis:"),
+        fluidRow(
+          column(2, numericInput("pars_N_max2", "N_max", 10, min = 1, step = 1)),
+          column(2, numericInput("pars_Nx_max2", "Nx_max", 5, min = 1, step = 1)),
+          column(2, numericInput("pars_Ny_max2", "Ny_max", 5, min = 1, step = 1)),
+          column(2, numericInput("pars_fold", "nr_folds", 6, min = 1, step = 1)),
+          column(3, withBusyIndicatorUI(actionButton("crossval", "CrossVal", class = "btn-success")), class = "top25")
+        ),
         fluidRow(
           column(2, numericInput("pars_N", "N", 10, min = 1, step = 1)),
           column(2, numericInput("pars_Nx", "Nx", 10, min = 1, step = 1)),
@@ -58,10 +64,10 @@ tabItem(
         12,
         tabsetPanel(
           tabPanel(
-            "01",
+            "CV_adjR2",
             br(),
-            plotOutput("a01") %>% withSpinner(),
-            tags$div(style = "text-align: right; margin-right: 20px;",
+            DTOutput("cvadjr_result") %>% withSpinner(),
+            tags$div(style = "text-align: right; margin-right: 20px; margin-top: 20px;",
               downloadButton("adownload_result1", "Download", class = "btn-primary"))
           ),
           tabPanel(
