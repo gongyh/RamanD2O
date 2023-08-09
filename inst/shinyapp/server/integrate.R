@@ -57,9 +57,7 @@ observeEvent(input$cvadjr, {
     ig$cvadjr <- crossval_o2m_adjR2(ig$upload_X, ig$upload_Y, 1:isolate(input$pars_N_max1),
       0:isolate(input$pars_Nx_max1), 0:isolate(input$pars_Ny_max1), nr_folds=2, nr_cores=1)
   })
-},
-ignoreNULL = T
-)
+})
 
 observeEvent(input$crossval,{
   withBusyIndicatorServer("crossval",{
@@ -80,12 +78,10 @@ observeEvent(input$crossval,{
 })
 
 observeEvent(input$integrate, {
-  withBusyIndicatorServer("cvadjr", {
+  withBusyIndicatorServer("integrate", {
     ig$result <- o2m(ig$upload_X, ig$upload_Y, ig$number[1], ig$number[2], ig$number[3])
   })
-},
-ignoreNULL = T
-)
+})
 
 observeEvent(ig$cvadjr, {
   output$cvadjr_result <- renderDataTable({
@@ -93,6 +89,21 @@ observeEvent(ig$cvadjr, {
     DT::datatable(ig$cvadjr,
       escape = FALSE, selection = "single", extensions = list("Responsive", "Scroller"),
       options = list(deferRender = T, searchHighlight = T, scrollX = T)
+    )
+  })
+},
+ignoreNULL = FALSE
+)
+
+observeEvent(ig$crossval, {
+  output$crossval_result <- renderDataTable({
+    validate(need(ig$crossval, ""))
+    new_row <- gsub("a", "N", rownames(as.data.frame(res$Sorted)))
+    new_col <- gsub("a", "N", colnames(as.data.frame(res$Sorted)))
+    DT::datatable(as.data.frame(ig$crossval$Sorted),
+      escape = FALSE, selection = "single", extensions = list("Responsive", "Scroller"),
+      options = list(deferRender = T, searchHighlight = T, scrollX = T),
+      rownames = new_row, colnames = new_col
     )
   })
 },

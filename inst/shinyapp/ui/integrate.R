@@ -23,14 +23,14 @@ tabItem(
           column(2, withBusyIndicatorUI(actionButton("upload_Y", "Upload", class = "btn-success")), class = "top25")
         ),
         fluidRow(
-          column(2, numericInput("pars_N_max1", "N_max", 10, min = 1, step = 1)),
+          column(2, numericInput("pars_N_max1", "N_max", 5, min = 1, step = 1)),
           column(2, numericInput("pars_Nx_max1", "Nx_max", 5, min = 1, step = 1)),
           column(2, numericInput("pars_Ny_max1", "Ny_max", 5, min = 1, step = 1)),
           column(2, ),
           column(3, withBusyIndicatorUI(actionButton("cvadjr", "CV_adjR2", class = "btn-success")), class = "top25")
         ),
         fluidRow(
-          column(2, numericInput("pars_N_max2", "N_max", 10, min = 1, step = 1)),
+          column(2, numericInput("pars_N_max2", "N_max", 5, min = 1, step = 1)),
           column(2, numericInput("pars_Nx_max2", "Nx_max", 5, min = 1, step = 1)),
           column(2, numericInput("pars_Ny_max2", "Ny_max", 5, min = 1, step = 1)),
           column(2, numericInput("pars_fold", "nr_folds", 6, min = 1, step = 1)),
@@ -47,14 +47,16 @@ tabItem(
     ),
     box(
       title = "Notes", status = "info", solidHeader = TRUE, collapsible = FALSE,
-      p("randomForest implements Breiman's random forest algorithm (based on Breiman and Cutler's original Fortran code) for classification and regression.
-        The RandomForestClassifier is trained using bootstrap aggregation, where each new tree is fit from a bootstrap sample of the training observations.
-        The out-of-bag (OOB) error is the average error for each observation calculated using predictions from the trees that do not contain this observation in their respective bootstrap sample.
-        This allows the RandomForestClassifier to be fit and validated whilst being trained."),
-      p("1. If you also want to evaluate your model, please change Evaluation dataset to anything except _ ."),
-      p("2. Change Label to your categorical variable."),
-      p("3. Number of trees should not be set to too small to ensure that every input row gets predicted at least a few times."),
-      p("4. Sampling of cases (replicate) can be done with or without replacement.")
+      p("The integration analysis using the OmicsPLS package. 
+        The O2PLS (Two-way Orthogonal Partial Least Squares) model is a statistical modeling 
+        approach applied to two data matrices representing different omics datasets. 
+        It aims to predict sets of data variables (such as sets of correlated genes and metabolites) 
+        that have potential associations within the two matrices."),
+      p("1. Select X and Y datasets, there are two options for the X dataset, choose one of them."),
+      p("2. The parameters N_max/Nx_max/Ny_max are used to search for the optimal value of N/Nx/Ny within ranges."),
+      p("3. CV_adjR2: Preliminary calculation of analysis parameters, can be attempted multiple times."),
+      p("4. CrossVal: Further calculate the analysis parameters based on the results of CV_adjR2."),
+      p("5. Integrate: Integration analysis using the determined parameters N/Nx/Ny.")
     )
   ),
   fluidRow(
@@ -71,10 +73,10 @@ tabItem(
               downloadButton("adownload_result1", "Download", class = "btn-primary"))
           ),
           tabPanel(
-            "02",
+            "CrossVal",
             br(),
-            plotOutput("a02") %>% withSpinner(),
-            tags$div(style = "text-align: right; margin-right: 20px;",
+            DTOutput("crossval_result") %>% withSpinner(),
+            tags$div(style = "text-align: right; margin-right: 20px; margin-top: 20px;",
               downloadButton("adownload_result2", "Download", class = "btn-primary"))
           ),
           tabPanel(
