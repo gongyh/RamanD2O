@@ -22,26 +22,41 @@ tabItem(
           column(4, fileInput("upload_Y_file", "Y dataset", accept = ".csv", placeholder = "Y.csv")),
           column(2, withBusyIndicatorUI(actionButton("upload_Y", "Upload", class = "btn-success")), class = "top25")
         ),
+        hr(),
         fluidRow(
+          column(2, numericInput("pars_N_min1", "N_min", 1, min = 1, step = 1)),
           column(2, numericInput("pars_N_max1", "N_max", 5, min = 1, step = 1)),
+          column(2, numericInput("pars_Nx_min1", "Nx_min", 0, min = 0, step = 1)),
           column(2, numericInput("pars_Nx_max1", "Nx_max", 5, min = 1, step = 1)),
-          column(2, numericInput("pars_Ny_max1", "Ny_max", 5, min = 1, step = 1)),
-          column(2, ),
-          column(3, withBusyIndicatorUI(actionButton("cvadjr", "CV_adjR2", class = "btn-success")), class = "top25")
+          column(2, numericInput("pars_Ny_min1", "Ny_min", 0, min = 0, step = 1)),
+          column(2, numericInput("pars_Ny_max1", "Ny_max", 5, min = 1, step = 1))
         ),
         fluidRow(
-          column(2, numericInput("pars_N_max2", "N_max", 5, min = 1, step = 1)),
-          column(2, numericInput("pars_Nx_max2", "Nx_max", 5, min = 1, step = 1)),
-          column(2, numericInput("pars_Ny_max2", "Ny_max", 5, min = 1, step = 1)),
-          column(2, numericInput("pars_fold", "nr_folds", 6, min = 1, step = 1)),
-          column(3, withBusyIndicatorUI(actionButton("crossval", "CrossVal", class = "btn-success")), class = "top25")
+          column(10, ),
+          column(2, withBusyIndicatorUI(actionButton("cvadjr", "CV_adjR2", class = "btn-success")), class = "top25")
         ),
+        hr(),
+        fluidRow(
+          column(2, numericInput("pars_N_min2", "N_min", 1, min = 1, step = 1)),
+          column(2, numericInput("pars_N_max2", "N_max", 5, min = 1, step = 1)),
+          column(2, numericInput("pars_Nx_min2", "Nx_min", 0, min = 0, step = 1)),
+          column(2, numericInput("pars_Nx_max2", "Nx_max", 5, min = 1, step = 1)),
+          column(2, numericInput("pars_Ny_min2", "Ny_min", 0, min = 0, step = 1)),
+          column(2, numericInput("pars_Ny_max2", "Ny_max", 5, min = 1, step = 1))
+        ),
+        fluidRow(
+          column(2, numericInput("pars_fold", "nr_folds", 6, min = 1, step = 1)),
+          column(8, ),
+          column(2, withBusyIndicatorUI(actionButton("crossval", "CrossVal", class = "btn-success")), class = "top25")
+        ),
+        hr(),
         fluidRow(
           column(2, numericInput("pars_N", "N", 10, min = 1, step = 1)),
           column(2, numericInput("pars_Nx", "Nx", 10, min = 1, step = 1)),
           column(2, numericInput("pars_Ny", "Ny", 10, min = 1, step = 1)),
           column(2, numericInput("pars_top", "top", 10, min = 1, step = 1)),
-          column(3, withBusyIndicatorUI(actionButton("integrate", "Integrate", class = "btn-success")), class = "top25")
+          column(2, ),
+          column(2, withBusyIndicatorUI(actionButton("integrate", "Integrate", class = "btn-success")), class = "top25")
         )
       )
     ),
@@ -80,17 +95,17 @@ tabItem(
               downloadButton("adownload_result2", "Download", class = "btn-primary"))
           ),
           tabPanel(
-            "03",
+            "Xjoint",
             br(),
-            DTOutput("a03") %>% withSpinner(),
-            tags$div(style = "text-align: right; margin-right: 20px; margin-top: 20px;",
+            plotOutput("Xjoint") %>% withSpinner(),
+            tags$div(style = "text-align: right; margin-right: 20px;",
               downloadButton("adownload_result3", "Download", class = "btn-primary"))
           ),
           tabPanel(
-            "04",
+            "Yjoint",
             br(),
-            DTOutput("a04") %>% withSpinner(),
-            tags$div(style = "text-align: right; margin-right: 20px; margin-top: 20px;",
+            plotOutput("Yjoint") %>% withSpinner(),
+            tags$div(style = "text-align: right; margin-right: 20px;",
               downloadButton("adownload_result4", "Download", class = "btn-primary"))
           ),
           tabPanel(

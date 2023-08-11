@@ -54,15 +54,15 @@ observeEvent(input$upload_Y, {
 
 observeEvent(input$cvadjr, {
   withBusyIndicatorServer("cvadjr", {
-    ig$cvadjr <- crossval_o2m_adjR2(ig$upload_X, ig$upload_Y, 1:isolate(input$pars_N_max1),
-      0:isolate(input$pars_Nx_max1), 0:isolate(input$pars_Ny_max1), nr_folds=2, nr_cores=1)
+    ig$cvadjr <- crossval_o2m_adjR2(ig$upload_X, ig$upload_Y, isolate(input$pars_N_min1):isolate(input$pars_N_max1),
+      isolate(input$pars_Nx_min1):isolate(input$pars_Nx_max1), isolate(input$pars_Ny_min1):isolate(input$pars_Ny_max1), nr_folds=2, nr_cores=1)
   })
 })
 
 observeEvent(input$crossval,{
   withBusyIndicatorServer("crossval",{
-    ig$crossval <- crossval_o2m(ig$upload_X, ig$upload_Y, 1:isolate(input$pars_N_max2),
-      0:isolate(input$pars_Nx_max2), 0:isolate(input$pars_Ny_max2), nr_folds=isolate(input$pars_fold), nr_cores=5)
+    ig$crossval <- crossval_o2m(ig$upload_X, ig$upload_Y, isolate(input$pars_N_min2):isolate(input$pars_N_max2),
+      isolate(input$pars_Nx_min2):isolate(input$pars_Nx_max2), isolate(input$pars_Ny_min2):isolate(input$pars_Ny_max2), nr_folds=isolate(input$pars_fold), nr_cores=5)
     index <- which(ig$crossval$Original == min(ig$crossval$Original, na.rm = T), arr.ind = TRUE)
     Nx <- dimnames(ig$crossval$Original)[[1]][index[1]]
     Ny <- dimnames(ig$crossval$Original)[[2]][index[2]]
@@ -98,13 +98,34 @@ ignoreNULL = FALSE
 observeEvent(ig$crossval, {
   output$crossval_result <- renderDataTable({
     validate(need(ig$crossval, ""))
-    new_row <- gsub("a", "N", rownames(as.data.frame(res$Sorted)))
-    new_col <- gsub("a", "N", colnames(as.data.frame(res$Sorted)))
+    new_row <- gsub("a", "N", rownames(as.data.frame(ig$crossval$Sorted)))
+    new_col <- gsub("a", "N", colnames(as.data.frame(ig$crossval$Sorted)))
     DT::datatable(as.data.frame(ig$crossval$Sorted),
       escape = FALSE, selection = "single", extensions = list("Responsive", "Scroller"),
       options = list(deferRender = T, searchHighlight = T, scrollX = T),
       rownames = new_row, colnames = new_col
     )
+  })
+},
+ignoreNULL = FALSE
+)
+
+observeEvent(ig$result, {
+  output$Xjoint <- renderPlot({
+    validate(need(ig$result, ""))
+    px <- list()
+    px <- lapply(1:isolate(input$pars_N), function(i) {
+      plot(ig$result, loading_name='Xjoint', i=i, j=NULL, col='black')
+    })
+    ggarrange(plotlist = px, ncol=1)
+  })
+  output$Yjoint <- renderPlot({
+    validate(need(ig$result, ""))
+    py <- list()
+    py <- lapply(1:isolate(input$pars_N), function(i) {
+      plot(ig$result, loading_name='Yjoint', i=i, j=NULL, col='black')
+    })
+    ggarrange(plotlist = py, ncol=1)
   })
 },
 ignoreNULL = FALSE
