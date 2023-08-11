@@ -30,7 +30,8 @@ Imports:
     randomForest,
     caret,
     baseline,
-    markdown
+    markdown,
+    OmicsPLS
 Suggests:
     shiny,
     shinydashboard,

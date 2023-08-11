@@ -33,6 +33,7 @@ library(baseline)
 library(permute)
 library(hyperSpec)
 library(hySpc.ggplot2)
+library(OmicsPLS)
 
 user_name <- Sys.getenv("SHINYPROXY_USERNAME")
 if (user_name == "") user_name <- "Anonymous"
