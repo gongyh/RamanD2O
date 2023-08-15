@@ -25,6 +25,7 @@ ui <- dashboardPage(
       menuItem("Load Data", tabName = "settings", icon = icon("cogs")),
       menuItem("Tools",
         menuItem("Visualize", tabName = "visualize", icon = icon("poll")),
+        menuItem("Statistics", tabName = "statistics", icon = icon("layer-group")),
         menuItem("Database", tabName = "database", icon = icon("coins")),
         tabName = "tools", icon = icon("toolbox"), startExpanded = T
       ),
@@ -91,6 +92,7 @@ ui <- dashboardPage(
       source(file.path("ui", "snr.R"), local = TRUE)$value,
       source(file.path("ui", "cdr.R"), local = TRUE)$value,
       source(file.path("ui", "visualize.R"), local = TRUE)$value,
+      source(file.path("ui", "statistics.R"), local = TRUE)$value,
       source(file.path("ui", "database.R"), local = TRUE)$value,
       source(file.path("ui", "ml_prepare.R"), local = TRUE)$value,
       source(file.path("ui", "ml_explore.R"), local = TRUE)$value,
@@ -141,6 +143,7 @@ server <- function(input, output, session) {
   source(file.path("server", "normalize.R"), local = TRUE)$value
   source(file.path("server", "average.R"), local = TRUE)$value
   source(file.path("server", "visualize.R"), local = TRUE)$value
+  source(file.path("server", "statistics.R"), local = TRUE)$value
   source(file.path("server", "database.R"), local = TRUE)$value
   source(file.path("server", "carotenoid.R"), local = TRUE)$value
   source(file.path("server", "snr.R"), local = TRUE)$value
