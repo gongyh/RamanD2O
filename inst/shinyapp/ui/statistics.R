@@ -28,7 +28,7 @@ tabItem(
               column(2, uiOutput("visualize_pcaColBy")),
               column(2, withBusyIndicatorUI(actionButton("plot_pca", "Analysis & Draw", class = "btn-success")), class = "top25")
             ),
-            plotlyOutput("pca_plot") %>% withSpinner()
+            plotlyOutput("pca_plot", height = "800px") %>% withSpinner()
           )
         )
       )
