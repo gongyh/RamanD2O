@@ -85,35 +85,35 @@ tabItem(
             br(),
             DTOutput("cvadjr_result") %>% withSpinner(),
             tags$div(style = "text-align: right; margin-right: 20px; margin-top: 20px;",
-              downloadButton("adownload_result1", "Download", class = "btn-primary"))
+              downloadButton("ig_result1", "Download", class = "btn-primary"))
           ),
           tabPanel(
             "CrossVal",
             br(),
             DTOutput("crossval_result") %>% withSpinner(),
             tags$div(style = "text-align: right; margin-right: 20px; margin-top: 20px;",
-              downloadButton("adownload_result2", "Download", class = "btn-primary"))
+              downloadButton("ig_result2", "Download", class = "btn-primary"))
           ),
           tabPanel(
             "Xjoint",
             br(),
             plotOutput("Xjoint") %>% withSpinner(),
             tags$div(style = "text-align: right; margin-right: 20px;",
-              downloadButton("adownload_result3", "Download", class = "btn-primary"))
+              downloadButton("ig_result3", "Download", class = "btn-primary"))
           ),
           tabPanel(
             "Yjoint",
             br(),
             plotOutput("Yjoint") %>% withSpinner(),
             tags$div(style = "text-align: right; margin-right: 20px;",
-              downloadButton("adownload_result4", "Download", class = "btn-primary"))
+              downloadButton("ig_result4", "Download", class = "btn-primary"))
           ),
           tabPanel(
             "05",
             br(),
             DTOutput("a05") %>% withSpinner(),
             tags$div(style = "text-align: right; margin-right: 20px; margin-top: 20px;",
-              downloadButton("adownload_result5", "Download", class = "btn-primary"))
+              downloadButton("ig_result5", "Download", class = "btn-primary"))
           )
         )
       )
