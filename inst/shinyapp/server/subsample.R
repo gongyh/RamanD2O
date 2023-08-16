@@ -31,7 +31,7 @@ observeEvent(hs$val[["sampled"]],
     # req(hs$val[["sampled"]])
     sampled <- hs$val[["sampled"]]
     output$sampled_table <- renderDataTable({
-      DT::datatable(if (is.null(sampled)) NULL else sampled@data %>% select(!matches("spc")),
+      DT::datatable(if (is.null(sampled)) NULL else sampled@data %>% dplyr::select(!matches("spc")),
         escape = FALSE, selection = "single",
         extensions = list("Responsive", "Scroller"),
         options = list(searchHighlight = TRUE, scrollX = TRUE)

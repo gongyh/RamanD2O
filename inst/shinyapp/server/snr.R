@@ -60,7 +60,7 @@ observeEvent(hs$val[["snr"]],
   {
     hs_snr <- hs$val[["snr"]]
     output$snr_table <- renderDataTable({
-      DT::datatable(if (is.null(hs_snr)) NULL else hs_snr@data %>% select(!matches("spc")),
+      DT::datatable(if (is.null(hs_snr)) NULL else hs_snr@data %>% dplyr::select(!matches("spc")),
         escape = FALSE, selection = "single", extensions = list("Responsive", "Scroller"),
         options = list(searchHighlight = TRUE, scrollX = TRUE)
       )

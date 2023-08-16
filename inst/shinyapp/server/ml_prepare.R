@@ -36,7 +36,7 @@ observeEvent(ml_trim_num(), {
       fluidRow(
         column(2, numericInput(inputId = paste0("ml_trim_min", i), "Min", min = 0, max = 4000, step = 1, value = eval(parse(text = paste0("ml_trim_min", i, "()"))), width = "100%")),
         column(8,
-               sliderInput(inputId = paste0("ml_trim_range", i), label = paste0("Selecting Wavelength Ranges: ", i), 
+               sliderInput(inputId = paste0("ml_trim_range", i), label = paste0("Selecting Wavelength Ranges: ", i),
                            min = 0, max = 4000, value = c(eval(parse(text = paste0("ml_trim_min", i, "()"))), eval(parse(text = paste0("ml_trim_max", i, "()")))), step = 1, dragRange = F, width = "100%")),
         column(2, numericInput(inputId = paste0("ml_trim_max", i), "Max", min = 0, max = 4000, step = 1, value = eval(parse(text = paste0("ml_trim_max", i, "()"))), width = "100%"))
       )
@@ -126,7 +126,7 @@ observeEvent(result$prepare,
   {
     hs_prepare <- result$prepare
     output$after_prepare <- renderDataTable({
-      DT::datatable(if (is.null(hs_prepare)) NULL else hs_prepare@data %>% select(!matches("spc")),
+      DT::datatable(if (is.null(hs_prepare)) NULL else hs_prepare@data %>% dplyr::select(!matches("spc")),
         escape = FALSE, selection = "single", extensions = list("Responsive", "Scroller"),
         options = list(searchHighlight = TRUE, scrollX = TRUE)
       )

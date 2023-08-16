@@ -36,7 +36,7 @@ observeEvent(hs$val[["smoothed"]],
   {
     hs_sm <- hs$val[["smoothed"]]
     output$smoothed_table <- renderDataTable({
-      DT::datatable(if (is.null(hs_sm)) NULL else hs_sm@data %>% select(!matches("spc")),
+      DT::datatable(if (is.null(hs_sm)) NULL else hs_sm@data %>% dplyr::select(!matches("spc")),
         escape = FALSE, selection = "single", extensions = list("Responsive", "Scroller"),
         options = list(searchHighlight = TRUE, scrollX = TRUE)
       )

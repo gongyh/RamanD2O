@@ -44,7 +44,7 @@ observeEvent(hs$val[["average"]],
   {
     hs_average <- hs$val[["average"]]
     output$average_table <- renderDataTable({
-      DT::datatable(if (is.null(hs_average)) NULL else hs_average@data %>% select(!matches("spc")),
+      DT::datatable(if (is.null(hs_average)) NULL else hs_average@data %>% dplyr::select(!matches("spc")),
         escape = FALSE, selection = "single", extensions = list("Responsive", "Scroller"),
         options = list(searchHighlight = TRUE, scrollX = TRUE)
       )

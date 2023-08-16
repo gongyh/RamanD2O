@@ -14,7 +14,7 @@ tabItem(
         ),
         fluidRow(
           column(6, selectInput("select_baseline", "Baseline method",
-            choices = c("polyfit", "als"), selected = "als"
+            choices = c("polyfit", "als"), selected = "polyfit"
           )),
           column(6, uiOutput("baseline_config"))
         ),

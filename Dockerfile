@@ -68,7 +68,7 @@ RUN apt-get update \
 RUN R -e "library(pak); pkg_install(c('shiny', 'shinydashboard', 'shinyjs', 'shinyFiles', \
   'shinybusy', 'shinyalert', 'shinydisconnect', 'shinycssloaders', 'shinytoastr', \
   'DT', 'fresh', 'devtools', 'plotly', 'fs', 'ggpubr', 'ggplot2', 'stringr', \
-  'RColorBrewer', 'dplyr', 'compiler', 'mongolite', 'zip', \
+  'RColorBrewer', 'dplyr', 'compiler', 'mongolite', 'zip', 'fawda123/ggord', \
   'baseline', 'permute', 'Rtsne', 'markdown', 'caret', 'randomForest', 'OmicsPLS', \
   'r-hyperspec/hyperSpec', 'r-hyperspec/hySpc.ggplot2', \
   'RinteRface/shinydashboardPlus')); cache_clean()" && rm -rf /tmp/*

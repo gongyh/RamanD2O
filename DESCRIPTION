@@ -14,6 +14,7 @@ Depends:
 Imports:
     ggplot2,
     ggpubr,
+    ggord,
     tools,
     methods,
     RColorBrewer,
@@ -62,6 +63,7 @@ Collate:
     'runRamanD2O.R'
 Remotes: 
     r-hyperspec/hyperSpec,
-    r-hyperspec/hySpc.ggplot2
+    r-hyperspec/hySpc.ggplot2,
+    fawda123/ggord
 Config/testthat/edition: 3
 VignetteBuilder: knitr

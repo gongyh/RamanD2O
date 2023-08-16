@@ -13,7 +13,7 @@ output$hs_select_for_baseline <- renderUI({
 observeEvent(input$select_baseline, {
   output$baseline_config <- renderUI({
     if (input$select_baseline == "polyfit") {
-      numericInput("polyfit_order", "Order", 7, min = 3, max = 10, step = 1)
+      numericInput("polyfit_order", "Order", 5, min = 3, max = 10, step = 1)
     } else if (input$select_baseline == "als") {
       ""
     } else {
@@ -75,7 +75,7 @@ observeEvent(hs$val[["baselined"]],
   {
     hs_bl <- hs$val[["baselined"]]
     output$baselined_table <- renderDataTable({
-      DT::datatable(if (is.null(hs_bl)) NULL else hs_bl@data %>% select(!matches("spc")),
+      DT::datatable(if (is.null(hs_bl)) NULL else hs_bl@data %>% dplyr::select(!matches("spc")),
         escape = FALSE, selection = "single", extensions = list("Responsive", "Scroller"),
         options = list(searchHighlight = TRUE, scrollX = TRUE)
       )

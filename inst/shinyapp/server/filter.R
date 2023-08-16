@@ -38,7 +38,7 @@ observeEvent(hs$val[["filtered"]],
   {
     hs_fl <- hs$val[["filtered"]]
     output$after_filter <- renderDataTable({
-      DT::datatable(if (is.null(hs_fl)) NULL else hs_fl@data %>% select(!matches("spc")),
+      DT::datatable(if (is.null(hs_fl)) NULL else hs_fl@data %>% dplyr::select(!matches("spc")),
         escape = FALSE, selection = "single", extensions = list("Responsive", "Scroller"),
         options = list(searchHighlight = TRUE, scrollX = TRUE)
       )

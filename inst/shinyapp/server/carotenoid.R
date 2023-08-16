@@ -45,7 +45,7 @@ observeEvent(hs$val[["carotenoid"]],
   {
     hs_bl <- hs$val[["carotenoid"]]
     output$carotenoid_table <- renderDataTable({
-      DT::datatable(if (is.null(hs_bl)) NULL else hs_bl@data %>% select(!matches("spc")),
+      DT::datatable(if (is.null(hs_bl)) NULL else hs_bl@data %>% dplyr::select(!matches("spc")),
         escape = FALSE, selection = "single", extensions = list("Responsive", "Scroller"),
         options = list(searchHighlight = TRUE, scrollX = TRUE)
       )
