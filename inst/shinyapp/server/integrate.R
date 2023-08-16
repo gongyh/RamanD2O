@@ -80,7 +80,7 @@ observeEvent(input$crossval,{
 
 observeEvent(input$integrate, {
   withBusyIndicatorServer("integrate", {
-    ig$result <- o2m(ig$upload_X, ig$upload_Y, ig$number[1], ig$number[2], ig$number[3])
+    ig$result <- o2m(ig$upload_X, ig$upload_Y, isolate(input$pars_N), isolate(input$pars_Nx), isolate(input$pars_Ny))
   })
 })
 
