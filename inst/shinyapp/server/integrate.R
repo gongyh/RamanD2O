@@ -8,7 +8,7 @@ output$hs_select_for_integrate <- renderUI({
   } else if ("snr" %in% hs_all) {
     selected <- "snr"
   }
-  selectInput("hs_selector_for_integrate", "(a) X dataset", choices = hs_all, selected = selected)
+  selectInput("hs_selector_for_integrate", "(a) Ramanome dataset", choices = hs_all, selected = selected)
 })
 
 observeEvent(input$hs_selector_for_integrate,
@@ -130,7 +130,7 @@ ignoreNULL = FALSE
 )
 
 output$ig_result1 <- downloadHandler(
-  filename = paste0("ig-result1-", format(Sys.time(), "%Y%m%d%H%M%S"), ".csv"), 
+  filename = paste0("ig-result1-", format(Sys.time(), "%Y%m%d%H%M%S"), ".csv"),
   content = function(file) {
     if (is.null(ig$cvadjr)) {
       shinyalert("Oops!", "No result yet.", type = "error")
@@ -140,7 +140,7 @@ output$ig_result1 <- downloadHandler(
 )
 
 output$ig_result2 <- downloadHandler(
-  filename = paste0("ig-result2-", format(Sys.time(), "%Y%m%d%H%M%S"), ".csv"), 
+  filename = paste0("ig-result2-", format(Sys.time(), "%Y%m%d%H%M%S"), ".csv"),
   content = function(file) {
     if (is.null(ig$crossval_df)) {
       shinyalert("Oops!", "No result yet.", type = "error")
@@ -150,7 +150,7 @@ output$ig_result2 <- downloadHandler(
 )
 
 output$ig_result3 <- downloadHandler(
-  filename = paste0("ig-result3-", format(Sys.time(), "%Y%m%d%H%M%S"), ".png"), 
+  filename = paste0("ig-result3-", format(Sys.time(), "%Y%m%d%H%M%S"), ".png"),
   content = function(file) {
     if (is.null(ig$result)) {
       shinyalert("Oops!", "No result yet.", type = "error")
@@ -168,7 +168,7 @@ output$ig_result3 <- downloadHandler(
 )
 
 output$ig_result4 <- downloadHandler(
-  filename = paste0("ig-result4-", format(Sys.time(), "%Y%m%d%H%M%S"), ".png"), 
+  filename = paste0("ig-result4-", format(Sys.time(), "%Y%m%d%H%M%S"), ".png"),
   content = function(file) {
     if (is.null(ig$result)) {
       shinyalert("Oops!", "No result yet.", type = "error")

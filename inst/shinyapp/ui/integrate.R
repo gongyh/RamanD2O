@@ -1,25 +1,26 @@
 # Integration analysis tab
 tabItem(
   tabName = "integrate",
-  h2("Integration analysis"),
+  h2("Integration analysis based on O2PLS"),
   br(),
   fluidRow(
     box(
-      title = "Settings", status = "info", solidHeader = TRUE, collapsible = FALSE,
+      title = "Settings", status = "info", solidHeader = TRUE, collapsible = FALSE, width = 8,
       column(
         12,
         fluidRow(
-          column(12, radioButtons("ig_choice", label = "Choose X dataset source:", choices = c("Use existing dataset (a)", "Upload new dataset (b)"),
+          column(12, radioButtons("ig_choice", label = "Choose Ramanome dataset source:",
+                                  choices = c("Use existing dataset (a)", "Upload new dataset (b)"),
             selected = "Use existing dataset (a)", inline = TRUE))
         ),
         fluidRow(
           column(3, uiOutput("hs_select_for_integrate")),
           column(3, uiOutput("hs_select_for_ig_label")),
-          column(4, fileInput("upload_X_file", "(b) X dataset", accept = ".csv", placeholder = "X.csv")),
+          column(4, fileInput("upload_X_file", "(b) Ramanome dataset", accept = ".csv", placeholder = "X.csv")),
           column(2, withBusyIndicatorUI(actionButton("upload_X", "Upload", class = "btn-success")), class = "top25")
         ),
         fluidRow(
-          column(4, fileInput("upload_Y_file", "Y dataset", accept = ".csv", placeholder = "Y.csv")),
+          column(4, fileInput("upload_Y_file", "Transcriptome dataset", accept = ".csv", placeholder = "Y.csv")),
           column(2, withBusyIndicatorUI(actionButton("upload_Y", "Upload", class = "btn-success")), class = "top25")
         ),
         hr(),
@@ -51,9 +52,9 @@ tabItem(
         ),
         hr(),
         fluidRow(
-          column(2, numericInput("pars_N", "N", 10, min = 1, step = 1)),
-          column(2, numericInput("pars_Nx", "Nx", 10, min = 1, step = 1)),
-          column(2, numericInput("pars_Ny", "Ny", 10, min = 1, step = 1)),
+          column(2, numericInput("pars_N", "N", 5, min = 1, step = 1)),
+          column(2, numericInput("pars_Nx", "Nx", 0, min = 1, step = 1)),
+          column(2, numericInput("pars_Ny", "Ny", 0, min = 1, step = 1)),
           column(2, numericInput("pars_top", "top", 10, min = 1, step = 1)),
           column(2, ),
           column(2, withBusyIndicatorUI(actionButton("integrate", "Integrate", class = "btn-success")), class = "top25")
@@ -61,11 +62,11 @@ tabItem(
       )
     ),
     box(
-      title = "Notes", status = "info", solidHeader = TRUE, collapsible = FALSE,
-      p("The integration analysis using the OmicsPLS package. 
-        The O2PLS (Two-way Orthogonal Partial Least Squares) model is a statistical modeling 
-        approach applied to two data matrices representing different omics datasets. 
-        It aims to predict sets of data variables (such as sets of correlated genes and metabolites) 
+      title = "Notes", status = "info", solidHeader = TRUE, collapsible = FALSE, width = 4,
+      p("The integration analysis using the OmicsPLS package.
+        The O2PLS (Two-way Orthogonal Partial Least Squares) model is a statistical modeling
+        approach applied to two data matrices representing different omics datasets.
+        It aims to predict sets of data variables (such as sets of correlated genes and metabolites)
         that have potential associations within the two matrices."),
       p("1. Select X and Y datasets, there are two options for the X dataset, choose one of them."),
       p("2. The parameters N_max/Nx_max/Ny_max are used to search for the optimal value of N/Nx/Ny within ranges."),
@@ -76,7 +77,7 @@ tabItem(
   ),
   fluidRow(
     box(
-      title = "Results", status = "warning", solidHeader = TRUE, collapsible = TRUE, width = 6,
+      title = "Results", status = "warning", solidHeader = TRUE, collapsible = TRUE, width = 12,
       column(
         12,
         tabsetPanel(
@@ -97,31 +98,22 @@ tabItem(
           tabPanel(
             "Xjoint",
             br(),
-            plotOutput("Xjoint") %>% withSpinner(),
+            plotOutput("Xjoint", height = "1000px") %>% withSpinner(),
             tags$div(style = "text-align: right; margin-right: 20px;",
               downloadButton("ig_result3", "Download", class = "btn-primary"))
           ),
           tabPanel(
             "Yjoint",
             br(),
-            plotOutput("Yjoint") %>% withSpinner(),
+            plotOutput("Yjoint", height = "1000px") %>% withSpinner(),
             tags$div(style = "text-align: right; margin-right: 20px;",
               downloadButton("ig_result4", "Download", class = "btn-primary"))
-          ),
-          tabPanel(
-            "05",
-            br(),
-            DTOutput("a05") %>% withSpinner(),
-            tags$div(style = "text-align: right; margin-right: 20px; margin-top: 20px;",
-              downloadButton("ig_result5", "Download", class = "btn-primary"))
           )
+
         )
       )
-    ),
-    box(
-      title = "Raman spectra", status = "warning", solidHeader = TRUE, collapsible = FALSE,
-      plotlyOutput("aselected_predicted_plot") %>% withSpinner()
     )
+
   )
 )
 
