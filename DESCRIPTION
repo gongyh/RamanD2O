@@ -32,7 +32,8 @@ Imports:
     caret,
     baseline,
     markdown,
-    OmicsPLS
+    OmicsPLS,
+    mdatools
 Suggests:
     shiny,
     shinydashboard,
