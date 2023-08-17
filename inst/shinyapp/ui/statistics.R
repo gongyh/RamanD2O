@@ -26,6 +26,8 @@ tabItem(
             fluidRow(
               column(2, uiOutput("visualize_pcaColBy")),
               column(2, numericInput("num_clusters", "How many clusters", 1, min = 1, max = 10, step = 1)),
+              column(1, checkboxInput("pca_scale", "Scale", value = T), class = "top25"),
+              column(1, checkboxInput("pca_center", "Center", value = T), class = "top25"),
               column(2, withBusyIndicatorUI(actionButton("plot_pca", "Analysis & Draw", class = "btn-success")), class = "top25")
             ),
             plotlyOutput("pca_plot", width = "600px", height = "600px") %>% withSpinner()

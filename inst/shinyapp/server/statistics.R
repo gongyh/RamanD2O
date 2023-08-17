@@ -48,8 +48,11 @@ observeEvent(input$plot_pca,
         req(isolate(input$select_pcaColBy), cancelOutput = T)
         nclusters <- isolate(input$num_clusters)
         colby <- isolate(input$select_pcaColBy)
+        pca_center <- isolate(input$pca_center)
+        pca_scale <- isolate(input$pca_scale)
+
         hs_cur <- hs$val[[isolate(input$hs_selector_for_statistics)]]
-        pca <- prcomp(~spc, data = hs_cur@data, center = FALSE)
+        pca <- prcomp(~spc, data = hs_cur@data, center = pca_center, scale=pca_scale)
         scores <- pca$x
         rownames(scores) <- rownames(hs_cur$spc)
         HC <- hclust(dist(scores), method = "ward.D2")
@@ -84,7 +87,7 @@ observeEvent(input$perform_lda,
                    data <- hs_cur@data[ldaby]
                    colnames(data) <- 'group'
                    if (pca_first) {
-                       pca <- prcomp(~spc, data = hs_cur@data, center = FALSE)
+                       pca <- prcomp(~spc, data=hs_cur@data, center=T, scale=T)
                        scores <- pca$x[,c("PC1","PC2")]
                        rownames(scores) <- rownames(hs_cur$spc)
                        data <- cbind(data, scores)
