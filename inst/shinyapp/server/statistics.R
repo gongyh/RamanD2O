@@ -120,3 +120,52 @@ observeEvent(input$perform_lda,
              ignoreNULL = TRUE
 )
 
+# perform MCR on click of button
+observeEvent(input$perform_mcr,
+             {
+               withBusyIndicatorServer("perform_mcr", {
+                 output$mcr_plot <- renderPlotly({
+                   validate(need(isolate(input$hs_selector_for_statistics), ""))
+                   mcr_method <- isolate(input$select_mcr_method)
+                   num_mcr_pcs <- isolate(input$num_mcr_pcs)
+
+                   hs_cur <- hs$val[[isolate(input$hs_selector_for_statistics)]]
+                   data <- hs_cur$spc
+
+                   if (mcr_method == "MCR-Pure") {
+                     m = mcrpure(data, ncomp = num_mcr_pcs)
+                     summary(m)
+                     cumexpvar <- m$variance[2,]
+                     df <- data.frame(x=names(cumexpvar),y=cumexpvar)
+                     p1 <- ggline(df, x="x", y="y") + theme_bw() +
+                       labs(x="Components", y="Cumulative variance")
+                     gp1 <- ggplotly(p1)
+                     resspec <- melt(t(m$resspec))
+                     p2 <- ggline(resspec, x="Var2", y= "value", group="Var1", color="Var1",
+                            numeric.x.axis = T, shape = NA) + theme_bw()
+                     gp2 <- ggplotly(p2)
+                     subplot(gp2,gp1, nrows=2)
+                   } else if (mcr_method == "MCR-ALS") {
+                     m = mcrals(data, ncomp = num_mcr_pcs)
+                     summary(m)
+                     cumexpvar <- m$variance[2,]
+                     df <- data.frame(x=names(cumexpvar),y=cumexpvar)
+                     p1 <- ggline(df, x="x", y="y") + theme_bw() +
+                       labs(x="Components", y="Cumulative variance")
+                     gp1 <- ggplotly(p1)
+                     resspec <- melt(t(m$resspec))
+                     p2 <- ggline(resspec, x="Var2", y= "value", group="Var1", color="Var1",
+                                  numeric.x.axis = T, shape = NA) + theme_bw()
+                     gp2 <- ggplotly(p2)
+                     subplot(gp2,gp1, nrows=2)
+                   } else {
+                     toastr_error("Not implemented!", position = "top-center")
+                     return()
+                   }
+
+                 })
+               })
+             },
+             ignoreNULL = TRUE
+)
+

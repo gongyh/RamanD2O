@@ -23,6 +23,7 @@ tabItem(
           tabPanel(
             "PCA",
             br(),
+            h4("Principal Component Analysis"),
             fluidRow(
               column(2, uiOutput("visualize_pcaColBy")),
               column(2, numericInput("num_clusters", "How many clusters", 1, min = 1, max = 10, step = 1)),
@@ -35,6 +36,7 @@ tabItem(
           tabPanel(
             "LDA",
             br(),
+            h4("Linear Discriminant Analysis"),
             fluidRow(
               column(1, checkboxInput("use_pca", "PCA-LDA", value = T), class = "top25"),
               column(2, numericInput("num_pcs", "PCA components to keep", 2, min = 1, max = 10, step = 1)),
@@ -43,7 +45,21 @@ tabItem(
               column(4, withBusyIndicatorUI(actionButton("perform_lda", "(PCA-)LDA analysis", class = "btn-success")), class = "top25")
             ),
             plotlyOutput("lda_plot", width = "600px", height = "600px") %>% withSpinner()
+          ),
+          tabPanel(
+            "MCR",
+            br(),
+            h4("Multivariate Curve Resolution"),
+            fluidRow(
+              column(2, selectInput("select_mcr_method", "MCR method",
+                                    choices = c("MCR-Pure", "MCR-ALS"), selected = "MCR-Pure"
+              )),
+              column(2, numericInput("num_mcr_pcs", "Number of components", 3, min = 1, max = 100, step = 1)),
+              column(4, withBusyIndicatorUI(actionButton("perform_mcr", "MCR analysis", class = "btn-success")), class = "top25")
+            ),
+            plotlyOutput("mcr_plot", width = "100%", height = "800px") %>% withSpinner()
           )
+
         )
       )
     )
