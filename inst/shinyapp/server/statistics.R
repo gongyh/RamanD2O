@@ -55,7 +55,7 @@ observeEvent(input$plot_pca,
         HC <- hclust(dist(scores), method = "ward.D2")
         Clusters <- cutree(HC, k = nclusters)
         Df <- data.frame(scores, "cluster" = factor(Clusters))
-        Df <- cbind(hs_cur@data %>% select(!matches("spc")), Df)
+        Df <- cbind(hs_cur@data %>% dplyr::select(!matches("spc")), Df)
         Df <- transform(Df, cluster_name = paste("Cluster", Clusters))
         rownames(Df) <- rownames(scores)
         plot_ly(Df,
