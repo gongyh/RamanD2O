@@ -32,13 +32,14 @@ output$download <- downloadHandler(
       meta$spc <- NULL
       write.table(meta, "meta.txt", row.names = F, col.names = T, quote = F, sep = "\t")
       if (!dir.exists(zip_dir)) dir.create(zip_dir)
-      files <- c()
+      print("Preparing Raman Spectra files.")
       for (i in (1:nrow(data))) {
         cell <- data[i]
         txtdf <- data.frame(shift = cell@wavelength, intensity = t(cell$spc))
         txtname <- file.path(zip_dir, paste0(cell$ID_Cell, ".txt"))
         write.table(txtdf, txtname, row.names = F, col.names = F, quote = F, sep = "\t")
       }
+      print("Done!")
       zip::zip(zipfile = file, c(zip_dir, "meta.txt"))
     }
   }
