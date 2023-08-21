@@ -13,8 +13,9 @@ tabItem(
           column(2, selectInput("select_type", "Choose format",
             choices = c("csv", "zip"), selected = "csv"
           )),
-          column(2, downloadButton("download", "Download", class = "btn-success"), class = "top25"),
-          column(6, p("Download zip file will produce an archive with multiple spectrum files in txt format and a metadata table file."), class = "top25")
+          column(2, withBusyIndicatorUI(actionButton("prepare_file", "Prepare file", class = "btn-success")), class = "top25"),
+          column(2, downloadButton("download", "Download", class = "btn-success disabled"), class = "top25"),
+          column(4, p("Download zip file will produce an archive with multiple spectrum files in txt format and a metadata table file."), class = "top25")
         )
       )
     )

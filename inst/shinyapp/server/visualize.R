@@ -9,6 +9,40 @@ output$hs_select_for_export <- renderUI({
   selectInput("hs_selector_for_export", "Choose target", choices = hs_all, selected = selected)
 })
 
+# prepare file to download on click of button
+observeEvent(input$prepare_file,
+             {
+               req(isolate(input$hs_selector_for_export), cancelOutput = T)
+               withBusyIndicatorServer("prepare_file", {
+                 data <- hs$val[[isolate(input$hs_selector_for_export)]]
+                 setwd(tempdir())
+                 if (isolate(input$select_type == "csv")) {
+                   file <- paste0("spectra-", isolate(input$hs_selector_for_export), ".csv")
+                   write.csv(data@data, file, quote=F, row.names=F)
+                   shinyjs::enable('download')
+                 } else if (isolate(input$select_type == "zip")) {
+                   file <- paste0("spectra-", isolate(input$hs_selector_for_export), ".zip")
+                   zip_dir <- isolate(input$hs_selector_for_export)
+                   meta <- data@data
+                   meta$spc <- NULL
+                   write.table(meta, "meta.txt", row.names = F, col.names = T, quote = F, sep = "\t")
+                   if (dir.exists(zip_dir)) fs::dir_delete(zip_dir)
+                   dir.create(zip_dir)
+                   #print("Preparing Raman Spectra files.")
+                   for (i in (1:nrow(data))) {
+                     cell <- data[i]
+                     txtdf <- data.frame(shift = cell@wavelength, intensity = t(cell$spc))
+                     txtname <- file.path(zip_dir, paste0(cell$ID_Cell, ".txt"))
+                     write.table(txtdf, txtname, row.names = F, col.names = F, quote = F, sep = "\t")
+                   }
+                   #print("Done!")
+                   zip::zip(zipfile = file, c(zip_dir, "meta.txt"))
+                   shinyjs::enable('download')
+                 }
+               })
+             },
+             ignoreNULL = T
+)
 
 output$download <- downloadHandler(
   filename = function() {
@@ -22,28 +56,33 @@ output$download <- downloadHandler(
     paste0(name, suffix)
   },
   content = function(file) {
-    data <- hs$val[[isolate(input$hs_selector_for_export)]]
-    if (isolate(input$select_type == "csv")) {
-      write.csv(data@data, file, quote=F, row.names=F)
-    } else if (isolate(input$select_type == "zip")) {
-      setwd(tempdir())
-      zip_dir <- isolate(input$hs_selector_for_export)
-      meta <- data@data
-      meta$spc <- NULL
-      write.table(meta, "meta.txt", row.names = F, col.names = T, quote = F, sep = "\t")
-      if (!dir.exists(zip_dir)) dir.create(zip_dir)
-      print("Preparing Raman Spectra files.")
-      for (i in (1:nrow(data))) {
-        cell <- data[i]
-        txtdf <- data.frame(shift = cell@wavelength, intensity = t(cell$spc))
-        txtname <- file.path(zip_dir, paste0(cell$ID_Cell, ".txt"))
-        write.table(txtdf, txtname, row.names = F, col.names = F, quote = F, sep = "\t")
-      }
-      print("Done!")
-      zip::zip(zipfile = file, c(zip_dir, "meta.txt"))
+    name <- paste0("spectra-", isolate(input$hs_selector_for_export))
+    suffix <- ".csv"
+    if (isolate(input$select_type) == "csv") {
+      suffix <- ".csv"
+    } else if (isolate(input$select_type) == "zip") {
+      suffix <- ".zip"
     }
+    prepared_file <- paste0(name, suffix)
+    file.copy(prepared_file, file)
   }
 )
+
+observeEvent(c(input$hs_selector_for_export, input$select_type), {
+  name <- paste0("spectra-", isolate(input$hs_selector_for_export))
+  suffix <- ".csv"
+  if (isolate(input$select_type) == "csv") {
+    suffix <- ".csv"
+  } else if (isolate(input$select_type) == "zip") {
+    suffix <- ".zip"
+  }
+  prepared_file <- paste0(name, suffix)
+  if (file.exists(prepared_file)) {
+    shinyjs::enable('download')
+  } else {
+    shinyjs::disable('download')
+  }
+})
 
 observeEvent(input$hs_selector_for_export,
   {

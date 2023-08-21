@@ -44,10 +44,12 @@ if (user_name == "") user_name <- "Anonymous"
 
 theme_set(theme_bw())
 
-set.seed(2020)
+set.seed(2023)
+
+unlink(paste0(tempdir(),"/*"),recursive = T, force = T)
 
 options(encoding = "UTF-8")
-options(shiny.maxRequestSize = 200 * 1024^2)
+options(shiny.maxRequestSize = 800 * 1024^2) # 800 MB
 options(spinner.type = 5, spinner.color = "#bf00ff", spinner.size = 1)
 
 scrs <- reactiveValues(spc = NULL)
