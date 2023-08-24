@@ -10,14 +10,21 @@ tabItem(
         12,
         fluidRow(
           column(12, radioButtons("ig_choice", label = "Choose Ramanome dataset source:",
-                                  choices = c("Use existing dataset (a)", "Upload new dataset (b)"),
-            selected = "Use existing dataset (a)", inline = TRUE))
+            choices = c("Use existing dataset", "Upload new dataset"),
+            selected = "Use existing dataset", inline = TRUE))
         ),
         fluidRow(
-          column(3, uiOutput("hs_select_for_integrate")),
-          column(3, uiOutput("hs_select_for_ig_label")),
-          column(4, fileInput("upload_X_file", "(b) Ramanome dataset", accept = ".csv", placeholder = "X.csv")),
-          column(2, withBusyIndicatorUI(actionButton("upload_X", "Upload", class = "btn-success")), class = "top25")
+          conditionalPanel(
+            condition = "input.ig_choice == 'Use existing dataset'",
+            column(3, uiOutput("hs_select_for_integrate")),
+            column(3, uiOutput("hs_select_for_ig_label")),
+            column(2, withBusyIndicatorUI(actionButton("confirm_X", "Confirm ", class = "btn-success")), class = "top25")
+          ),
+          conditionalPanel(
+            condition = "input.ig_choice == 'Upload new dataset'",
+            column(4, fileInput("upload_X_file", "Ramanome dataset", accept = ".csv", placeholder = "X.csv")),
+            column(2, withBusyIndicatorUI(actionButton("upload_X", "Upload", class = "btn-success")), class = "top25")
+          )
         ),
         fluidRow(
           column(4, fileInput("upload_Y_file", "Transcriptome dataset", accept = ".csv", placeholder = "Y.csv")),

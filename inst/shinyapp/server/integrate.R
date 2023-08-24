@@ -1,14 +1,14 @@
 output$hs_select_for_integrate <- renderUI({
   hs_all <- names(hs$val)
   selected <- NULL
-  if ("train" %in% hs_all) {
-    selected <- "train"
+  if ("average" %in% hs_all) {
+    selected <- "average"
   } else if ("cdr" %in% hs_all) {
     selected <- "cdr"
   } else if ("snr" %in% hs_all) {
     selected <- "snr"
   }
-  selectInput("hs_selector_for_integrate", "(a) Ramanome dataset", choices = hs_all, selected = selected)
+  selectInput("hs_selector_for_integrate", "Ramanome dataset", choices = hs_all, selected = selected)
 })
 
 observeEvent(input$hs_selector_for_integrate,
@@ -30,6 +30,17 @@ observeEvent(input$hs_selector_for_integrate,
 )
 
 # upload X/Y dataset
+observeEvent(input$confirm_X, {
+  hs_cur <- NULL
+  if (!is.null(input$hs_selector_for_integrate)) {
+    hs_cur <- hs$val[[input$hs_selector_for_integrate]]
+    ig$upload_X <- hs_cur$spc
+    ig$upload_X <- scale(ig$upload_X, scale=F)
+  } else {
+    toastr_error("No data selected!", position = "top-center")
+  }
+})
+
 observeEvent(input$upload_X, {
   withBusyIndicatorServer("upload_X", {
     if (!is.null(isolate(input$upload_X_file$datapath))) {
