@@ -46,19 +46,20 @@ ui <- dashboardPage(
         menuItem("Prepare", tabName = "prepare", icon = icon("hourglass-start")),
         menuItem("Explore", tabName = "explore", icon = icon("eye")),
         menuItem("Random forest", tabName = "rf", icon = icon("tree")),
-        tabName = "ml", icon = icon("robot"), startExpanded = T
+        tabName = "ml", icon = icon("robot"), startExpanded = F
       ),
       menuItem("Integration analysis",
-               menuItem("Integrate", tabName = "integrate", icon = icon("share-nodes")),
-               menuItem("Integrate2", tabName = "integrate2", icon = icon("vials")),
-               tabName = "ig", icon = icon("shuffle"), startExpanded = T
+               menuItem("Ramanome & Transcriptome", tabName = "integrate", icon = icon("square-plus")),
+               menuItem("Ramanome & Metabolome", tabName = "integrate2", icon = icon("circle-plus")),
+               menuItem("MultiOmics Integration", tabName = "integrate3", icon = icon("circle-nodes")),
+               tabName = "ig", icon = icon("shuffle"), startExpanded = F
       ),
       menuItem("SessionInfo", tabName = "info", icon = icon("circle-info")),
 
       div(
         class = "hide_when_sidebar_collapsed",
         helpText("Developed by ", a("Yanhai Gong", href = "mailto:gongyh@qibebt.ac.cn"),
-          br(), a("SCC, QIBEBT, CAS",
+          br(), a("@ SCC, QIBEBT, CAS",
             href = "http://singlecellcenter.org/en/index.aspx", target = "_blank"
           ),
           style = "padding-left:1em; padding-right:1em;position:absolute; bottom:1em; "
@@ -103,7 +104,7 @@ ui <- dashboardPage(
   ),
   # END dashboardBody
 
-  footer = dashboardFooter(left = "By Yanhai Gong", right = "SCC, QIBEBT, CAS, 2020")
+  footer = dashboardFooter(left = "Citation: https://github.com/gongyh/RamanD2O", right = "SCC, QIBEBT, CAS")
 )
 
 server <- function(input, output, session) {

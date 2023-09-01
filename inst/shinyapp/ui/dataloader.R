@@ -20,7 +20,8 @@ tabItem(
         column(7, withBusyIndicatorUI(actionButton("load_meta", "Load metadata", class = "btn-success")), class = "top25")
       ),
       h5("Notes:"),
-      p("The first column of the metadata table should be ID_Cell, which contains spectra file names without suffix."),
+      p("The first column of the metadata table should be ID_Cell, which contains spectra file names without suffix.
+        If you choose Interpolation, Raman spectra will be interpolated at integer frequencies."),
       br()
     ),
     box(

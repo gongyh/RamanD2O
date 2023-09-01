@@ -26,9 +26,10 @@ To try RamanD2O, you can load a small demo using the link in `Load data` tab, or
 4. `Smooth`: reduce high frequency noise, time consuming but recommended.
 5. `Baseline`: remove baseline for each spectrum, recommended.
 6. `Normalize`: normalize to allow equal comparison between spectrum, recommended.
-7. `Carotenoid`: detect cells with carotenoid peaks, recommended if you need to calculate C-D ratio.
-8. `SNR`: calculate signal noise ratio (SNR) and optionally filter dataset based on SNR values (recommended).
-9. `CDR`: calculate C-D ratio for cells incorporated heavy water.
+7. `Average`: Calculate average spectra in each selected group.
+8. `Carotenoid`: detect cells with carotenoid peaks, recommended if you need to calculate C-D ratio.
+9. `SNR`: calculate signal noise ratio (SNR) and optionally filter dataset based on SNR values (recommended).
+10. `CDR`: calculate C-D ratio for cells incorporated heavy water.
 
 ### Machine learning
 
@@ -36,8 +37,7 @@ To try RamanD2O, you can load a small demo using the link in `Load data` tab, or
 2. `Explore`: visualize the dataset using t-SNE embedding (into two dimensions), optional.
 3. `Random forest`: train a random forest classifier and evaluate for the `eval` dataset.
 
-### Citation
-https://github.com/gongyh/RamanD2O
-
-### Contact
-[Yanhai Gong](mailto:gongyh@qibebt.ac.cn)
+### Integration analysis
+1. `Ramanome & Transcriptome`: Integrate Ramanome and Transcriptome using O2PLS.
+2. `Ramanome & Metabolome`: Integrate Ramanome and Metabolome, TBD.
+3. `MultiOmics Integration`: Integrate Ramanome with multiple omics datasets, TBD.
