@@ -12,7 +12,7 @@ tabItem(
         fluidRow(
           column(2, textInput("collection", "Collection", value = "test")),
           column(2, textInput("db", "db", value = "test")),
-          column(5, textInput("url", "url", value = "mongodb+srv://singlecell:qibebt@cluster0.jvyuq.mongodb.net/test")),
+          column(5, textInput("url", "url", value = "mongodb+srv://localhost/test")),
           column(3, actionButton("connectdb", "Connect", class = "btn-success", icon = icon("link")), class = "top25")
         ),
         verbatimTextOutput("db_message", placeholder = T),
@@ -21,8 +21,7 @@ tabItem(
         fluidRow(
           column(
             12, p("The URL is in Connection String URI Format, the standard URI connection scheme has the form:"),
-            p("mongodb://[username:password@]host1[:port1][,...hostN[:portN]][/[defaultauthdb][?options]]"),
-            p("To test this app, use mongodb+srv://singlecell:qibebt@cluster0.jvyuq.mongodb.net/test to load 4893 testing spectra.", style = "color: red;")
+            p("mongodb://[username:password@]host1[:port1][,...hostN[:portN]][/[defaultauthdb][?options]]")
           )
         )
       )

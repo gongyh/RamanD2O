@@ -15,8 +15,7 @@ runtime: shiny
 You can load your spectra data and metadata using `Load data` tab.
 For spectrum file, two columns TXT file is supported, all spectra files should be archived in a single zip file.
 For metadata table, it should be in TSV format with headers in the first line. The first column should be `ID_Cell`, feel free to add more columns.
-
-To try RamanD2O, you can load a small demo using the link in `Load data` tab, or pull a bigger dataset (with 4893 spectra) from our public MongoDB database ([mongodb+srv://singlecell:qibebt@cluster0.jvyuq.mongodb.net/test](#)) using `Database` tab.
+To try RamanD2O, you can load a small demo using the link in `Load data` tab.
 
 ### Regular pipeline
 

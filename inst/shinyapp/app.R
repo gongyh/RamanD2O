@@ -27,7 +27,7 @@ ui <- dashboardPage(
         menuItem("Visualize", tabName = "visualize", icon = icon("poll")),
         menuItem("Statistics", tabName = "statistics", icon = icon("layer-group")),
         menuItem("Database", tabName = "database", icon = icon("coins")),
-        tabName = "tools", icon = icon("toolbox"), startExpanded = T
+        tabName = "tools", icon = icon("toolbox"), startExpanded = F
       ),
       menuItem("Pipeline",
         menuSubItem("Sample", tabName = "ss", icon = icon("crosshairs")),
