@@ -109,10 +109,17 @@ observeEvent(input$perform_lda,
                    tab2 <- table(Predicted = p2, Actual = testing$group)
                    acc_test <- sum(diag(tab2))/sum(tab2)
 
-                   p <- ggord(linear, training$group) +
-                     labs(title=sprintf("training accuracy is %.2f, testing accuracy is %.2f", acc_train, acc_test))
+                   if (nlevels(training$group) == 2) {
+                     tp <- predict(linear, training)
+                     tpdf <- data.frame(LD1 = tp$x, group = tp$class)
+                     p <- ggplot(tpdf) + geom_density(aes(LD1, fill = group), alpha = 0.2)
+                   } else {
+                     p <- ggord(linear, training$group)
+                   }
 
-                   ggplotly(p)
+                   ggplotly(p +
+                      labs(title=sprintf("training accuracy is %.2f, testing accuracy is %.2f", acc_train, acc_test))
+                     )
 
                  })
                })
