@@ -49,7 +49,7 @@ set.seed(2023)
 unlink(paste0(tempdir(),"/*"),recursive = T, force = T)
 
 options(encoding = "UTF-8")
-options(shiny.maxRequestSize = 800 * 1024^2) # 800 MB
+options(shiny.maxRequestSize = 8 * 1024^3) # 8 GB
 options(spinner.type = 5, spinner.color = "#bf00ff", spinner.size = 1)
 
 scrs <- reactiveValues(spc = NULL)
