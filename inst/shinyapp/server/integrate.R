@@ -11,23 +11,20 @@ output$hs_select_for_integrate <- renderUI({
   selectInput("hs_selector_for_integrate", "Ramanome dataset", choices = hs_all, selected = selected)
 })
 
-observeEvent(input$hs_selector_for_integrate,
-  {
-    hs_cur <- NULL
-    if (!is.null(input$hs_selector_for_integrate)) {
-      hs_cur <- hs$val[[input$hs_selector_for_integrate]]
+observeEvent(input$hs_selector_for_integrate, {
+  hs_cur <- NULL
+  if (!is.null(input$hs_selector_for_integrate)) {
+    hs_cur <- hs$val[[input$hs_selector_for_integrate]]
+  }
+  output$hs_select_for_ig_label <- renderUI({
+    metacols <- c("")
+    if (!is.null(hs_cur)) {
+      metacols <- colnames(hs_cur)
+      metacols <- metacols[metacols != "spc"]
     }
-    output$hs_select_for_ig_label <- renderUI({
-      metacols <- c("")
-      if (!is.null(hs_cur)) {
-        metacols <- colnames(hs_cur)
-        metacols <- metacols[metacols != "spc"]
-      }
-      selectInput("ig_select_label", "Group label", choices = metacols, selected = F)
-    })
-  },
-  ignoreNULL = FALSE
-)
+    selectInput("ig_select_label", "Group label", choices = metacols, selected = F)
+  })
+}, ignoreNULL = FALSE)
 
 # upload X/Y dataset
 observeEvent(input$confirm_X, {
@@ -99,25 +96,35 @@ observeEvent(ig$cvadjr, {
   output$cvadjr_result <- renderDataTable({
     validate(need(ig$cvadjr, ""))
     DT::datatable(ig$cvadjr,
-      escape = FALSE, selection = "single", extensions = list("Responsive", "Scroller"),
-      options = list(deferRender = T, searchHighlight = T, scrollX = T)
+      escape = FALSE, selection = "single", extensions = c("Buttons", "Responsive"),
+      options = list(
+        dom = 'Bfrtip',
+        deferRender = T, searchHighlight = T, scrollX = T,
+        buttons = list(
+          list(extend = "csv", filename = "CVadjr_result", text = "Download CSV")
+        )
+      )
     )
   })
 },
-ignoreNULL = FALSE
-)
+ignoreNULL = FALSE)
 
 observeEvent(ig$crossval, {
   output$crossval_result <- renderDataTable({
     validate(need(ig$crossval, ""))
     DT::datatable(as.data.frame(ig$crossval_df),
-      escape = FALSE, selection = "single", extensions = list("Responsive", "Scroller"),
-      options = list(deferRender = T, searchHighlight = T, scrollX = T)
+      escape = FALSE, selection = "single", extensions = c("Buttons", "Responsive"),
+      options = list(
+        dom = 'Bfrtip',
+        deferRender = T, searchHighlight = T, scrollX = T,
+        buttons = list(
+          list(extend = "csv", filename = "Crossval_result", text = "Download CSV")
+        )
+      )
     )
   })
 },
-ignoreNULL = FALSE
-)
+ignoreNULL = FALSE)
 
 observeEvent(ig$result, {
   output$Xjoint <- renderPlot({
@@ -137,60 +144,44 @@ observeEvent(ig$result, {
     ggarrange(plotlist = py, ncol=1)
   })
 },
-ignoreNULL = FALSE
-)
+ignoreNULL = FALSE)
 
-output$ig_result1 <- downloadHandler(
-  filename = paste0("ig-result1-", format(Sys.time(), "%Y%m%d%H%M%S"), ".csv"),
-  content = function(file) {
-    if (is.null(ig$cvadjr)) {
-      shinyalert("Oops!", "No result yet.", type = "error")
-      return()
-    } else {write.csv(ig$cvadjr, file)}
-  }
-)
-
-output$ig_result2 <- downloadHandler(
-  filename = paste0("ig-result2-", format(Sys.time(), "%Y%m%d%H%M%S"), ".csv"),
-  content = function(file) {
-    if (is.null(ig$crossval_df)) {
-      shinyalert("Oops!", "No result yet.", type = "error")
-      return()
-    } else {write.csv(ig$crossval_df, file)}
-  }
-)
-
+# Download result
 output$ig_result3 <- downloadHandler(
-  filename = paste0("ig-result3-", format(Sys.time(), "%Y%m%d%H%M%S"), ".png"),
+  filename = paste0("ig-result3-", format(Sys.time(), "%Y%m%d%H%M%S"), ".pdf"),
   content = function(file) {
     if (is.null(ig$result)) {
       shinyalert("Oops!", "No result yet.", type = "error")
       return()
     } else {
-      png(file)
+      pdf(file)
       px <- list()
       px <- lapply(1:isolate(input$pars_N), function(i) {
         plot(ig$result, loading_name='Xjoint', i=i, j=NULL, col='black')
       })
-      ggarrange(plotlist = px, ncol=1)
+      print(px)
+      pxs <- ggarrange(plotlist = px, ncol=1)
+      print(pxs)
       dev.off()
     }
   }
 )
 
 output$ig_result4 <- downloadHandler(
-  filename = paste0("ig-result4-", format(Sys.time(), "%Y%m%d%H%M%S"), ".png"),
+  filename = paste0("ig-result4-", format(Sys.time(), "%Y%m%d%H%M%S"), ".pdf"),
   content = function(file) {
     if (is.null(ig$result)) {
       shinyalert("Oops!", "No result yet.", type = "error")
       return()
     } else {
-      png(file)
+      pdf(file)
       py <- list()
       py <- lapply(1:isolate(input$pars_N), function(i) {
         plot(ig$result, loading_name='Yjoint', i=i, j=NULL, col='black')
       })
-      ggarrange(plotlist = py, ncol=1)
+      print(py)
+      pys <- ggarrange(plotlist = py, ncol=1)
+      print(pys)
       dev.off()
     }
   }

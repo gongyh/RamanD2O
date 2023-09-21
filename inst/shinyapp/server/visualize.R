@@ -205,7 +205,6 @@ observeEvent(input$plot_agg,
           } else {
             plot(means, stacked = ".aggregate", axis.args = list(las = 1))
           }
-
         }
       })
     })

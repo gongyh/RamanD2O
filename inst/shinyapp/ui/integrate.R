@@ -91,16 +91,12 @@ tabItem(
           tabPanel(
             "CV_adjR2",
             br(),
-            DTOutput("cvadjr_result") %>% withSpinner(),
-            tags$div(style = "text-align: right; margin-right: 20px; margin-top: 20px;",
-              downloadButton("ig_result1", "Download", class = "btn-primary"))
+            DTOutput("cvadjr_result") %>% withSpinner()
           ),
           tabPanel(
             "CrossVal",
             br(),
-            DTOutput("crossval_result") %>% withSpinner(),
-            tags$div(style = "text-align: right; margin-right: 20px; margin-top: 20px;",
-              downloadButton("ig_result2", "Download", class = "btn-primary"))
+            DTOutput("crossval_result") %>% withSpinner()
           ),
           tabPanel(
             "Xjoint",
@@ -116,11 +112,9 @@ tabItem(
             tags$div(style = "text-align: right; margin-right: 20px;",
               downloadButton("ig_result4", "Download", class = "btn-primary"))
           )
-
         )
       )
     )
-
   )
 )
 

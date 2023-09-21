@@ -68,23 +68,17 @@ tabItem(
           tabPanel(
             "Confusion (OOB)",
             br(),
-            DTOutput("rf_confusion_oob_plot") %>% withSpinner(),
-            tags$div(style = "text-align: right; margin-right: 20px; margin-top: 20px;",
-              downloadButton("download_result3", "Download", class = "btn-primary"))
+            DTOutput("rf_confusion_oob_plot") %>% withSpinner()
           ),
           tabPanel(
             "Confusion (Evaluation)",
             br(),
-            DTOutput("rf_confusion_eval_plot") %>% withSpinner(),
-            tags$div(style = "text-align: right; margin-right: 20px; margin-top: 20px;",
-              downloadButton("download_result4", "Download", class = "btn-primary"))
+            DTOutput("rf_confusion_eval_plot") %>% withSpinner()
           ),
           tabPanel(
             "Eval/Test results",
             br(),
-            DTOutput("rf_test_predicted_plot") %>% withSpinner(),
-            tags$div(style = "text-align: right; margin-right: 20px; margin-top: 20px;",
-              downloadButton("download_result5", "Download", class = "btn-primary"))
+            DTOutput("rf_test_predicted_plot") %>% withSpinner()
           )
         )
       )
