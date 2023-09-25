@@ -1,0 +1,24 @@
+name: ramand2o-env
+channels:
+  - bioconda
+  - conda-forge
+dependencies:
+  - r-base=4.2.3
+  - r-essentials
+  - r-tidyverse
+  - r-ggpubr
+  - r-devtools
+  - r-plotly
+  - r-shiny
+  - r-shinydashboard
+  - r-baseline
+  - r-pak
+  - r-extrafont
+  - r-extrafontdb
+  - cyrus-sasl
+  - r-dt
+  - r-fresh
+  - r-mdatools
+  - r-mongolite
+  - r-optparse
+  - r-permute
