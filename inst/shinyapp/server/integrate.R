@@ -143,6 +143,9 @@ observeEvent(ig$result, {
     })
     ggarrange(plotlist = py, ncol=1)
   })
+  vip <- O2PLSvip(ig$upload_X, ig$upload_Y, ig$result)
+  vip_x <- which(vip$x$predVIPxy>1)
+  vip_y <- which(vip$y$predVIPyx>1)
 },
 ignoreNULL = FALSE)
 

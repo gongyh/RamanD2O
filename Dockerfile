@@ -69,7 +69,8 @@ RUN R -e "library(pak); pkg_install(c('shiny', 'shinydashboard', 'shinyjs', 'shi
   'shinybusy', 'shinyalert', 'shinydisconnect', 'shinycssloaders', 'shinytoastr', \
   'DT', 'fresh', 'devtools', 'plotly', 'fs', 'ggpubr', 'ggplot2', 'stringr', \
   'RColorBrewer', 'dplyr', 'compiler', 'mongolite', 'zip', 'fawda123/ggord', \
-  'baseline', 'permute', 'Rtsne', 'markdown', 'caret', 'randomForest', 'OmicsPLS', 'mdatools', \
+  'baseline', 'permute', 'Rtsne', 'markdown', 'caret', 'randomForest', \
+  'YuLab-SMU/MMINP', 'OmicsPLS', 'mdatools', \
   'r-hyperspec/hyperSpec', 'r-hyperspec/hySpc.ggplot2', \
   'RinteRface/shinydashboardPlus')); cache_clean()" && rm -rf /tmp/*
 
