@@ -111,6 +111,16 @@ tabItem(
             plotOutput("Yjoint", height = "1000px") %>% withSpinner(),
             tags$div(style = "text-align: right; margin-right: 20px;",
               downloadButton("ig_result4", "Download", class = "btn-primary"))
+          ),
+          tabPanel(
+            "X_VIP",
+            br(),
+            DTOutput("x_vip") %>% withSpinner()
+          ),
+          tabPanel(
+            "Y_VIP",
+            br(),
+            DTOutput("y_vip") %>% withSpinner()
           )
         )
       )

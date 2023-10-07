@@ -89,6 +89,7 @@ observeEvent(input$crossval,{
 observeEvent(input$integrate, {
   withBusyIndicatorServer("integrate", {
     ig$result <- o2m(ig$upload_X, ig$upload_Y, isolate(input$pars_N), isolate(input$pars_Nx), isolate(input$pars_Ny))
+    ig$vip <- O2PLSvip(ig$upload_X, ig$upload_Y, ig$result)
   })
 })
 
@@ -143,9 +144,37 @@ observeEvent(ig$result, {
     })
     ggarrange(plotlist = py, ncol=1)
   })
-  vip <- O2PLSvip(ig$upload_X, ig$upload_Y, ig$result)
-  vip_x <- which(vip$x$predVIPxy>1)
-  vip_y <- which(vip$y$predVIPyx>1)
+  # datatable x_vip and y_vip
+  output$x_vip <- renderDataTable({
+    validate(need(ig$vip, ""))
+    x_vip_index <- which(ig$vip$x$predVIPxy>1)
+    x_vip_data <- ig$vip$x[x_vip_index,]
+    DT::datatable(as.data.frame(x_vip_data),
+      escape = FALSE, selection = "single", extensions = c("Buttons", "Responsive"),
+      options = list(
+        dom = 'Bfrtip',
+        deferRender = T, searchHighlight = T, scrollX = T,
+        buttons = list(
+          list(extend = "csv", filename = "x_vip_data", text = "Download CSV")
+        )
+      )
+    )
+  })
+  output$y_vip <- renderDataTable({
+    validate(need(ig$vip, ""))
+    y_vip_index <- which(ig$vip$y$predVIPyx>1)
+    y_vip_data <- ig$vip$y[y_vip_index,]
+    DT::datatable(as.data.frame(y_vip_data),
+      escape = FALSE, selection = "single", extensions = c("Buttons", "Responsive"),
+      options = list(
+        dom = 'Bfrtip',
+        deferRender = T, searchHighlight = T, scrollX = T,
+        buttons = list(
+          list(extend = "csv", filename = "y_vip_data", text = "Download CSV")
+        )
+      )
+    )
+  })
 },
 ignoreNULL = FALSE)
 
