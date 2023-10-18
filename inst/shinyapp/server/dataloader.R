@@ -128,3 +128,57 @@ observeEvent(meta$tbl,
   },
   ignoreNULL = FALSE
 )
+
+observeEvent(input$tips1, {
+  showModal(
+    modalDialog(
+      includeMarkdown('#### **How to save the filenames in a folder to a text file?**
+                      \n(1)
+                      \nOpen the Command Prompt (CMD): Press Win+R, then type "cmd", and press Enter.
+                      \n(2)
+                      \nSwitch to the desired folder: Use the “cd” command to navigate to the folder
+                      that contains the desired files.
+                      \n`cd C:\\Users\\YourUsername\\Documents`
+                      \nReplace "YourUsername" with your actual username.
+                      \n(3)
+                      \nRun the “dir” command with additional parameters: In the command prompt,
+                      enter “dir /b” and press the space key. This will list the file names of all files
+                      in the folder in a compact format.
+                      \n(4)
+                      \nAdd ">filenames.txt": After the previous command, add ">filenames.txt" where "filenames"
+                      is the name of the text file you want to save. For example, if you want to save it as 
+                      "filenames.txt", the complete command would be:
+                      \n`dir /b > filenames.txt`
+                      \nExecuting this command will save the file names of all files in the folder to a text file
+                      named "filenames.txt".
+                      \n(5)
+                      \nLocate the text file: Check if a text file named “filenames.txt” (or the name you specified)
+                      has been created in the folder. You can look in the corresponding folder and make sure that
+                      the file name and saved location match what you specified.
+                      '),
+      footer = modalButton("Close")
+    )
+  )
+})
+
+observeEvent(input$tips2, {
+  showModal(
+    modalDialog(
+      includeMarkdown('#### **About meta.tsv file!**
+        \n(1)
+        \nTSV (Tab-Separated Values) files are a type of plain text file where the data
+        fields are separated by tab characters.
+        \n(2)
+        \nYou can obtain a TSV file using Excel. Enter your data into spreadsheet,
+        save the file in the TSV format or other Tab-Separated format and keep the suffix of filename to tsv.'),
+      renderTable(data.frame(
+        ID_Cell = c("file1", "file2", "file3"),
+        Group1 = c("Control", "Treat", "Treat"),
+        Group2 = c("Hot", "Hot", "Cold")
+      ), bordered = TRUE, align = "c"),
+      includeMarkdown('\n(3)
+        \nThe first column should be `ID_Cell`, feel free to add at least one columns.'),
+      footer = modalButton("Close")
+    )
+  )
+})

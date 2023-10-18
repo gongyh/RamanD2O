@@ -22,7 +22,11 @@ tabItem(
       h5("Notes:"),
       p("The first column of the metadata table should be ID_Cell, which contains spectra file names without suffix.
         If you choose Interpolation, Raman spectra will be interpolated at integer frequencies."),
-      br()
+      h5("Tips:"),
+      fluidRow(
+        column(2, actionButton("tips1", "Get Filenames")),
+        column(2, actionButton("tips2", "Get TSV File"))
+      )
     ),
     box(
       title = "Metadata Table", status = "warning", solidHeader = TRUE, collapsible = TRUE,

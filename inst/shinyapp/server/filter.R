@@ -10,6 +10,7 @@ output$hs_select_for_filter <- renderUI({
 })
 
 # filter scrs on click of button
+output$after_filter <- NULL
 observeEvent(input$filter, {
   withBusyIndicatorServer("filter", {
     if (isolate(input$hs_selector_for_filter) == "") {
@@ -29,29 +30,22 @@ observeEvent(input$filter, {
         OK <- apply(hs_cur[[]], 2, mean_sd_filter, n = isolate(input$n_sd))
         hs_cur <- hs_cur[apply(OK, 1, all)]
       }
+      output$after_filter <- renderDataTable({
+        DT::datatable(if (is.null(hs_cur)) NULL else hs_cur@data %>% dplyr::select(!matches("spc")),
+          escape = FALSE, selection = "multiple", extensions = list("Responsive", "Scroller"),
+          options = list(searchHighlight = TRUE, scrollX = TRUE)
+        )
+      })
       hs$val[["filtered"]] <- hs_cur
     }
   })
 })
 
-observeEvent(hs$val[["filtered"]],
-  {
-    hs_fl <- hs$val[["filtered"]]
-    output$after_filter <- renderDataTable({
-      DT::datatable(if (is.null(hs_fl)) NULL else hs_fl@data %>% dplyr::select(!matches("spc")),
-        escape = FALSE, selection = "single", extensions = list("Responsive", "Scroller"),
-        options = list(searchHighlight = TRUE, scrollX = TRUE)
-      )
-    })
-  },
-  ignoreNULL = FALSE
-)
-
 observeEvent(input$after_filter_rows_selected,
   {
     output$after_filter_plot <- renderPlotly({
-      validate(need(input$after_filter_rows_selected, ""))
-      index <- input$after_filter_rows_selected
+      validate(need(isolate(input$after_filter_rows_selected), ""))
+      index <- isolate(input$after_filter_rows_selected)
       item <- hs$val[["filtered"]][index]
       p <- qplotspc(item) + xlab(TeX("\\Delta \\tilde{\\nu }/c{{m}^{-1}}")) + ylab("I / a.u.")
       ggplotly(p) %>% config(mathjax = "cdn")
@@ -61,6 +55,8 @@ observeEvent(input$after_filter_rows_selected,
 )
 
 # remove scrs on click of button
+proxy = dataTableProxy('after_filter')
+
 observeEvent(input$remove, {
   withBusyIndicatorServer("remove", {
     if (is.null(isolate(input$after_filter_rows_selected))) {
@@ -71,8 +67,18 @@ observeEvent(input$remove, {
         type = "info", closeOnClickOutside = T, showCancelButton = T,
         callbackR = function(x) {
           if (x) hs$val[["filtered"]] <- hs$val[["filtered"]][-isolate(input$after_filter_rows_selected)]
+          replaceData(proxy, data = hs$val[["filtered"]]@data %>% dplyr::select(!matches("spc")))
+          if (length(isolate(input$after_filter_rows_selected)) == 1)
+            selectRows(proxy, as.numeric(isolate(input$after_filter_rows_selected)))
         }
       )
     }
   })
+})
+
+observeEvent(input$next_rm, {
+  proxy %>% selectRows(if (length(isolate(input$after_filter_rows_selected)) == 1
+    && isolate(input$after_filter_rows_selected) < length(input$after_filter_rows_all))
+    as.numeric(isolate(input$after_filter_rows_selected) + 1)
+    else as.numeric(isolate(input$after_filter_rows_selected)))
 })
