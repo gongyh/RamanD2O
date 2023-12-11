@@ -14,9 +14,30 @@ tabItem(
         ),
         fluidRow(
           column(6, selectInput("select_baseline", "Baseline method",
-            choices = c("polyfit", "als"), selected = "polyfit"
-          )),
-          column(6, uiOutput("baseline_config"))
+            choices = c("polyfit", "als"), selected = "polyfit")
+          ),
+          # two baseline method
+          conditionalPanel(
+            condition = "input.select_baseline == 'polyfit'",
+            conditionalPanel(
+              condition = "input.polyfit_custom == false",
+              column(3,numericInput("polyfit_order", "Order", 1, min = 1, max = 10, step = 1))
+            ),
+            conditionalPanel(
+              condition = "input.polyfit_custom == true",
+              column(1, actionButton("polyfit_custom_plus", "", icon = icon("plus")), class = "top25"),
+              column(1, actionButton("polyfit_custom_minus", "", icon = icon("minus")), class = "top25"),
+              column(1)
+            ),
+            column(3, checkboxInput("polyfit_custom", "Custom range", value = F), class = "top25")
+          ),
+          conditionalPanel(
+            condition = "input.select_baseline == 'als'"
+          )
+        ),
+        conditionalPanel(
+          condition = "input.polyfit_custom == true",
+          uiOutput("polyfit_custom_multi")
         ),
         radioButtons("select_negative", "How to handle negative values",
           choices = c(

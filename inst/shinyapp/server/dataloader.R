@@ -139,7 +139,7 @@ observeEvent(input$tips1, {
                       \nSwitch to the desired folder: Use the “cd” command to navigate to the folder
                       that contains the desired files.
                       \n`cd C:\\Users\\YourUsername\\Documents`
-                      \nReplace "YourUsername" with your actual username.
+                      \nReplace path with your actual path.
                       \n(3)
                       \nRun the “dir” command with additional parameters: In the command prompt,
                       enter “dir /b” and press the space key. This will list the file names of all files
