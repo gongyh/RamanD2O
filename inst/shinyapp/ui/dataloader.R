@@ -24,8 +24,8 @@ tabItem(
         If you choose Interpolation, Raman spectra will be interpolated at integer frequencies."),
       h5("Tips:"),
       fluidRow(
-        column(2, actionLink("tips1", "About Filenames")),
-        column(2, actionLink("tips2", "About TSV File"))
+        column(3, actionLink("tips1", "About Filenames")),
+        column(3, actionLink("tips2", "About TSV File"))
       )
     ),
     box(

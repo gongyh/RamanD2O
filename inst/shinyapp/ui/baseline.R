@@ -21,7 +21,7 @@ tabItem(
             condition = "input.select_baseline == 'polyfit'",
             conditionalPanel(
               condition = "input.polyfit_custom == false",
-              column(3,numericInput("polyfit_order", "Order", 1, min = 1, max = 10, step = 1))
+              column(3,numericInput("polyfit_order", "Order", 1, min = 0, max = 15, step = 1))
             ),
             conditionalPanel(
               condition = "input.polyfit_custom == true",
