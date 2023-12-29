@@ -36,7 +36,7 @@ tabItem(
           )
         ),
         conditionalPanel(
-          condition = "input.polyfit_custom == true",
+          condition = "input.polyfit_custom == true & input.select_baseline == 'polyfit'",
           uiOutput("polyfit_custom_multi")
         ),
         radioButtons("select_negative", "How to handle negative values",

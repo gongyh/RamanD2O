@@ -123,7 +123,8 @@ observeEvent(input$eval, {
         options = list(
           dom = 'Bfrtip', deferRender = T, searchHighlight = T, scrollX = T,
           buttons = list(
-            list(extend = "csv", filename = "Confusion_eval_result", text = "Download")
+            list(extend = "csv", filename = "Confusion_eval_result", text = "Download",
+              exportOptions = list(modifier = list(page = 'all', search = 'none')))
           )
         )
       ) %>% formatPercentage(c("class.error"), 4)
@@ -137,7 +138,8 @@ observeEvent(input$eval, {
         options = list(
           dom = 'Bfrtip', deferRender = T, searchHighlight = T, scrollX = T,
           buttons = list(
-            list(extend = "csv", filename = "Eval_result", text = "Download")
+            list(extend = "csv", filename = "Eval_result", text = "Download",
+              exportOptions = list(modifier = list(page = 'all', search = 'none')))
           )
         )
       )
@@ -174,7 +176,8 @@ observeEvent(input$test, {
         options = list(
           dom = 'Bfrtip', deferRender = T, searchHighlight = T, scrollX = T,
           buttons = list(
-            list(extend = "csv", filename = "Test_result", text = "Download")
+            list(extend = "csv", filename = "Test_result", text = "Download",
+              exportOptions = list(modifier = list(page = 'all', search = 'none')))
           )
         )
       )
@@ -204,7 +207,8 @@ observeEvent(ml$results, {
       options = list(
         dom = 'Bfrtip', deferRender = T, searchHighlight = T, scrollX = T,
         buttons = list(
-          list(extend = "csv", filename = "Confusion_OOB_result", text = "Download")
+          list(extend = "csv", filename = "Confusion_OOB_result", text = "Download",
+            exportOptions = list(modifier = list(page = 'all', search = 'none')))
         )
       )
     ) %>% formatPercentage(c("class.error"), 4)
@@ -217,7 +221,8 @@ observeEvent(ml$results, {
       options = list(
         dom = 'Bfrtip', deferRender = T, searchHighlight = T, scrollX = T,
         buttons = list(
-          list(extend = "csv", filename = "Confusion_eval_result", text = "Download")
+          list(extend = "csv", filename = "Confusion_eval_result", text = "Download",
+            exportOptions = list(modifier = list(page = 'all', search = 'none')))
         )
       )
     ) %>% formatPercentage(c("class.error"), 4)
@@ -250,7 +255,7 @@ observeEvent(input$upload_model, {
 })
 
 output$download_model <- downloadHandler(
-  filename = paste0("model-", format(Sys.time(), "%Y%m%d%H%M%S"), ".rds"), 
+  filename = paste0("model-", format(Sys.time(), "%Y%m%d%H%M%S"), ".rds"),
   content = function(file) {
     if (is.null(ml$results)) {
       shinyalert("Oops!", "Please train the model first.", type = "error")
@@ -260,7 +265,7 @@ output$download_model <- downloadHandler(
 )
 
 output$download_result1 <- downloadHandler(
-  filename = paste0("result1-", format(Sys.time(), "%Y%m%d%H%M%S"), ".pdf"), 
+  filename = paste0("result1-", format(Sys.time(), "%Y%m%d%H%M%S"), ".pdf"),
   content = function(file) {
     if (is.null(ml$results)) {
       shinyalert("Oops!", "No result yet.", type = "error")
@@ -274,7 +279,7 @@ output$download_result1 <- downloadHandler(
 )
 
 output$download_result2 <- downloadHandler(
-  filename = paste0("result2-", format(Sys.time(), "%Y%m%d%H%M%S"), ".png"), 
+  filename = paste0("result2-", format(Sys.time(), "%Y%m%d%H%M%S"), ".png"),
   content = function(file) {
     if (is.null(ml$results)) {
       shinyalert("Oops!", "No result yet.", type = "error")

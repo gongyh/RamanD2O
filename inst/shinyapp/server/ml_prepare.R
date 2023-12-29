@@ -94,7 +94,7 @@ observeEvent(input$prepare, {
       # randomly split
       total <- nrow(hs_cur)
       size <- floor(isolate(input$train_pct) / 100.0 * total)
-      tindex <- isample(hs_cur)
+      tindex <- hyperSpec::isample(hs_cur)
       index <- tindex[1:max(size, 2)]
       # Train&Eval set
       if (isolate(input$datatype_for_ml_prepare) == "Train&Eval") {
