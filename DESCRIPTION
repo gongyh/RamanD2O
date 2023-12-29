@@ -33,7 +33,10 @@ Imports:
     baseline,
     markdown,
     OmicsPLS,
-    mdatools
+    mdatools,
+    foreach,
+    parallel,
+    doParallel
 Suggests:
     shiny,
     shinydashboard,
