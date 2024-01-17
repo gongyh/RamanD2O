@@ -23,8 +23,7 @@ observeEvent(input$unzip, {
         })
         scrs_min <- max(sapply(max_min_values, function(x) x$min))
         scrs_max <- min(sapply(max_min_values, function(x) x$max))
-        shift <- read.table(txtfiles[1], header = F, sep = "\t")$V1
-        shift <- round(shift[shift >= scrs_min & shift <= scrs_max])
+        shift <- round(scrs_min):round(scrs_max)
         scrs_colnames <- c("ID_Cell", shift)
         scrs_df <- matrix(nrow = length(scrs_colnames), ncol = total)
         for (filename in txtfiles) {
@@ -146,7 +145,7 @@ observeEvent(input$tips1, {
                       in the folder in a compact format.
                       \n(4)
                       \nAdd ">filenames.txt": After the previous command, add ">filenames.txt" where "filenames"
-                      is the name of the text file you want to save. For example, if you want to save it as 
+                      is the name of the text file you want to save. For example, if you want to save it as
                       "filenames.txt", the complete command would be:
                       \n`dir /b > filenames.txt`
                       \nExecuting this command will save the file names of all files in the folder to a text file

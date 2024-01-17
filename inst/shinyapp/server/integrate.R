@@ -69,6 +69,7 @@ observeEvent(input$cvadjr, {
 
 observeEvent(input$crossval,{
   withBusyIndicatorServer("crossval",{
+    print(Sys.time())
     ig$crossval <- crossval_o2m(ig$upload_X, ig$upload_Y, isolate(input$pars_N_min2):isolate(input$pars_N_max2),
       isolate(input$pars_Nx_min2):isolate(input$pars_Nx_max2), isolate(input$pars_Ny_min2):isolate(input$pars_Ny_max2), nr_folds=isolate(input$pars_fold), nr_cores=5)
     ig$crossval_df <- data.frame()
@@ -83,6 +84,7 @@ observeEvent(input$crossval,{
       df_tmp <- data.frame(MSE = ifelse(is.null(rownames(index)), "NA", ig$crossval$Original[index]), N = N, Nx = Nx, Ny = Ny)
       ig$crossval_df <- rbind(ig$crossval_df, df_tmp)
     })
+    print(Sys.time())
   })
 })
 
@@ -95,6 +97,7 @@ observeEvent(input$integrate, {
 
 observeEvent(input$integrate2d, {
   withBusyIndicatorServer("integrate2d", {
+    print(Sys.time())
     ig$upload_X2 <- matrix(nrow=nrow(ig$upload_X), ncol=ncol(ig$upload_X)*(ncol(ig$upload_X)+1))
     ig$upload_X2[,1:ncol(ig$upload_X)] <- as.matrix(ig$upload_X)
     rownames(ig$upload_X2) <- rownames(ig$upload_X)
@@ -114,8 +117,11 @@ observeEvent(input$integrate2d, {
     ig$upload_X2[, (ncol(ig$upload_X) + 1) : (ncol(ig$upload_X) + ncol(X2))] <- X2
     colnames(ig$upload_X2) <- c(colnames(ig$upload_X), colnames(X2))
     # O2PLS
+    print(Sys.time())
     ig$result2 <- o2m(ig$upload_X2, ig$upload_Y, isolate(input$pars_N), isolate(input$pars_Nx), isolate(input$pars_Ny))
+    print(Sys.time())
     ig$vip2 <- O2PLSvip(ig$upload_X2, ig$upload_Y, ig$result2)
+    print(Sys.time())
   })
 })
 
@@ -123,14 +129,10 @@ observeEvent(ig$cvadjr, {
   output$cvadjr_result <- renderDataTable({
     validate(need(ig$cvadjr, ""))
     DT::datatable(ig$cvadjr,
-      escape = FALSE, selection = "single", extensions = c("Buttons", "Responsive"),
+      escape = FALSE, selection = "single", extensions = c("Responsive"),
       options = list(
         dom = 'Bfrtip',
-        deferRender = T, searchHighlight = T, scrollX = T,
-        buttons = list(
-          list(extend = "csv", filename = "CVadjr_result", text = "Download CSV",
-            exportOptions = list(modifier = list(page = 'all', search = 'none')))
-        )
+        deferRender = T, searchHighlight = T, scrollX = T
       )
     )
   })
@@ -141,14 +143,10 @@ observeEvent(ig$crossval, {
   output$crossval_result <- renderDataTable({
     validate(need(ig$crossval, ""))
     DT::datatable(as.data.frame(ig$crossval_df),
-      escape = FALSE, selection = "single", extensions = c("Buttons", "Responsive"),
+      escape = FALSE, selection = "single", extensions = c("Responsive"),
       options = list(
         dom = 'Bfrtip',
-        deferRender = T, searchHighlight = T, scrollX = T,
-        buttons = list(
-          list(extend = "csv", filename = "Crossval_result", text = "Download CSV",
-            exportOptions = list(modifier = list(page = 'all', search = 'none')))
-        )
+        deferRender = T, searchHighlight = T, scrollX = T
       )
     )
   })
@@ -160,7 +158,7 @@ observeEvent(ig$result, {
     validate(need(ig$result, ""))
     px <- list()
     px <- lapply(1:isolate(input$pars_N), function(i) {
-      plot(ig$result, loading_name='Xjoint', i=i, j=NULL, col='black')
+      plot_o2m(ig$result, loading_name='Xjoint', i=i, j=NULL, col='black')
     })
     ggarrange(plotlist = px, ncol=1)
   })
@@ -168,7 +166,7 @@ observeEvent(ig$result, {
     validate(need(ig$result, ""))
     py <- list()
     py <- lapply(1:isolate(input$pars_N), function(i) {
-      plot(ig$result, loading_name='Yjoint', i=i, j=NULL, col='black')
+      plot_o2m(ig$result, loading_name='Yjoint', i=i, j=NULL, col='black')
     })
     ggarrange(plotlist = py, ncol=1)
   })
@@ -177,15 +175,12 @@ observeEvent(ig$result, {
     validate(need(ig$vip, ""))
     x_vip_index <- which(ig$vip$x$predVIPxy>1)
     x_vip_data <- ig$vip$x[x_vip_index,]
+    ig$cur_x_vip <- x_vip_data
     DT::datatable(as.data.frame(x_vip_data),
-      escape = FALSE, selection = "single", extensions = c("Buttons", "Responsive"),
+      escape = FALSE, selection = "single", extensions = c("Responsive"),
       options = list(
         dom = 'Bfrtip',
-        deferRender = T, searchHighlight = T, scrollX = T,
-        buttons = list(
-          list(extend = "csv", filename = "x_vip_data", text = "Download CSV",
-            exportOptions = list(modifier = list(page = 'all', search = 'none')))
-        )
+        deferRender = T, searchHighlight = T, scrollX = T
       )
     )
   })
@@ -193,16 +188,12 @@ observeEvent(ig$result, {
     validate(need(ig$vip, ""))
     y_vip_index <- which(ig$vip$y$predVIPyx>1)
     y_vip_data <- ig$vip$y[y_vip_index,]
+    ig$cur_y_vip <- y_vip_data
     DT::datatable(as.data.frame(y_vip_data),
-      escape = FALSE, selection = "single", extensions = c("Buttons", "Responsive"),
+      escape = FALSE, selection = "single", extensions = c("Responsive"),
       options = list(
         dom = 'Bfrtip',
-        deferRender = T, searchHighlight = T, scrollX = T,
-        buttons = list(
-          list(extend = "csv", filename = "y_vip_data", text = "Download CSV",
-            exportOptions = list(modifier = list(page = 'all', search = 'none'))
-          )
-        )
+        deferRender = T, searchHighlight = T, scrollX = T
       )
     )
   })
@@ -215,7 +206,7 @@ observeEvent(ig$result2, {
     validate(need(ig$result2, ""))
     px <- list()
     px <- lapply(1:isolate(input$pars_N), function(i) {
-      plot(ig$result2, loading_name='Xjoint', i=i, j=NULL, col='black')
+      plot_o2m(ig$result2, loading_name='Xjoint', i=i, j=NULL, col='black')
     })
     ggarrange(plotlist = px, ncol=1)
   })
@@ -223,24 +214,21 @@ observeEvent(ig$result2, {
     validate(need(ig$result2, ""))
     py <- list()
     py <- lapply(1:isolate(input$pars_N), function(i) {
-      plot(ig$result2, loading_name='Yjoint', i=i, j=NULL, col='black')
+      plot_o2m(ig$result2, loading_name='Yjoint', i=i, j=NULL, col='black')
     })
     ggarrange(plotlist = py, ncol=1)
   })
   # datatable x_vip and y_vip
   output$x_vip <- renderDataTable({
     validate(need(ig$vip2, ""))
-    x_vip_index <- which(ig$vip2$x$predVIPxy>55)
+    x_vip_index <- which(ig$vip2$x$predVIPxy>55 & !grepl("_", rownames(ig$vip2$x)))
     x_vip_data <- ig$vip2$x[x_vip_index,]
+    ig$cur_x_vip <- x_vip_data
     DT::datatable(as.data.frame(x_vip_data),
-      escape = FALSE, selection = "single", extensions = c("Buttons", "Responsive"),
+      escape = FALSE, selection = "single", extensions = c("Responsive"),
       options = list(
         dom = 'Bfrtip',
-        deferRender = T, searchHighlight = T, scrollX = T,
-         buttons = list(
-           list(extend = "csv", filename = "x_vip_data", text = "Download CSV",
-             exportOptions = list(modifier = list(page = 'all', search = 'none')))
-         )
+        deferRender = T, searchHighlight = T, scrollX = T
       )
     )
   })
@@ -248,15 +236,12 @@ observeEvent(ig$result2, {
     validate(need(ig$vip2, ""))
     y_vip_index <- which(ig$vip2$y$predVIPyx>1)
     y_vip_data <- ig$vip2$y[y_vip_index,]
+    ig$cur_y_vip <- y_vip_data
     DT::datatable(as.data.frame(y_vip_data),
-      escape = FALSE, selection = "single", extensions = c("Buttons", "Responsive"),
+      escape = FALSE, selection = "single", extensions = c("Responsive"),
       options = list(
         dom = 'Bfrtip',
-        deferRender = T, searchHighlight = T, scrollX = T,
-        buttons = list(
-          list(extend = "csv", filename = "y_vip_data", text = "Download CSV",
-            exportOptions = list(modifier = list(page = 'all', search = 'none')))
-        )
+        deferRender = T, searchHighlight = T, scrollX = T
       )
     )
   })
@@ -265,6 +250,26 @@ observeEvent(ig$result2, {
 ignoreNULL = FALSE)
 
 # Download result
+output$ig_result1 <- downloadHandler(
+  filename = paste0("ig-result1-", format(Sys.time(), "%Y%m%d%H%M%S"), ".csv"),
+  content = function(file) {
+    if (is.null(ig$cvadjr)) {
+      shinyalert("Oops!", "No result yet.", type = "error")
+      return()
+    } else {write.csv(ig$cvadjr, file)}
+  }
+)
+
+output$ig_result2 <- downloadHandler(
+  filename = paste0("ig-result2-", format(Sys.time(), "%Y%m%d%H%M%S"), ".csv"),
+  content = function(file) {
+    if (is.null(ig$crossval_df)) {
+      shinyalert("Oops!", "No result yet.", type = "error")
+      return()
+    } else {write.csv(ig$crossval_df, file)}
+  }
+)
+
 output$ig_result3 <- downloadHandler(
   filename = paste0("ig-result3-", format(Sys.time(), "%Y%m%d%H%M%S"), ".pdf"),
   content = function(file) {
@@ -275,7 +280,7 @@ output$ig_result3 <- downloadHandler(
       pdf(file)
       px <- list()
       px <- lapply(1:isolate(input$pars_N), function(i) {
-        plot(ig[[ig$cur_result]], loading_name='Xjoint', i=i, j=NULL, col='black')
+        plot_o2m(ig[[ig$cur_result]], loading_name='Xjoint', i=i, j=NULL, col='black')
       })
       print(px)
       pxs <- ggarrange(plotlist = px, ncol=1)
@@ -295,12 +300,33 @@ output$ig_result4 <- downloadHandler(
       pdf(file)
       py <- list()
       py <- lapply(1:isolate(input$pars_N), function(i) {
-        plot(ig[[ig$cur_result]], loading_name='Yjoint', i=i, j=NULL, col='black')
+        plot_o2m(ig[[ig$cur_result]], loading_name='Yjoint', i=i, j=NULL, col='black')
       })
       print(py)
       pys <- ggarrange(plotlist = py, ncol=1)
       print(pys)
       dev.off()
     }
+  }
+)
+
+output$ig_result5 <- downloadHandler(
+  filename = paste0("ig-result5-", format(Sys.time(), "%Y%m%d%H%M%S"), ".csv"),
+  content = function(file) {
+    if (is.null(ig[[ig$cur_result]])) {
+      shinyalert("Oops!", "No result yet.", type = "error")
+      return()
+    } else {write.csv(ig$cur_x_vip, file)}
+  }
+)
+
+output$ig_result6 <- downloadHandler(
+  filename = paste0("ig-result6-", format(Sys.time(), "%Y%m%d%H%M%S"), ".csv"),
+  content = function(file) {
+    if (is.null(ig[[ig$cur_result]])) {
+      shinyalert("Oops!", "No result yet.", type = "error")
+      return()
+    } else {
+      write.csv(ig$cur_y_vip, file)}
   }
 )

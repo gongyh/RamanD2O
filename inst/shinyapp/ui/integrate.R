@@ -59,8 +59,8 @@ tabItem(
         hr(),
         fluidRow(
           column(2, numericInput("pars_N", "N", 5, min = 1, step = 1)),
-          column(2, numericInput("pars_Nx", "Nx", 0, min = 1, step = 1)),
-          column(2, numericInput("pars_Ny", "Ny", 0, min = 1, step = 1)),
+          column(2, numericInput("pars_Nx", "Nx", 0, min = 0, step = 1)),
+          column(2, numericInput("pars_Ny", "Ny", 0, min = 0, step = 1)),
           column(2, numericInput("cpu_cores", "CPU cores", 1, min = 1, max = 30, step = 1)),
           column(2, withBusyIndicatorUI(actionButton("integrate", "O2PLS", class = "btn-success")), class = "top25"),
           column(2, withBusyIndicatorUI(actionButton("integrate2d", "O2PLS-2D", class = "btn-success")), class = "top25")
@@ -90,12 +90,16 @@ tabItem(
           tabPanel(
             "CV_adjR2",
             br(),
-            DTOutput("cvadjr_result") %>% withSpinner()
+            DTOutput("cvadjr_result") %>% withSpinner(),
+            tags$div(style = "text-align: right; margin-right: 20px;",
+              downloadButton("ig_result1", "Download", class = "btn-primary"))
           ),
           tabPanel(
             "CrossVal",
             br(),
-            DTOutput("crossval_result") %>% withSpinner()
+            DTOutput("crossval_result") %>% withSpinner(),
+            tags$div(style = "text-align: right; margin-right: 20px;",
+              downloadButton("ig_result2", "Download", class = "btn-primary"))
           ),
           tabPanel(
             "Xjoint",
@@ -114,12 +118,16 @@ tabItem(
           tabPanel(
             "X_VIP",
             br(),
-            DTOutput("x_vip") %>% withSpinner()
+            DTOutput("x_vip") %>% withSpinner(),
+            tags$div(style = "text-align: right; margin-right: 20px;",
+              downloadButton("ig_result5", "Download", class = "btn-primary"))
           ),
           tabPanel(
             "Y_VIP",
             br(),
-            DTOutput("y_vip") %>% withSpinner()
+            DTOutput("y_vip") %>% withSpinner(),
+            tags$div(style = "text-align: right; margin-right: 20px;",
+              downloadButton("ig_result6", "Download", class = "btn-primary"))
           )
         )
       )
