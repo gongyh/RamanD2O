@@ -31,8 +31,8 @@ observeEvent(input$confirm_X, {
   hs_cur <- NULL
   if (!is.null(input$hs_selector_for_integrate)) {
     hs_cur <- hs$val[[input$hs_selector_for_integrate]]
-    ig$upload_X <- hs_cur$spc
-    ig$upload_X <- scale(ig$upload_X, scale=F)
+    ig$upload_X_raw <- hs_cur$spc
+    ig$upload_X <- scale(ig$upload_X_raw, scale=F)
   } else {
     toastr_error("No data selected!", position = "top-center")
   }
@@ -41,8 +41,8 @@ observeEvent(input$confirm_X, {
 observeEvent(input$upload_X, {
   withBusyIndicatorServer("upload_X", {
     if (!is.null(isolate(input$upload_X_file$datapath))) {
-      ig$upload_X <- read.table(isolate(input$upload_X_file$datapath), header = T, sep = ",", row.names = 1, stringsAsFactors = T)
-      ig$upload_X <- scale(ig$upload_X, scale=F)
+      ig$upload_X_raw <- read.table(isolate(input$upload_X_file$datapath), header = T, sep = ",", row.names = 1, stringsAsFactors = T)
+      ig$upload_X <- scale(ig$upload_X_raw, scale=F)
     } else {
       toastr_error("No file selected!", position = "top-center")
     }
@@ -52,8 +52,8 @@ observeEvent(input$upload_X, {
 observeEvent(input$upload_Y, {
   withBusyIndicatorServer("upload_Y", {
     if (!is.null(isolate(input$upload_Y_file$datapath))) {
-      ig$upload_Y <- read.table(isolate(input$upload_Y_file$datapath), header = T, sep = ",", row.names = 1, stringsAsFactors = T)
-      ig$upload_Y <- scale(ig$upload_Y, scale=F)
+      ig$upload_Y_raw <- read.table(isolate(input$upload_Y_file$datapath), header = T, sep = ",", row.names = 1, stringsAsFactors = T)
+      ig$upload_Y <- scale(ig$upload_Y_raw, scale=F)
     } else {
       toastr_error("No file selected!", position = "top-center")
     }
@@ -69,7 +69,6 @@ observeEvent(input$cvadjr, {
 
 observeEvent(input$crossval,{
   withBusyIndicatorServer("crossval",{
-    print(Sys.time())
     ig$crossval <- crossval_o2m(ig$upload_X, ig$upload_Y, isolate(input$pars_N_min2):isolate(input$pars_N_max2),
       isolate(input$pars_Nx_min2):isolate(input$pars_Nx_max2), isolate(input$pars_Ny_min2):isolate(input$pars_Ny_max2), nr_folds=isolate(input$pars_fold), nr_cores=5)
     ig$crossval_df <- data.frame()
@@ -84,7 +83,6 @@ observeEvent(input$crossval,{
       df_tmp <- data.frame(MSE = ifelse(is.null(rownames(index)), "NA", ig$crossval$Original[index]), N = N, Nx = Nx, Ny = Ny)
       ig$crossval_df <- rbind(ig$crossval_df, df_tmp)
     })
-    print(Sys.time())
   })
 })
 
@@ -97,31 +95,25 @@ observeEvent(input$integrate, {
 
 observeEvent(input$integrate2d, {
   withBusyIndicatorServer("integrate2d", {
-    print(Sys.time())
-    ig$upload_X2 <- matrix(nrow=nrow(ig$upload_X), ncol=ncol(ig$upload_X)*(ncol(ig$upload_X)+1))
-    ig$upload_X2[,1:ncol(ig$upload_X)] <- as.matrix(ig$upload_X)
-    rownames(ig$upload_X2) <- rownames(ig$upload_X)
-    # library para
-    cores_to_use <- isolate(input$cpu_cores)
-    if (cores_to_use > (detectCores(logical = FALSE) - 1)) {cores_to_use <- detectCores(logical = FALSE) - 1}
-    cl <- makeCluster(cores_to_use)
-    registerDoParallel(cl)
-    upload_X <- isolate(ig$upload_X)
-    X2 <- foreach(i = 1:ncol(upload_X), .combine = 'cbind', .export = "upload_X") %dopar% {
-      Ri <- (upload_X+1)/(upload_X[,i]+1)
-      Ri <- as.matrix(Ri)
-      colnames(Ri) <- paste0(colnames(upload_X), "_", colnames(upload_X)[i])
-      Ri
+    ig$upload_X <- as.matrix(ig$upload_X_raw)
+    X2 <- matrix(nrow=nrow(ig$upload_X), ncol=ncol(ig$upload_X)*(ncol(ig$upload_X)+1))
+    X2[,1:ncol(ig$upload_X)] <- as.matrix(ig$upload_X)
+    rownames(X2) <- rownames(ig$upload_X)
+    X2_colnames <- 1:ncol(ig$upload_X)*(ncol(ig$upload_X)+1)
+    X2_colnames[1:ncol(ig$upload_X)] <- colnames(ig$upload_X)
+    for (i in 1:ncol(ig$upload_X)) {
+      print(i)
+      Ri <- (ig$upload_X+1)/(ig$upload_X[,i]+1)
+      X2_colnames[(ncol(ig$upload_X)*i+1) : (ncol(ig$upload_X)*(i+1))] <- paste0(colnames(ig$upload_X),"_",colnames(ig$upload_X)[i])
+      X2[ , (ncol(ig$upload_X)*i+1) : (ncol(ig$upload_X)*(i+1)) ] <- as.matrix(Ri)
     }
-    stopCluster(cl)
-    ig$upload_X2[, (ncol(ig$upload_X) + 1) : (ncol(ig$upload_X) + ncol(X2))] <- X2
-    colnames(ig$upload_X2) <- c(colnames(ig$upload_X), colnames(X2))
+    colnames(X2) <- X2_colnames
+    ig$upload_X2 <- X2
+    ig$upload_X <- scale(ig$upload_X_raw, scale=F)
     # O2PLS
-    print(Sys.time())
     ig$result2 <- o2m(ig$upload_X2, ig$upload_Y, isolate(input$pars_N), isolate(input$pars_Nx), isolate(input$pars_Ny))
-    print(Sys.time())
+    browser()
     ig$vip2 <- O2PLSvip(ig$upload_X2, ig$upload_Y, ig$result2)
-    print(Sys.time())
   })
 })
 
@@ -158,7 +150,7 @@ observeEvent(ig$result, {
     validate(need(ig$result, ""))
     px <- list()
     px <- lapply(1:isolate(input$pars_N), function(i) {
-      plot_o2m(ig$result, loading_name='Xjoint', i=i, j=NULL, col='black')
+      plot(ig$result, loading_name='Xjoint', i=i, j=NULL, col='black')
     })
     ggarrange(plotlist = px, ncol=1)
   })
@@ -166,7 +158,7 @@ observeEvent(ig$result, {
     validate(need(ig$result, ""))
     py <- list()
     py <- lapply(1:isolate(input$pars_N), function(i) {
-      plot_o2m(ig$result, loading_name='Yjoint', i=i, j=NULL, col='black')
+      plot(ig$result, loading_name='Yjoint', i=i, j=NULL, col='black')
     })
     ggarrange(plotlist = py, ncol=1)
   })
@@ -205,16 +197,20 @@ observeEvent(ig$result2, {
   output$Xjoint <- renderPlot({
     validate(need(ig$result2, ""))
     px <- list()
-    px <- lapply(1:isolate(input$pars_N), function(i) {
-      plot_o2m(ig$result2, loading_name='Xjoint', i=i, j=NULL, col='black')
-    })
-    ggarrange(plotlist = px, ncol=1)
+    Xcols <- rep("black",length(ig$result2$W.[colnames(ig$upload_X),1]))
+    x_cm <- as.numeric(sub("spc.","",colnames(ig$upload_X)))
+    par(mfrow=c(isolate(input$pars_N),1))
+    for (i in 1:isolate(input$pars_N)) {
+      Xcols1 <- Xcols
+      Xcols1[which(abs(scale(ig$result2$W.[colnames(ig$upload_X),i]))>3.29)] <- "red"
+      plot(x_cm, ig$result2$W.[colnames(ig$upload_X),i], col=Xcols1, xlab="Raman Shift", ylab=paste("Xjoint loading",i))
+    }
   })
   output$Yjoint <- renderPlot({
     validate(need(ig$result2, ""))
     py <- list()
     py <- lapply(1:isolate(input$pars_N), function(i) {
-      plot_o2m(ig$result2, loading_name='Yjoint', i=i, j=NULL, col='black')
+      plot(ig$result2, loading_name='Yjoint', i=i, j=NULL, col='black')
     })
     ggarrange(plotlist = py, ncol=1)
   })
@@ -278,13 +274,14 @@ output$ig_result3 <- downloadHandler(
       return()
     } else {
       pdf(file)
-      px <- list()
-      px <- lapply(1:isolate(input$pars_N), function(i) {
-        plot_o2m(ig[[ig$cur_result]], loading_name='Xjoint', i=i, j=NULL, col='black')
-      })
-      print(px)
-      pxs <- ggarrange(plotlist = px, ncol=1)
-      print(pxs)
+      Xcols <- rep("black",length(ig$result2$W.[colnames(ig$upload_X),1]))
+      x_cm <- as.numeric(sub("spc.","",colnames(ig$upload_X)))
+      par(mfrow=c(isolate(input$pars_N),1))
+      for (i in 1:isolate(input$pars_N)) {
+        Xcols1 <- Xcols
+        Xcols1[which(abs(scale(ig$result2$W.[colnames(ig$upload_X),i]))>3.29)] <- "red"
+        plot(x_cm, ig$result2$W.[colnames(ig$upload_X),i], col=Xcols1, xlab="Raman Shift", ylab=paste("Xjoint loading",i))
+      }
       dev.off()
     }
   }
@@ -300,7 +297,7 @@ output$ig_result4 <- downloadHandler(
       pdf(file)
       py <- list()
       py <- lapply(1:isolate(input$pars_N), function(i) {
-        plot_o2m(ig[[ig$cur_result]], loading_name='Yjoint', i=i, j=NULL, col='black')
+        plot(ig[[ig$cur_result]], loading_name='Yjoint', i=i, j=NULL, col='black')
       })
       print(py)
       pys <- ggarrange(plotlist = py, ncol=1)
