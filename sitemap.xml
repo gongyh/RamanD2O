@@ -19,10 +19,22 @@
     <loc>/index.html</loc>
   </url>
   <url>
+    <loc>/reference/O2PLSvip.html</loc>
+  </url>
+  <url>
     <loc>/reference/SCRS_preprocess.html</loc>
   </url>
   <url>
     <loc>/reference/SCRS_toDF.html</loc>
+  </url>
+  <url>
+    <loc>/reference/calOrthVIP.html</loc>
+  </url>
+  <url>
+    <loc>/reference/calPredVIP.html</loc>
+  </url>
+  <url>
+    <loc>/reference/checkInputdata.html</loc>
   </url>
   <url>
     <loc>/reference/findPeaks.html</loc>
@@ -35,5 +47,8 @@
   </url>
   <url>
     <loc>/reference/runRamanD2O.html</loc>
+  </url>
+  <url>
+    <loc>/reference/ssd.html</loc>
   </url>
 </urlset>
