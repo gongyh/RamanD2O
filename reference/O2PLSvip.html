@@ -117,30 +117,6 @@ influence on projection (VIP) in O2PLS models. Chemometrics and Intelligent
 Laboratory Systems 2017; 160: 110–124.</p>
     </div>
 
-    <div id="ref-examples">
-    <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">#' data(test_metab)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">test_metag</span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>data set ‘test_metag’ not found</span>
-<span class="r-in"><span><span class="va">a</span> <span class="op">&lt;-</span> <span class="fu">MMINP.preprocess</span><span class="op">(</span><span class="va">test_metag</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">20</span><span class="op">]</span>, normalized <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in MMINP.preprocess(test_metag[, 1:20], normalized = FALSE):</span> could not find function "MMINP.preprocess"</span>
-<span class="r-in"><span><span class="va">b</span> <span class="op">&lt;-</span> <span class="fu">MMINP.preprocess</span><span class="op">(</span><span class="va">test_metab</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">20</span><span class="op">]</span>, normalized <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in MMINP.preprocess(test_metab[, 1:20], normalized = FALSE):</span> could not find function "MMINP.preprocess"</span>
-<span class="r-in"><span><span class="va">mminp_model</span> <span class="op">&lt;-</span> <span class="fu">MMINP.train</span><span class="op">(</span>metag <span class="op">=</span> <span class="va">a</span>,</span></span>
-<span class="r-in"><span>                           metab <span class="op">=</span> <span class="va">b</span>,</span></span>
-<span class="r-in"><span>                           n <span class="op">=</span> <span class="fl">3</span><span class="op">:</span><span class="fl">5</span>, nx <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">3</span>, ny <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">3</span>,</span></span>
-<span class="r-in"><span>                           nr_folds <span class="op">=</span> <span class="fl">2</span>, nr_cores <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in MMINP.train(metag = a, metab = b, n = 3:5, nx = 0:3, ny = 0:3,     nr_folds = 2, nr_cores = 1):</span> could not find function "MMINP.train"</span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">mminp_model</span><span class="op">$</span><span class="va">trainres</span><span class="op">$</span><span class="va">wellPredicted</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(expr, envir, enclos):</span> object 'mminp_model' not found</span>
-<span class="r-in"><span><span class="va">vipres</span> <span class="op">&lt;-</span> <span class="fu">O2PLSvip</span><span class="op">(</span><span class="va">a</span>, <span class="va">b</span>, <span class="va">mminp_model</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(expr, envir, enclos):</span> object 'mminp_model' not found</span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">vipres</span><span class="op">$</span><span class="va">xvip</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(expr, envir, enclos):</span> object 'vipres' not found</span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">vipres</span><span class="op">$</span><span class="va">yvip</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(expr, envir, enclos):</span> object 'vipres' not found</span>
-</code></pre></div>
-    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>
