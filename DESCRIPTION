@@ -36,7 +36,8 @@ Imports:
     mdatools,
     foreach,
     parallel,
-    doParallel
+    doParallel,
+    magrittr
 Suggests:
     shiny,
     shinydashboard,
@@ -56,6 +57,7 @@ Suggests:
     Rtsne
 RoxygenNote: 7.2.3
 Collate: 
+    'O2PLS_VIP.R'
     'SCRS_cdr.R'
     'SCRS_cdr_rarefy.R'
     'SCRS_cdr_stats.R'
