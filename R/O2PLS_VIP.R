@@ -35,19 +35,6 @@
 #' influence on projection (VIP) in O2PLS models. Chemometrics and Intelligent
 #' Laboratory Systems 2017; 160: 110–124.
 #' @export
-#' @examples
-#' #' data(test_metab)
-#' data(test_metag)
-#' a <- MMINP.preprocess(test_metag[, 1:20], normalized = FALSE)
-#' b <- MMINP.preprocess(test_metab[, 1:20], normalized = FALSE)
-#' mminp_model <- MMINP.train(metag = a,
-#'                            metab = b,
-#'                            n = 3:5, nx = 0:3, ny = 0:3,
-#'                            nr_folds = 2, nr_cores = 1)
-#' length(mminp_model$trainres$wellPredicted)
-#' vipres <- O2PLSvip(a, b, mminp_model)
-#' head(vipres$xvip)
-#' head(vipres$yvip)
 O2PLSvip <- function(x, y, model){
   if(!inherits(model, "mminp") && !inherits(model, "o2m"))
     stop("The model must be class 'mminp' or 'o2m'")
@@ -131,13 +118,13 @@ O2PLSvip <- function(x, y, model){
 
   #step6: a total VIPO2PLS for each data block
   cl <- makeCluster(getOption("cl.cores", detectCores()))
-  
+
   totVIPxy <- sqrt(orthVIPx0^2 + predVIPxy0^2) %>%
     parLapply(cl=cl, norm, type="2") %>% unlist * sqrt(ncol(x))
 
   totVIPyx <- sqrt(orthVIPy0^2 + predVIPyx0^2) %>%
     parLapply(cl=cl, norm, type="2") %>% unlist * sqrt(ncol(y))
-  
+
   stopCluster(cl)
 
   # results
@@ -163,13 +150,13 @@ calOrthVIP <- function(SSDAO, SSD, loading){
   load2 <-  loading^2
 
   cl <- makeCluster(getOption("cl.cores", detectCores()))
-  
+
   orthVIP <- (sapply(1:ao, function(n){
     sqrt( load2[, n] * SSDAO[n] / sum(SSD) )
   })) %>% parApply(cl=cl, 1, norm, type="2")
 
   stopCluster(cl)
-  
+
   return(orthVIP)
 }
 
@@ -183,13 +170,13 @@ calPredVIP <- function(SSXAP, SSYAP, SSD, loading){
   load2 <-  loading^2  #matrixcalc::hadamard.prod(loading, loading) == loading^2
 
   cl <- makeCluster(getOption("cl.cores", detectCores()))
-  
+
   predVIP <- (1/ap * sapply(1:ap, function(n){
     sqrt( (load2[, n] * SSXAP[n] + load2[, n] * SSYAP[n]) / sum(SSD) )
   })) %>% parApply(cl=cl, 1, norm, type="2")
 
   stopCluster(cl)
-  
+
   return(predVIP)
 }
 

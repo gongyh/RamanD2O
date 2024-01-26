@@ -44,20 +44,6 @@ both predictive and orthogonal components) for both the X- and the Y- blocks
 severally, these VIP profiles point at the X- and Y- variables that are more
 significant for the whole model.
 }
-\examples{
-#' data(test_metab)
-data(test_metag)
-a <- MMINP.preprocess(test_metag[, 1:20], normalized = FALSE)
-b <- MMINP.preprocess(test_metab[, 1:20], normalized = FALSE)
-mminp_model <- MMINP.train(metag = a,
-                           metab = b,
-                           n = 3:5, nx = 0:3, ny = 0:3,
-                           nr_folds = 2, nr_cores = 1)
-length(mminp_model$trainres$wellPredicted)
-vipres <- O2PLSvip(a, b, mminp_model)
-head(vipres$xvip)
-head(vipres$yvip)
-}
 \references{
 Galindo-Prieto B, Trygg J, Geladi P. A new approach for variable
 influence on projection (VIP) in O2PLS models. Chemometrics and Intelligent
