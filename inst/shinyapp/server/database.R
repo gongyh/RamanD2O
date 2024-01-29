@@ -11,7 +11,7 @@ observeEvent(input$connectdb, {
       output$db_message <- renderText({
         msg <- paste0("MongoDB is connected at ", Sys.time(), "\n\nproject, spectra_count\n")
         if (nrow(dbstats$projects) > 0) {
-          for (i in 1:nrow(dbstats$projects)) {
+          for (i in seq_len(nrow(dbstats$projects))) {
             msg <- paste(msg, toString(dbstats$projects[i, ]), "\n")
           }
         }

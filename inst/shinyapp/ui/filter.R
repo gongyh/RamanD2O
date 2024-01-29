@@ -15,10 +15,13 @@ tabItem(
         ),
         fluidRow(
           column(2, numericInput("filter_min", "Min", min = 0, max = 4000, step = 1, value = 0, width = "100%")),
-          column(8,
-            sliderInput("filter_range", " Selecting Wavelength Ranges for Filtering:", 
-              min = 0, max = 4000, value = c(0, 4000), step = 1, dragRange = F, width = "100%")),
-          column(2, numericInput("filter_max", "Max",min = 0, max = 4000, step = 1, value = 4000, width = "100%"))
+          column(
+            8,
+            sliderInput("filter_range", " Selecting Wavelength Ranges for Filtering:",
+              min = 0, max = 4000, value = c(0, 4000), step = 1, dragRange = F, width = "100%"
+            )
+          ),
+          column(2, numericInput("filter_max", "Max", min = 0, max = 4000, step = 1, value = 4000, width = "100%"))
         ),
         fluidRow(
           column(4, checkboxInput("filter_low", "By lowest intensity", value = T), class = "top25"),

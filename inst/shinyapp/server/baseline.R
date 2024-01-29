@@ -12,29 +12,40 @@ output$hs_select_for_baseline <- renderUI({
 # polyfit_custom_multi_parameter
 polyfit_custom_num <- reactiveVal(1)
 for (i in 1:5) {
-  assign(paste0("polyfit_custom_order",i), reactiveVal(1))
-  assign(paste0("polyfit_custom_text",i), reactiveVal("1~1798, 1800~2065, 2300~2633, 2783, 3050~4000"))
+  assign(paste0("polyfit_custom_order", i), reactiveVal(1))
+  assign(paste0("polyfit_custom_text", i), reactiveVal("1~1798, 1800~2065, 2300~2633, 2783, 3050~4000"))
 }
 
-observeEvent(polyfit_custom_num(), {
-  output$polyfit_custom_multi <- renderUI({
-    inputs <- lapply(1:polyfit_custom_num(), function(i) {
-      fluidRow(
-        column(8, textInput(inputId = paste0("polyfit_custom_text", i), label = paste0("Line ", i),
-          value = isolate(eval(parse(text = paste0("polyfit_custom_text", i, "()")))))),
-        column(2, numericInput(inputId = paste0("polyfit_custom_order", i), "Order",
-          value = isolate(eval(parse(text = paste0("polyfit_custom_order", i, "()")))), min = 0, max = 15, step = 1))
-      )
+observeEvent(polyfit_custom_num(),
+  {
+    output$polyfit_custom_multi <- renderUI({
+      inputs <- lapply(1:polyfit_custom_num(), function(i) {
+        fluidRow(
+          column(8, textInput(
+            inputId = paste0("polyfit_custom_text", i), label = paste0("Line ", i),
+            value = isolate(eval(parse(text = paste0("polyfit_custom_text", i, "()"))))
+          )),
+          column(2, numericInput(
+            inputId = paste0("polyfit_custom_order", i), "Order",
+            value = isolate(eval(parse(text = paste0("polyfit_custom_order", i, "()")))), min = 0, max = 15, step = 1
+          ))
+        )
+      })
     })
-  })
-}, ignoreNULL = TRUE)
+  },
+  ignoreNULL = TRUE
+)
 
 # reactivate polyfit custom range number and limit in 1-5
 observeEvent(input$polyfit_custom_plus, {
-  if(polyfit_custom_num() < 5) {polyfit_custom_num(polyfit_custom_num() + 1)}
+  if (polyfit_custom_num() < 5) {
+    polyfit_custom_num(polyfit_custom_num() + 1)
+  }
 })
 observeEvent(input$polyfit_custom_minus, {
-  if(polyfit_custom_num() > 1) {polyfit_custom_num(polyfit_custom_num() - 1)}
+  if (polyfit_custom_num() > 1) {
+    polyfit_custom_num(polyfit_custom_num() - 1)
+  }
 })
 
 # dynamic convert polyfit_custom_order and polyfit_custom_text
@@ -77,7 +88,9 @@ observeEvent(input$baseline, {
         hs_bl$spc <- unAsIs(hs_bl$spc)
         dimnames(hs_bl$spc) <- dimnames(hs_cur$spc)
       } else if (input$select_baseline == "polyfit" & input$polyfit_custom == TRUE) {
-        order_list <- sapply(1:polyfit_custom_num(), function(i) {input[[paste0("polyfit_custom_order", i)]]})
+        order_list <- sapply(1:polyfit_custom_num(), function(i) {
+          input[[paste0("polyfit_custom_order", i)]]
+        })
         if (any(order_list > 15)) {
           shinyalert("Oops!", "Order out of range(0-15).", type = "error")
           remove_modal_spinner()
@@ -91,33 +104,33 @@ observeEvent(input$baseline, {
             remove_modal_spinner()
             return()
           }
-          range_value <- paste0("c(",gsub("~", ":", range),")")
+          range_value <- paste0("c(", gsub("~", ":", range), ")")
           range_max <- max(eval(parse(text = range_value)))
           range_min <- min(eval(parse(text = range_value)))
-          if (length(hs_cur[,,range_min ~ range_max]@wavelength) == 0) {
-            shinyalert("Oops!", paste0("Line",line," does not have a spectrum."), type = "error")
+          if (length(hs_cur[, , range_min ~ range_max]@wavelength) == 0) {
+            shinyalert("Oops!", paste0("Line", line, " does not have a spectrum."), type = "error")
             remove_modal_spinner()
             return()
           }
-          range <- eval(parse(text = paste0("c(", range,")")))
+          range <- eval(parse(text = paste0("c(", range, ")")))
           # avoid range duplication in same line
-          if (any(duplicated(wl(hs_cur[,,range])))) {
+          if (any(duplicated(wl(hs_cur[, , range])))) {
             shinyalert("Oops!", "The range is duplicated.", type = "error")
             remove_modal_spinner()
             return()
           }
-          assign(paste0("hs_line",line), hs_cur[,,range_min ~ range_max] -
-            spc_fit_poly_below(hs_cur[,,range], hs_cur[,,range_min ~ range_max], poly.order = input[[paste0("polyfit_custom_order", line)]]))
+          assign(paste0("hs_line", line), hs_cur[, , range_min ~ range_max] -
+            spc_fit_poly_below(hs_cur[, , range], hs_cur[, , range_min ~ range_max], poly.order = input[[paste0("polyfit_custom_order", line)]]))
           # handle negative(multi lines)
           if (input$select_negative == "zero") {
-            value_name <- paste0("hs_line",line)
+            value_name <- paste0("hs_line", line)
             value <- get(value_name)$spc
             value[value < 0] <- 0
             data <- get(value_name)
             data$spc <- value
             assign(value_name, data)
           } else if (input$select_negative == "up") {
-            value_name <- paste0("hs_line",line)
+            value_name <- paste0("hs_line", line)
             offsets <- apply(get(value_name), 1, min)
             assign(value_name, sweep(get(value_name), 1, offsets, "-"))
           } else if (input$select_negative == "keep") {
@@ -134,8 +147,8 @@ observeEvent(input$baseline, {
           remove_modal_spinner()
           return()
         }
-        diff <- setdiff(wl(hs_cur),wl(hs_line_all))
-        unique <- hs_cur[,,as.numeric(diff), drop = FALSE]
+        diff <- setdiff(wl(hs_cur), wl(hs_line_all))
+        unique <- hs_cur[, , as.numeric(diff), drop = FALSE]
         hs_bl <- wl_sort(cbind.hyperSpec(unique, hs_line_all))
       } else {
         shinyalert("Oops!", "Baseline method not implemented yet.", type = "error")

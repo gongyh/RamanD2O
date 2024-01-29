@@ -14,7 +14,7 @@ observeEvent(input$unzip, {
         return()
       }
       if (isolate(input$align)) {
-	# different shift
+        # different shift
         max_min_values <- lapply(files, function(f) {
           data <- read.table(f, header = FALSE)$V1
           max_value <- max(data, na.rm = TRUE)
@@ -39,7 +39,7 @@ observeEvent(input$unzip, {
           i <- i + 1
         }
       } else {
-	# same shift
+        # same shift
         shift <- read.table(txtfiles[1], header = F, sep = "\t")$V1
         scrs_colnames <- c("ID_Cell", shift)
         scrs_df <- matrix(nrow = length(scrs_colnames), ncol = total)
@@ -163,20 +163,20 @@ observeEvent(input$tips1, {
 observeEvent(input$tips2, {
   showModal(
     modalDialog(
-      includeMarkdown('#### **About meta.tsv file!**
+      includeMarkdown("#### **About meta.tsv file!**
         \n(1)
         \nTSV (Tab-Separated Values) files are a type of plain text file where the data
         fields are separated by tab characters.
         \n(2)
         \nYou can obtain a TSV file using Excel. Enter your data into spreadsheet,
-        save the file in the TSV format or other Tab-Separated format and keep the suffix of filename to tsv.'),
+        save the file in the TSV format or other Tab-Separated format and keep the suffix of filename to tsv."),
       renderTable(data.frame(
         ID_Cell = c("file1", "file2", "file3"),
         Group1 = c("Control", "Treat", "Treat"),
         Group2 = c("Hot", "Hot", "Cold")
       ), bordered = TRUE, align = "c"),
-      includeMarkdown('\n(3)
-        \nThe first column should be `ID_Cell`, feel free to add at least one columns.'),
+      includeMarkdown("\n(3)
+        \nThe first column should be `ID_Cell`, feel free to add at least one columns."),
       footer = modalButton("Close")
     )
   )

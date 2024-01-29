@@ -20,7 +20,7 @@ observeEvent(input$carotenoid, {
       hs_cur <- hs$val[[isolate(input$hs_selector_for_carotenoid)]]
       wavelength <- wl(hs_cur)
       keep <- c()
-      for (i in (1:nrow(hs_cur))) {
+      for (i in seq_len(nrow(hs_cur))) {
         peaks <- wavelength[findPeaks(hs_cur[i]$spc)]
         if ((length(peaks[(peaks > 992) & (peaks < 1010)]) >= 1) && (length(peaks[(peaks > 1145) & (peaks < 1160)]) >= 1) &&
           (length(peaks[(peaks > 1480) & (peaks < 1525)]) >= 1)) { # carotenoid peaks

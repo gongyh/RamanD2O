@@ -4,6 +4,6 @@ tabItem(
   h3("SessionInfo"),
   br(),
   fluidRow(
-    column(12, verbatimTextOutput('sessionInfo'))
+    column(12, verbatimTextOutput("sessionInfo"))
   )
 )

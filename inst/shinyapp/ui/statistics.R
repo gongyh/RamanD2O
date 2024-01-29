@@ -52,14 +52,13 @@ tabItem(
             h4("Multivariate Curve Resolution"),
             fluidRow(
               column(2, selectInput("select_mcr_method", "MCR method",
-                                    choices = c("MCR-Pure", "MCR-ALS"), selected = "MCR-Pure"
+                choices = c("MCR-Pure", "MCR-ALS"), selected = "MCR-Pure"
               )),
               column(2, numericInput("num_mcr_pcs", "Number of components", 3, min = 1, max = 100, step = 1)),
               column(4, withBusyIndicatorUI(actionButton("perform_mcr", "MCR analysis", class = "btn-success")), class = "top25")
             ),
             plotlyOutput("mcr_plot", width = "100%", height = "800px") %>% withSpinner()
           )
-
         )
       )
     )

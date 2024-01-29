@@ -10,7 +10,11 @@ ui <- dashboardPage(
     title = "RamanD2O",
     tags$li(
       class = "dropdown",
-      tags$a(href = "#", style = "font-size: 20px;", "A ShinyApp to Analyze Raman Spectra Data  ")
+      tags$a(
+        href = "#",
+        style = "font-size: 20px;",
+        "A ShinyApp to Analyze Raman Spectra Data  "
+      )
     ),
     userOutput("user")
   ),
@@ -21,45 +25,95 @@ ui <- dashboardPage(
   # BEGIN dashboardSidebar
   dashboardSidebar(
     sidebarMenu(
-      menuItem("Introduction", tabName = "dashboard", icon = icon("dashboard")),
-      menuItem("Load Data", tabName = "settings", icon = icon("cogs")),
-      menuItem("Tools",
-        menuItem("Visualize", tabName = "visualize", icon = icon("poll")),
-        menuItem("Statistics", tabName = "statistics", icon = icon("layer-group")),
-        menuItem("Database", tabName = "database", icon = icon("coins")),
-        tabName = "tools", icon = icon("toolbox"), startExpanded = F
+      menuItem(
+        "Introduction",
+        tabName = "dashboard",
+        icon = icon("dashboard")
       ),
-      menuItem("Pipeline",
+      menuItem("Load Data", tabName = "settings", icon = icon("cogs")),
+      menuItem(
+        "Tools",
+        menuItem("Visualize", tabName = "visualize", icon = icon("poll")),
+        menuItem(
+          "Statistics",
+          tabName = "statistics",
+          icon = icon("layer-group")
+        ),
+        menuItem("Database", tabName = "database", icon = icon("coins")),
+        tabName = "tools",
+        icon = icon("toolbox"),
+        startExpanded = F
+      ),
+      menuItem(
+        "Pipeline",
         menuSubItem("Sample", tabName = "ss", icon = icon("crosshairs")),
         menuSubItem("Trim", tabName = "trim", icon = icon("cut")),
         menuSubItem("Filter", tabName = "fl", icon = icon("filter")),
         menuSubItem("Smooth", tabName = "sm", icon = icon("wave-square")),
-        menuSubItem("Baseline", tabName = "bl", icon = icon("chart-line")),
-        menuSubItem("Normalize", tabName = "nl", icon = icon("compress-arrows-alt")),
+        menuSubItem(
+          "Baseline",
+          tabName = "bl",
+          icon = icon("chart-line")
+        ),
+        menuSubItem(
+          "Normalize",
+          tabName = "nl",
+          icon = icon("compress-arrows-alt")
+        ),
         menuSubItem("Average", tabName = "avg", icon = icon("chart-bar")),
         menuSubItem("Carotenoid", tabName = "ct", icon = icon("palette")),
         menuSubItem("SNR", tabName = "snr", icon = icon("signal")),
         menuSubItem("CDR", tabName = "cdr", icon = icon("battery-half")),
-        tabName = "pipeline", icon = icon("project-diagram"), startExpanded = T
+        tabName = "pipeline",
+        icon = icon("project-diagram"),
+        startExpanded = T
       ),
-      menuItem("Machine learning",
-        menuItem("Prepare", tabName = "prepare", icon = icon("hourglass-start")),
+      menuItem(
+        "Machine learning",
+        menuItem(
+          "Prepare",
+          tabName = "prepare",
+          icon = icon("hourglass-start")
+        ),
         menuItem("Explore", tabName = "explore", icon = icon("eye")),
         menuItem("Random forest", tabName = "rf", icon = icon("tree")),
-        tabName = "ml", icon = icon("robot"), startExpanded = F
+        tabName = "ml",
+        icon = icon("robot"),
+        startExpanded = F
       ),
-      menuItem("Integration analysis",
-               menuItem("Ramanome & Transcriptome", tabName = "integrate", icon = icon("square-plus")),
-               menuItem("Ramanome & Metabolome", tabName = "integrate2", icon = icon("circle-plus")),
-               menuItem("MultiOmics Integration", tabName = "integrate3", icon = icon("circle-nodes")),
-               tabName = "ig", icon = icon("shuffle"), startExpanded = F
+      menuItem(
+        "Integration analysis",
+        menuItem(
+          "Ramanome & Transcriptome",
+          tabName = "integrate",
+          icon = icon("square-plus")
+        ),
+        menuItem(
+          "Ramanome & Metabolome",
+          tabName = "integrate2",
+          icon = icon("circle-plus")
+        ),
+        menuItem(
+          "MultiOmics Integration",
+          tabName = "integrate3",
+          icon = icon("circle-nodes")
+        ),
+        tabName = "ig",
+        icon = icon("shuffle"),
+        startExpanded = F
       ),
-      menuItem("SessionInfo", tabName = "info", icon = icon("circle-info")),
-
+      menuItem(
+        "SessionInfo",
+        tabName = "info",
+        icon = icon("circle-info")
+      ),
       div(
         class = "hide_when_sidebar_collapsed",
-        helpText("Developed by ", a("Yanhai Gong", href = "mailto:gongyh@qibebt.ac.cn"),
-          br(), a("@ SCC, QIBEBT, CAS",
+        helpText(
+          "Developed by ",
+          a("Yanhai Gong", href = "mailto:gongyh@qibebt.ac.cn"),
+          br(),
+          a("@ SCC, QIBEBT, CAS",
             href = "http://singlecellcenter.org/en/index.aspx", target = "_blank"
           ),
           style = "padding-left:1em; padding-right:1em;position:absolute; bottom:1em; "
@@ -75,10 +129,8 @@ ui <- dashboardPage(
     shinyalert::useShinyalert(),
     tags$head(includeCSS("style.css")),
     tags$script(HTML("$('body').addClass('sidebar-mini');")),
-
     shinydisconnect::disconnectMessage2(),
     useToastr(),
-
     tabItems(
       source(file.path("ui", "dashboard.R"), local = TRUE)$value,
       source(file.path("ui", "dataloader.R"), local = TRUE)$value,

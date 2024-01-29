@@ -34,7 +34,6 @@ observeEvent(input$hs_selector_for_statistics,
       }
       selectInput("select_ldaBy", "Group by", choices = metacols, selected = "")
     })
-
   },
   ignoreNULL = FALSE
 )
@@ -52,7 +51,7 @@ observeEvent(input$plot_pca,
         pca_scale <- isolate(input$pca_scale)
 
         hs_cur <- hs$val[[isolate(input$hs_selector_for_statistics)]]
-        pca <- prcomp(~spc, data = hs_cur@data, center = pca_center, scale=pca_scale)
+        pca <- prcomp(~spc, data = hs_cur@data, center = pca_center, scale = pca_scale)
         scores <- pca$x
         rownames(scores) <- rownames(hs_cur$spc)
         HC <- hclust(dist(scores), method = "ward.D2")
@@ -74,105 +73,106 @@ observeEvent(input$plot_pca,
 
 # perform LDA on click of button
 observeEvent(input$perform_lda,
-             {
-               withBusyIndicatorServer("perform_lda", {
-                 output$lda_plot <- renderPlotly({
-                   validate(need(isolate(input$hs_selector_for_statistics), ""))
-                   req(isolate(input$select_ldaBy), cancelOutput = T)
-                   num_pcs <- isolate(input$num_pcs)
-                   ldaby <- isolate(input$select_ldaBy)
-                   hs_cur <- hs$val[[isolate(input$hs_selector_for_statistics)]]
-                   pca_first <- isolate(input$use_pca)
-                   eval_pct <- isolate(input$lda_eval_pct)/100.0
-                   data <- hs_cur@data[ldaby]
-                   colnames(data) <- 'group'
-                   if (pca_first) {
-                       pca <- prcomp(~spc, data=hs_cur@data, center=T, scale=T)
-                       scores <- pca$x[,c("PC1","PC2")]
-                       rownames(scores) <- rownames(hs_cur$spc)
-                       data <- cbind(data, scores)
-                   } else {
-                       data <- cbind(data, hs_cur$spc)
-                   }
+  {
+    withBusyIndicatorServer("perform_lda", {
+      output$lda_plot <- renderPlotly({
+        validate(need(isolate(input$hs_selector_for_statistics), ""))
+        req(isolate(input$select_ldaBy), cancelOutput = T)
+        num_pcs <- isolate(input$num_pcs)
+        ldaby <- isolate(input$select_ldaBy)
+        hs_cur <- hs$val[[isolate(input$hs_selector_for_statistics)]]
+        pca_first <- isolate(input$use_pca)
+        eval_pct <- isolate(input$lda_eval_pct) / 100.0
+        data <- hs_cur@data[ldaby]
+        colnames(data) <- "group"
+        if (pca_first) {
+          pca <- prcomp(~spc, data = hs_cur@data, center = T, scale = T)
+          scores <- pca$x[, c("PC1", "PC2")]
+          rownames(scores) <- rownames(hs_cur$spc)
+          data <- cbind(data, scores)
+        } else {
+          data <- cbind(data, hs_cur$spc)
+        }
 
-                   ind <- sample(2, nrow(data), replace = T, prob = c(1-eval_pct, eval_pct))
-                   training <- data[ind==1,]
-                   testing <- data[ind==2,]
+        ind <- sample(2, nrow(data), replace = T, prob = c(1 - eval_pct, eval_pct))
+        training <- data[ind == 1, ]
+        testing <- data[ind == 2, ]
 
-                   linear <- lda(group~., training)
+        linear <- lda(group ~ ., training)
 
-                   p1 <- predict(linear, training)$class
-                   tab1 <- table(Predicted = p1, Actual = training$group)
-                   acc_train <- sum(diag(tab1))/sum(tab1)
+        p1 <- predict(linear, training)$class
+        tab1 <- table(Predicted = p1, Actual = training$group)
+        acc_train <- sum(diag(tab1)) / sum(tab1)
 
-                   p2 <- predict(linear, testing)$class
-                   tab2 <- table(Predicted = p2, Actual = testing$group)
-                   acc_test <- sum(diag(tab2))/sum(tab2)
+        p2 <- predict(linear, testing)$class
+        tab2 <- table(Predicted = p2, Actual = testing$group)
+        acc_test <- sum(diag(tab2)) / sum(tab2)
 
-                   if (nlevels(training$group) == 2) {
-                     tp <- predict(linear, training)
-                     tpdf <- data.frame(LD1 = tp$x, group = tp$class)
-                     p <- ggplot(tpdf) + geom_density(aes(LD1, fill = group), alpha = 0.2)
-                   } else {
-                     p <- ggord(linear, training$group)
-                   }
+        if (nlevels(training$group) == 2) {
+          tp <- predict(linear, training)
+          tpdf <- data.frame(LD1 = tp$x, group = tp$class)
+          p <- ggplot(tpdf) +
+            geom_density(aes(LD1, fill = group), alpha = 0.2)
+        } else {
+          p <- ggord(linear, training$group)
+        }
 
-                   ggplotly(p +
-                      labs(title=sprintf("training accuracy is %.2f, testing accuracy is %.2f", acc_train, acc_test))
-                     )
-
-                 })
-               })
-             },
-             ignoreNULL = TRUE
+        ggplotly(p +
+          labs(title = sprintf("training accuracy is %.2f, testing accuracy is %.2f", acc_train, acc_test)))
+      })
+    })
+  },
+  ignoreNULL = TRUE
 )
 
 # perform MCR on click of button
 observeEvent(input$perform_mcr,
-             {
-               withBusyIndicatorServer("perform_mcr", {
-                 output$mcr_plot <- renderPlotly({
-                   validate(need(isolate(input$hs_selector_for_statistics), ""))
-                   mcr_method <- isolate(input$select_mcr_method)
-                   num_mcr_pcs <- isolate(input$num_mcr_pcs)
+  {
+    withBusyIndicatorServer("perform_mcr", {
+      output$mcr_plot <- renderPlotly({
+        validate(need(isolate(input$hs_selector_for_statistics), ""))
+        mcr_method <- isolate(input$select_mcr_method)
+        num_mcr_pcs <- isolate(input$num_mcr_pcs)
 
-                   hs_cur <- hs$val[[isolate(input$hs_selector_for_statistics)]]
-                   data <- hs_cur$spc
+        hs_cur <- hs$val[[isolate(input$hs_selector_for_statistics)]]
+        data <- hs_cur$spc
 
-                   if (mcr_method == "MCR-Pure") {
-                     m = mcrpure(data, ncomp = num_mcr_pcs)
-                     summary(m)
-                     cumexpvar <- m$variance[2,]
-                     df <- data.frame(x=names(cumexpvar),y=cumexpvar)
-                     p1 <- ggline(df, x="x", y="y") + theme_bw() +
-                       labs(x="Components", y="Cumulative variance")
-                     gp1 <- ggplotly(p1)
-                     resspec <- melt(t(m$resspec))
-                     p2 <- ggline(resspec, x="Var2", y= "value", group="Var1", color="Var1",
-                            numeric.x.axis = T, shape = NA) + theme_bw()
-                     gp2 <- ggplotly(p2)
-                     subplot(gp2,gp1, nrows=2)
-                   } else if (mcr_method == "MCR-ALS") {
-                     m = mcrals(data, ncomp = num_mcr_pcs)
-                     summary(m)
-                     cumexpvar <- m$variance[2,]
-                     df <- data.frame(x=names(cumexpvar),y=cumexpvar)
-                     p1 <- ggline(df, x="x", y="y") + theme_bw() +
-                       labs(x="Components", y="Cumulative variance")
-                     gp1 <- ggplotly(p1)
-                     resspec <- melt(t(m$resspec))
-                     p2 <- ggline(resspec, x="Var2", y= "value", group="Var1", color="Var1",
-                                  numeric.x.axis = T, shape = NA) + theme_bw()
-                     gp2 <- ggplotly(p2)
-                     subplot(gp2,gp1, nrows=2)
-                   } else {
-                     toastr_error("Not implemented!", position = "top-center")
-                     return()
-                   }
-
-                 })
-               })
-             },
-             ignoreNULL = TRUE
+        if (mcr_method == "MCR-Pure") {
+          m <- mcrpure(data, ncomp = num_mcr_pcs)
+          summary(m)
+          cumexpvar <- m$variance[2, ]
+          df <- data.frame(x = names(cumexpvar), y = cumexpvar)
+          p1 <- ggline(df, x = "x", y = "y") + theme_bw() +
+            labs(x = "Components", y = "Cumulative variance")
+          gp1 <- ggplotly(p1)
+          resspec <- melt(t(m$resspec))
+          p2 <- ggline(resspec,
+            x = "Var2", y = "value", group = "Var1", color = "Var1",
+            numeric.x.axis = T, shape = NA
+          ) + theme_bw()
+          gp2 <- ggplotly(p2)
+          subplot(gp2, gp1, nrows = 2)
+        } else if (mcr_method == "MCR-ALS") {
+          m <- mcrals(data, ncomp = num_mcr_pcs)
+          summary(m)
+          cumexpvar <- m$variance[2, ]
+          df <- data.frame(x = names(cumexpvar), y = cumexpvar)
+          p1 <- ggline(df, x = "x", y = "y") + theme_bw() +
+            labs(x = "Components", y = "Cumulative variance")
+          gp1 <- ggplotly(p1)
+          resspec <- melt(t(m$resspec))
+          p2 <- ggline(resspec,
+            x = "Var2", y = "value", group = "Var1", color = "Var1",
+            numeric.x.axis = T, shape = NA
+          ) + theme_bw()
+          gp2 <- ggplotly(p2)
+          subplot(gp2, gp1, nrows = 2)
+        } else {
+          toastr_error("Not implemented!", position = "top-center")
+          return()
+        }
+      })
+    })
+  },
+  ignoreNULL = TRUE
 )
-

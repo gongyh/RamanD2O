@@ -22,7 +22,7 @@ observeEvent(input$cdr, {
       hs_cdr <- hs_cur
       spc <- hs_cur$spc
       # cdr
-      for (i in 1:nrow(spc)) {
+      for (i in seq_len(nrow(spc))) {
         Baseline_start <- which.min(abs(wavelength - 1760))
         Baseline_end <- which.min(abs(wavelength - 1960))
         Baseline <- spc[i, Baseline_start:Baseline_end]

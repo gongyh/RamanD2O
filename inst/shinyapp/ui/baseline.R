@@ -14,14 +14,14 @@ tabItem(
         ),
         fluidRow(
           column(6, selectInput("select_baseline", "Baseline method",
-            choices = c("polyfit", "als"), selected = "polyfit")
-          ),
+            choices = c("polyfit", "als"), selected = "polyfit"
+          )),
           # two baseline method
           conditionalPanel(
             condition = "input.select_baseline == 'polyfit'",
             conditionalPanel(
               condition = "input.polyfit_custom == false",
-              column(3,numericInput("polyfit_order", "Order", 1, min = 0, max = 15, step = 1))
+              column(3, numericInput("polyfit_order", "Order", 1, min = 0, max = 15, step = 1))
             ),
             conditionalPanel(
               condition = "input.polyfit_custom == true",

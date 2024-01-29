@@ -27,7 +27,7 @@ observeEvent(input$filter, {
       return()
     } else {
       hs_cur <- hs$val[[isolate(input$hs_selector_for_filter)]]
-      hs_cur_range <- hs_cur[,,isolate(input$filter_min) ~ isolate(input$filter_max)]
+      hs_cur_range <- hs_cur[, , isolate(input$filter_min) ~ isolate(input$filter_max)]
       if (isolate(input$filter_low)) {
         low.int <- apply(hs_cur_range, 1, max) < isolate(input$lowest)
         hs_cur <- hs_cur[!low.int]
@@ -65,7 +65,7 @@ observeEvent(input$after_filter_rows_selected,
 )
 
 # remove scrs on click of button
-proxy = dataTableProxy('after_filter')
+proxy <- dataTableProxy("after_filter")
 
 observeEvent(input$remove, {
   withBusyIndicatorServer("remove", {
@@ -78,8 +78,9 @@ observeEvent(input$remove, {
         callbackR = function(x) {
           if (x) hs$val[["filtered"]] <- hs$val[["filtered"]][-isolate(input$after_filter_rows_selected)]
           replaceData(proxy, data = hs$val[["filtered"]]@data %>% dplyr::select(!matches("spc")))
-          if (length(isolate(input$after_filter_rows_selected)) == 1)
+          if (length(isolate(input$after_filter_rows_selected)) == 1) {
             selectRows(proxy, as.numeric(isolate(input$after_filter_rows_selected)))
+          }
         }
       )
     }
@@ -87,15 +88,19 @@ observeEvent(input$remove, {
 })
 
 observeEvent(input$prev_rm, {
-  proxy %>% selectRows(if (length(isolate(input$after_filter_rows_selected)) == 1
-                           && isolate(input$after_filter_rows_selected) > 1)
+  proxy %>% selectRows(if (length(isolate(input$after_filter_rows_selected)) == 1 &&
+    isolate(input$after_filter_rows_selected) > 1) {
     as.numeric(isolate(input$after_filter_rows_selected) - 1)
-    else as.numeric(isolate(input$after_filter_rows_selected)))
+  } else {
+    as.numeric(isolate(input$after_filter_rows_selected))
+  })
 })
 
 observeEvent(input$next_rm, {
-  proxy %>% selectRows(if (length(isolate(input$after_filter_rows_selected)) == 1
-    && isolate(input$after_filter_rows_selected) < length(input$after_filter_rows_all))
+  proxy %>% selectRows(if (length(isolate(input$after_filter_rows_selected)) == 1 &&
+    isolate(input$after_filter_rows_selected) < length(input$after_filter_rows_all)) {
     as.numeric(isolate(input$after_filter_rows_selected) + 1)
-    else as.numeric(isolate(input$after_filter_rows_selected)))
+  } else {
+    as.numeric(isolate(input$after_filter_rows_selected))
+  })
 })

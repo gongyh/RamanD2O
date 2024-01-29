@@ -47,7 +47,7 @@ SCRS_preprocess <- function(input_dir, output, meta_fp, txt_filename) {
   # wholespectra data
   Group <- paste(raw.data$Timepoint, sep = "")
   # Add No_Cell, Group and other meta information
-  raw.data <- cbind(No_Cell = seq(1:nrow(raw.data)), Group = Group, raw.data)
+  raw.data <- cbind(No_Cell = seq_len(nrow(raw.data)), Group = Group, raw.data)
 
   ### delete 1049 peak ####
   # raw.data<-raw.data[,-(which(colnames(raw.data)=="X1026.09"):which(colnames(raw.data)=="X1075.76"))]
@@ -83,7 +83,7 @@ SCRS_preprocess <- function(input_dir, output, meta_fp, txt_filename) {
   # output txts
   Cells_bg_baseline_zero <- "Cells_bg_baseline_zero/"
   dir.create(Cells_bg_baseline_zero)
-  for (i in (1:nrow(data_baseline_zero_hyperSpec))) {
+  for (i in seq_len(nrow(data_baseline_zero_hyperSpec))) {
     Cells <- data.frame(shift = shift, intensity = t(data_baseline_zero_hyperSpec[i]$spc))
     write.table(Cells, paste0(Cells_bg_baseline_zero, data_baseline_zero_hyperSpec$ID_Cell[i], ".txt"),
       row.names = F, col.names = F, quote = F, sep = "\t"
@@ -100,7 +100,7 @@ SCRS_preprocess <- function(input_dir, output, meta_fp, txt_filename) {
   # output txts
   Cells_bg_baseline_zero_scale <- "Cells_bg_baseline_zero_scale/"
   dir.create(Cells_bg_baseline_zero_scale)
-  for (i in (1:nrow(data_baseline_zero_scale_hyperSpec))) {
+  for (i in seq_len(nrow(data_baseline_zero_scale_hyperSpec))) {
     Cells <- data.frame(shift = shift, intensity = t(data_baseline_zero_scale_hyperSpec[i]$spc))
     write.table(Cells, paste0(Cells_bg_baseline_zero_scale, data_baseline_zero_scale_hyperSpec$ID_Cell[i], ".txt"),
       row.names = F, col.names = F, quote = F, sep = "\t"

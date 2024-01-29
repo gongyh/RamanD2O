@@ -16,12 +16,12 @@ observeEvent(input$hs_selector_for_average,
       hs_cur <- hs$val[[input$hs_selector_for_average]]
     }
     output$hs_select_for_average_label <- renderUI({
-    metacols <- c("")
-    if (!is.null(hs_cur)) {
-      metacols <- colnames(hs_cur)
-      metacols <- metacols[metacols != "spc"]
-    }
-    selectInput("average_select_label", "Label", choices = metacols, selected = F)
+      metacols <- c("")
+      if (!is.null(hs_cur)) {
+        metacols <- colnames(hs_cur)
+        metacols <- metacols[metacols != "spc"]
+      }
+      selectInput("average_select_label", "Label", choices = metacols, selected = F)
     })
   },
   ignoreNULL = FALSE
@@ -31,7 +31,7 @@ observeEvent(input$average, {
   withBusyIndicatorServer("average", {
     hs_cur <- hs$val[[isolate(input$hs_selector_for_average)]]
     average_label <- isolate(input$average_select_label)
-    hs_avr <- aggregate(hs_cur, hs_cur@data[average_label][,1], FUN = mean)
+    hs_avr <- aggregate(hs_cur, hs_cur@data[average_label][, 1], FUN = mean)
     groupBy <- hs_avr$.aggregate
     row.names(hs_avr@data) <- groupBy
     hs_avr@data$ID_Cell <- groupBy

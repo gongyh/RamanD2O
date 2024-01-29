@@ -38,7 +38,7 @@ library(hySpc.ggplot2)
 library(OmicsPLS)
 library(mdatools)
 library(reshape2)
-#library(MMINP)
+# library(MMINP)
 library(foreach)
 library(parallel)
 library(doParallel)
@@ -50,7 +50,7 @@ theme_set(theme_bw())
 
 set.seed(2023)
 
-unlink(paste0(tempdir(),"/*"),recursive = T, force = T)
+unlink(paste0(tempdir(), "/*"), recursive = T, force = T)
 
 options(encoding = "UTF-8")
 options(shiny.maxRequestSize = 8 * 1024^3) # 8 GB

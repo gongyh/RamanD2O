@@ -55,15 +55,19 @@ tabItem(
             "Error rates",
             br(),
             plotOutput("rf_mse_plot") %>% withSpinner(),
-            tags$div(style = "text-align: right; margin-right: 20px;",
-              downloadButton("download_result1", "Download", class = "btn-primary"))
+            tags$div(
+              style = "text-align: right; margin-right: 20px;",
+              downloadButton("download_result1", "Download", class = "btn-primary")
+            )
           ),
           tabPanel(
             "Importance",
             br(),
             plotOutput("rf_importance_plot") %>% withSpinner(),
-            tags$div(style = "text-align: right; margin-right: 20px;",
-              downloadButton("download_result2", "Download", class = "btn-primary"))
+            tags$div(
+              style = "text-align: right; margin-right: 20px;",
+              downloadButton("download_result2", "Download", class = "btn-primary")
+            )
           ),
           tabPanel(
             "Confusion (OOB)",

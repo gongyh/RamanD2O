@@ -23,7 +23,7 @@ observeEvent(input$snr, {
       spc <- hs_cur$spc
       # snr
       if (isolate(input$select_snr) == "new") {
-        for (i in 1:nrow(spc)) {
+        for (i in seq_len(nrow(spc))) {
           Baseline_start <- which.min(abs(wavelength - 1730)) # 1760
           Baseline_end <- which.min(abs(wavelength - 1800)) # 1960
           Baseline <- spc[i, Baseline_start:Baseline_end]
@@ -33,7 +33,7 @@ observeEvent(input$snr, {
         }
         hs_snr$SNR <- round2(SNR_All)
       } else if (isolate(input$select_snr) == "old") {
-        for (i in 1:nrow(spc)) {
+        for (i in seq_len(nrow(spc))) {
           Baseline_start <- which.min(abs(wavelength - 1760))
           Baseline_end <- which.min(abs(wavelength - 1960))
           Baseline <- spc[i, Baseline_start:Baseline_end]

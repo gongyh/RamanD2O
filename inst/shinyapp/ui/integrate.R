@@ -9,9 +9,11 @@ tabItem(
       column(
         12,
         fluidRow(
-          column(12, radioButtons("ig_choice", label = "Choose Ramanome dataset source:",
+          column(12, radioButtons("ig_choice",
+            label = "Choose Ramanome dataset source:",
             choices = c("Use existing dataset", "Upload new dataset"),
-            selected = "Use existing dataset", inline = TRUE))
+            selected = "Use existing dataset", inline = TRUE
+          ))
         ),
         fluidRow(
           conditionalPanel(
@@ -91,47 +93,58 @@ tabItem(
             "CV_adjR2",
             br(),
             DTOutput("cvadjr_result") %>% withSpinner(),
-            tags$div(style = "text-align: right; margin-right: 20px;",
-              downloadButton("ig_result1", "Download", class = "btn-primary"))
+            tags$div(
+              style = "text-align: right; margin-right: 20px;",
+              downloadButton("ig_result1", "Download", class = "btn-primary")
+            )
           ),
           tabPanel(
             "CrossVal",
             br(),
             DTOutput("crossval_result") %>% withSpinner(),
-            tags$div(style = "text-align: right; margin-right: 20px;",
-              downloadButton("ig_result2", "Download", class = "btn-primary"))
+            tags$div(
+              style = "text-align: right; margin-right: 20px;",
+              downloadButton("ig_result2", "Download", class = "btn-primary")
+            )
           ),
           tabPanel(
             "Xjoint",
             br(),
             plotOutput("Xjoint", height = "1000px") %>% withSpinner(),
-            tags$div(style = "text-align: right; margin-right: 20px;",
-              downloadButton("ig_result3", "Download", class = "btn-primary"))
+            tags$div(
+              style = "text-align: right; margin-right: 20px;",
+              downloadButton("ig_result3", "Download", class = "btn-primary")
+            )
           ),
           tabPanel(
             "Yjoint",
             br(),
             plotOutput("Yjoint", height = "1000px") %>% withSpinner(),
-            tags$div(style = "text-align: right; margin-right: 20px;",
-              downloadButton("ig_result4", "Download", class = "btn-primary"))
+            tags$div(
+              style = "text-align: right; margin-right: 20px;",
+              downloadButton("ig_result4", "Download", class = "btn-primary")
+            )
           ),
           tabPanel(
             "X_VIP",
             br(),
             DTOutput("x_vip") %>% withSpinner(),
-            tags$div(style = "text-align: right; margin-right: 20px;",
-              downloadButton("ig_result5", "Download", class = "btn-primary"))
+            tags$div(
+              style = "text-align: right; margin-right: 20px;",
+              downloadButton("ig_result5", "Download", class = "btn-primary")
+            )
           ),
           tabPanel(
             "Y_VIP",
             br(),
             DTOutput("y_vip") %>% withSpinner(),
-            tags$div(style = "text-align: right; margin-right: 20px;",
-              downloadButton("ig_result6", "Download", class = "btn-primary"))
+            tags$div(
+              style = "text-align: right; margin-right: 20px;",
+              downloadButton("ig_result6", "Download", class = "btn-primary")
+            )
           )
         )
       )
     )
   )
 )
-
