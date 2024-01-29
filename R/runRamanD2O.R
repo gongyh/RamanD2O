@@ -11,5 +11,6 @@ runRamanD2O <- function() {
     stop("Could not find shinyapp directory. Try re-installing `RamanD2O`.", call. = FALSE)
   }
 
+  library(RamanD2O)
   shiny::runApp(appDir, display.mode = "normal")
 }
