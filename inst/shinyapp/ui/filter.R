@@ -18,13 +18,13 @@ tabItem(
           column(
             8,
             sliderInput("filter_range", " Selecting Wavelength Ranges for Filtering:",
-              min = 0, max = 4000, value = c(0, 4000), step = 1, dragRange = F, width = "100%"
+              min = 0, max = 4000, value = c(0, 4000), step = 1, dragRange = FALSE, width = "100%"
             )
           ),
           column(2, numericInput("filter_max", "Max", min = 0, max = 4000, step = 1, value = 4000, width = "100%"))
         ),
         fluidRow(
-          column(4, checkboxInput("filter_low", "By lowest intensity", value = T), class = "top25"),
+          column(4, checkboxInput("filter_low", "By lowest intensity", value = TRUE), class = "top25"),
           column(4, numericInput("lowest", "Value", 0)),
           column(4, p("Filter spectra with too low signal."), class = "top25")
         ),

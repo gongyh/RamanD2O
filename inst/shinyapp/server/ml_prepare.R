@@ -85,7 +85,7 @@ observeEvent(ml_trim_num(), {
               text = paste0("ml_trim_max", i, "()")
             ))),
             step = 1,
-            dragRange = F,
+            dragRange = FALSE,
             width = "100%"
           )
         ),
@@ -175,19 +175,13 @@ observeEvent(input$prepare, {
         hs$val[["train"]] <- hs_cur[index]
         hs$val[["eval"]] <- hs_cur[-index]
         result$prepare <- hs$val[["train"]]
-      }
-      # Train set
-      else if (isolate(input$datatype_for_ml_prepare) == "Train set") {
+      } else if (isolate(input$datatype_for_ml_prepare) == "Train set") { # Train set
         hs$val[["train"]] <- hs_cur[index]
         result$prepare <- hs$val[["train"]]
-      }
-      # Eval set
-      else if (isolate(input$datatype_for_ml_prepare) == "Eval set") {
+      } else if (isolate(input$datatype_for_ml_prepare) == "Eval set") { # Eval set
         hs$val[["eval"]] <- hs_cur[index]
         result$prepare <- hs$val[["eval"]]
-      }
-      # Test set
-      else if (isolate(input$datatype_for_ml_prepare) == "Test set") {
+      } else if (isolate(input$datatype_for_ml_prepare) == "Test set") { # Test set
         hs$val[["test"]] <- hs_cur[index]
         result$prepare <- hs$val[["test"]]
       }

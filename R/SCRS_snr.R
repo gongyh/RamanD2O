@@ -6,14 +6,13 @@ SCRS_snr <- function(input_csv, output_dir) {
 
   dir.create(output_dir)
 
-  SNR1 <- read.table(input_csv, header = T, sep = ",")
+  SNR1 <- read.table(input_csv, header = TRUE, sep = ",")
   SNR2 <- SNR1[, 12:length(SNR1[1, ]) - 1]
   colnames(SNR2) <-
     formatC(as.numeric(gsub("spc.", "", colnames(SNR2))), digits = 1, format = "f")
   wave_nums <- as.numeric(gsub("[A-Z]", "", colnames(SNR2)))
   SNR_All <- NULL
-  for (i in seq_len(nrow(SNR2)))
-  {
+  for (i in seq_len(nrow(SNR2))) {
     Baseline_start <- which.min(abs(wave_nums - 1730)) # 1760
     Baseline_end <- which.min(abs(wave_nums - 1800)) # 1960
     Baseline <- SNR2[i, Baseline_start:Baseline_end]
@@ -28,7 +27,7 @@ SCRS_snr <- function(input_csv, output_dir) {
     SNR_All,
     file = paste0(output_dir, "/", "SNR.txt"),
     sep = "\t",
-    quote = F,
-    row.names = F
+    quote = FALSE,
+    row.names = FALSE
   )
 }

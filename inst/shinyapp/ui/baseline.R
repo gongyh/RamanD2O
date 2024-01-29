@@ -29,7 +29,7 @@ tabItem(
               column(1, actionButton("polyfit_custom_minus", "", icon = icon("minus")), class = "top25"),
               column(1)
             ),
-            column(3, checkboxInput("polyfit_custom", "Custom range", value = F), class = "top25")
+            column(3, checkboxInput("polyfit_custom", "Custom range", value = FALSE), class = "top25")
           ),
           conditionalPanel(
             condition = "input.select_baseline == 'als'"
@@ -45,7 +45,7 @@ tabItem(
             "Pull up" = "up",
             "Keep intact" = "keep"
           ),
-          selected = "up", inline = T
+          selected = "up", inline = TRUE
         )
       )
     ),

@@ -24,4 +24,4 @@ for (dir in groups_dirs) {
   meta_df <- rbind(meta_df, meta)
 }
 
-write.table(meta_df, output_tsv, sep = "\t", quote = FALSE, row.names = F)
+write.table(meta_df, output_tsv, sep = "\t", quote = FALSE, row.names = FALSE)

@@ -10,7 +10,7 @@ tabItem(
         12,
         fluidRow(
           column(4, uiOutput("hs_select_for_carotenoid")),
-          column(2, checkboxInput("filter_carotenoid", "Remove", value = T), class = "top25"),
+          column(2, checkboxInput("filter_carotenoid", "Remove", value = TRUE), class = "top25"),
           column(4, withBusyIndicatorUI(actionButton("carotenoid", "Identification", class = "btn-success")), class = "top25")
         )
       )

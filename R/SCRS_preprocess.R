@@ -26,8 +26,7 @@ SCRS_preprocess <- function(input_dir, output, meta_fp, txt_filename) {
   files <- list.files(pattern = "*.txt") # at least 1 file
   shift <- read.table(files[1], header = F, sep = "\t")$V1
   final_data <- c(meta_colnames, shift)
-  for (filename in files)
-  {
+  for (filename in files) {
     ID_Cell <- sub(".txt", "", filename)
     if (ID_Cell %in% ID_Cells) {
       dt <- read.table(filename, header = F, sep = "\t")$V2
@@ -91,18 +90,18 @@ SCRS_preprocess <- function(input_dir, output, meta_fp, txt_filename) {
   }
 
   ## normalization
-  data_baseline_zero_scale_hyperSpec <- data_baseline_zero_hyperSpec / rowMeans(data_baseline_zero_hyperSpec)
-  # data_baseline_zero_scale_hyperSpec <- data_baseline_zero_hyperSpec / rowSums (data_baseline_zero_hyperSpec)
-  write.csv(data_baseline_zero_scale_hyperSpec, "Cells_bg_baseline_zero_scale.csv",
+  baseline_zero_scale_hyperSpec <- data_baseline_zero_hyperSpec / rowMeans(data_baseline_zero_hyperSpec)
+  # baseline_zero_scale_hyperSpec <- data_baseline_zero_hyperSpec / rowSums (data_baseline_zero_hyperSpec)
+  write.csv(baseline_zero_scale_hyperSpec, "Cells_bg_baseline_zero_scale.csv",
     quote = F, row.names = F
   )
 
   # output txts
   Cells_bg_baseline_zero_scale <- "Cells_bg_baseline_zero_scale/"
   dir.create(Cells_bg_baseline_zero_scale)
-  for (i in seq_len(nrow(data_baseline_zero_scale_hyperSpec))) {
-    Cells <- data.frame(shift = shift, intensity = t(data_baseline_zero_scale_hyperSpec[i]$spc))
-    write.table(Cells, paste0(Cells_bg_baseline_zero_scale, data_baseline_zero_scale_hyperSpec$ID_Cell[i], ".txt"),
+  for (i in seq_len(nrow(baseline_zero_scale_hyperSpec))) {
+    Cells <- data.frame(shift = shift, intensity = t(baseline_zero_scale_hyperSpec[i]$spc))
+    write.table(Cells, paste0(Cells_bg_baseline_zero_scale, baseline_zero_scale_hyperSpec$ID_Cell[i], ".txt"),
       row.names = F, col.names = F, quote = F, sep = "\t"
     )
   }

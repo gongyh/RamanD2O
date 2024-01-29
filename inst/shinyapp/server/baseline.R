@@ -120,7 +120,7 @@ observeEvent(input$baseline, {
             return()
           }
           assign(paste0("hs_line", line), hs_cur[, , range_min ~ range_max] -
-            spc_fit_poly_below(hs_cur[, , range], hs_cur[, , range_min ~ range_max], poly.order = input[[paste0("polyfit_custom_order", line)]]))
+                   spc_fit_poly_below(hs_cur[, , range], hs_cur[, , range_min ~ range_max], poly.order = input[[paste0("polyfit_custom_order", line)]]))
           # handle negative(multi lines)
           if (input$select_negative == "zero") {
             value_name <- paste0("hs_line", line)

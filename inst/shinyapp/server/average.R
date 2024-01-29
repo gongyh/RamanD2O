@@ -21,7 +21,7 @@ observeEvent(input$hs_selector_for_average,
         metacols <- colnames(hs_cur)
         metacols <- metacols[metacols != "spc"]
       }
-      selectInput("average_select_label", "Label", choices = metacols, selected = F)
+      selectInput("average_select_label", "Label", choices = metacols, selected = FALSE)
     })
   },
   ignoreNULL = FALSE

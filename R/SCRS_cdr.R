@@ -9,8 +9,7 @@ SCRS_cdr <- function(input_csv, output_dir) {
     formatC(as.numeric(gsub("spc.", "", colnames(SNR2))), digits = 1, format = "f")
   wave_nums <- as.numeric(gsub("[A-Z]", "", colnames(SNR2)))
   CDR_All <- NULL
-  for (i in seq_len(nrow(SNR2)))
-  {
+  for (i in seq_len(nrow(SNR2))) {
     CD_start <- which.min(abs(wave_nums - 2050))
     CD_end <- which.min(abs(wave_nums - 2300))
     CH_start <- which.min(abs(wave_nums - 3050))

@@ -46,12 +46,12 @@ O2PLSvip <- function(x, y, model) {
   checkInputdata(x)
   checkInputdata(y)
   if (any(!rownames(model$Tt) %in% rownames(x)) ||
-    any(!rownames(model$W.) %in% colnames(x))) {
+        any(!rownames(model$W.) %in% colnames(x))) {
     stop("x must be the data corresponding to the model")
   }
   x <- x[rownames(model$Tt), rownames(model$W.)]
   if (any(!rownames(model$U) %in% rownames(y)) ||
-    any(!rownames(model$C.) %in% colnames(y))) {
+        any(!rownames(model$C.) %in% colnames(y))) {
     stop("y must be the data corresponding to the model")
   }
   y <- y[rownames(model$U), rownames(model$C.)]

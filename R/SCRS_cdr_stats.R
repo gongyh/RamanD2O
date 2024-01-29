@@ -29,18 +29,18 @@ getPermuteMatrix <- function(perm, N, strata = NULL) {
 }
 
 #--------------------------------------------------
-cumcv <-
-  function(x) {
-    sapply(seq_along(x), function(k, z) {
-      sd(z[1:k]) / mean(z[1:k])
-    }, z = x)
-  }
-cummedian <-
-  function(x) {
-    sapply(seq_along(x), function(k, z) {
-      median(z[1:k])
-    }, z = x)
-  }
+cumcv <- function(x) {
+  sapply(seq_along(x), function(k, z) {
+    sd(z[1:k]) / mean(z[1:k])
+  }, z = x)
+}
+
+cummedian <- function(x) {
+  sapply(seq_along(x), function(k, z) {
+    median(z[1:k])
+  }, z = x)
+}
+
 cummean <- function(x) {
   cumsum(x) / seq_along(x)
 }
@@ -192,7 +192,7 @@ StatAccumCurve <-
           )
       })
       ra_df <- do.call(rbind, ra_list)
-      if (length(Group_name) == 1 & length(Group) == nrow(x)) {
+      if (length(Group_name) == 1 && length(Group) == nrow(x)) {
         colnames(ra_df)[1] <- Group_name
         sink(paste(outdir, stat, "_accum_df_by_", Group_name, ".txt", sep = ""))
         write.table(ra_df,
@@ -241,7 +241,7 @@ StatAccumCurve <-
         ) +
         theme_bw() +
         scale_x_continuous(breaks = breaks)
-      if (length(Group_name) == 1 & length(Group) == nrow(x)) {
+      if (length(Group_name) == 1 && length(Group) == nrow(x)) {
         p <- p + facet_wrap(~ get(Group_name), scales = scales)
         ggsave(
           filename = paste(
@@ -293,7 +293,7 @@ SCRS_cdr_stats <- function(input, outpath) {
   dir.create(outpath)
   outpath <- file_path_as_absolute(outpath)
 
-  mat <- read.table(input, header = T, sep = "\t")
+  mat <- read.table(input, header = TRUE, sep = "\t")
   mat$CD_ratio <- mat$CDR
   mat$Time <- mat$Timepoint
   rownames(mat) <- mat$No_Cell

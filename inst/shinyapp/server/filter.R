@@ -74,7 +74,7 @@ observeEvent(input$remove, {
       return()
     } else {
       shinyalert("Caution", "Confirm to delete this spectrum?",
-        type = "info", closeOnClickOutside = T, showCancelButton = T,
+        type = "info", closeOnClickOutside = TRUE, showCancelButton = TRUE,
         callbackR = function(x) {
           if (x) hs$val[["filtered"]] <- hs$val[["filtered"]][-isolate(input$after_filter_rows_selected)]
           replaceData(proxy, data = hs$val[["filtered"]]@data %>% dplyr::select(!matches("spc")))
@@ -89,7 +89,7 @@ observeEvent(input$remove, {
 
 observeEvent(input$prev_rm, {
   proxy %>% selectRows(if (length(isolate(input$after_filter_rows_selected)) == 1 &&
-    isolate(input$after_filter_rows_selected) > 1) {
+                             isolate(input$after_filter_rows_selected) > 1) {
     as.numeric(isolate(input$after_filter_rows_selected) - 1)
   } else {
     as.numeric(isolate(input$after_filter_rows_selected))
@@ -98,7 +98,7 @@ observeEvent(input$prev_rm, {
 
 observeEvent(input$next_rm, {
   proxy %>% selectRows(if (length(isolate(input$after_filter_rows_selected)) == 1 &&
-    isolate(input$after_filter_rows_selected) < length(input$after_filter_rows_all)) {
+                             isolate(input$after_filter_rows_selected) < length(input$after_filter_rows_all)) {
     as.numeric(isolate(input$after_filter_rows_selected) + 1)
   } else {
     as.numeric(isolate(input$after_filter_rows_selected))

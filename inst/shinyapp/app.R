@@ -20,7 +20,7 @@ ui <- dashboardPage(
   ),
   # END dashboardHeader
 
-  controlbar = dashboardControlbar(collapsed = T, skinSelector()),
+  controlbar = dashboardControlbar(collapsed = TRUE, skinSelector()),
 
   # BEGIN dashboardSidebar
   dashboardSidebar(
@@ -42,7 +42,7 @@ ui <- dashboardPage(
         menuItem("Database", tabName = "database", icon = icon("coins")),
         tabName = "tools",
         icon = icon("toolbox"),
-        startExpanded = F
+        startExpanded = FALSE
       ),
       menuItem(
         "Pipeline",
@@ -66,7 +66,7 @@ ui <- dashboardPage(
         menuSubItem("CDR", tabName = "cdr", icon = icon("battery-half")),
         tabName = "pipeline",
         icon = icon("project-diagram"),
-        startExpanded = T
+        startExpanded = TRUE
       ),
       menuItem(
         "Machine learning",
@@ -79,7 +79,7 @@ ui <- dashboardPage(
         menuItem("Random forest", tabName = "rf", icon = icon("tree")),
         tabName = "ml",
         icon = icon("robot"),
-        startExpanded = F
+        startExpanded = FALSE
       ),
       menuItem(
         "Integration analysis",
@@ -100,7 +100,7 @@ ui <- dashboardPage(
         ),
         tabName = "ig",
         icon = icon("shuffle"),
-        startExpanded = F
+        startExpanded = FALSE
       ),
       menuItem(
         "SessionInfo",

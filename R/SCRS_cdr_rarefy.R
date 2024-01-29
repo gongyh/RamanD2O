@@ -9,7 +9,7 @@ SCRS_cdr_rarefy <- function(input, outpath) {
   for (Time in Time) {
     content_timepoint <-
       raw.data[which(raw.data$Time == Time &
-        raw.data$cells == 60), "mean"] ## 60 ???
+                       raw.data$cells == 60), "mean"] ## 60 ???
     raw.data_tem <-
       raw.data[which(raw.data$Time == Time), "stdev"] / content_timepoint * 100
     stdev_mean <- c(stdev_mean, raw.data_tem)
@@ -26,7 +26,7 @@ SCRS_cdr_rarefy <- function(input, outpath) {
     n_location <- hline.data_tem[1, "cells"] + 1
     hline.data_tem <-
       raw.data_new[which(raw.data_new$Time == Time &
-        raw.data_new$cells == n_location), ]
+                           raw.data_new$cells == n_location), ]
     hline.data_all <- rbind(hline.data_all, hline.data_tem)
   }
 

@@ -15,8 +15,7 @@ SCRS_filter <- function(input_dir, output_dir) {
   # Read or SCRS txt files into a dataframe
   raw_dataframe <-
     read.txt.Renishaw(paste0(input_dir, "/", filenames[1]), data = "spc")
-  for (filename in filenames[-1])
-  {
+  for (filename in filenames[-1]) {
     temp <-
       read.txt.Renishaw(paste0(input_dir, "/", filename), data = "spc")
     raw_dataframe <- rbind(raw_dataframe, temp)
@@ -38,7 +37,7 @@ SCRS_filter <- function(input_dir, output_dir) {
   )
 
   # Filter low quality SCRS
-  good_data_baseline_normalization <- data_hyperSpec
+  good_data_baseline_normalize <- data_hyperSpec
   wls <- wl(data_hyperSpec)
   if (wls[length(wls)] >= 3099) {
     data_baseline <- data_hyperSpec[, , c(1730 ~ 3099)] - # 3151 Horiba
@@ -52,19 +51,19 @@ SCRS_filter <- function(input_dir, output_dir) {
       sweep(data_baseline, 1, factors, "*")
     data_baseline_normalization <- data_baseline_normalization
     plot(data_baseline_normalization)
-    data_baseline_normalization_frame <-
+    data_baseline_normalization_df <-
       cbind(
         select(as.data.frame(data_baseline_normalization), -spc, -.row),
         as.data.frame(data_baseline_normalization$spc)
       )
-    good_data_baseline_normalization <- filter(
-      data_baseline_normalization_frame,
-      apply(abs(data_baseline_normalization_frame[, 5:75]), 1, mean) < 0.2,
-      apply(abs(data_baseline_normalization_frame[, 5:75]), 1, sd) < 0.2
+    good_data_baseline_normalize <- filter(
+      data_baseline_normalization_df,
+      apply(abs(data_baseline_normalization_df[, 5:75]), 1, mean) < 0.2,
+      apply(abs(data_baseline_normalization_df[, 5:75]), 1, sd) < 0.2
     )
     cat(
       "INFO:",
-      length(good_data_baseline_normalization$filename),
+      length(good_data_baseline_normalize$filename),
       "spectra left after C/D filtering!",
       sep = " ",
       fill = T
@@ -73,9 +72,8 @@ SCRS_filter <- function(input_dir, output_dir) {
 
   # output high quality SCRS
   data_postfilter <-
-    data_hyperSpec[data_hyperSpec$filename %in% good_data_baseline_normalization$filename] # output raw SCRS
-  for (i in seq_len(nrow(data_postfilter)))
-  {
+    data_hyperSpec[data_hyperSpec$filename %in% good_data_baseline_normalize$filename] # output raw SCRS
+  for (i in seq_len(nrow(data_postfilter))) {
     Cells <- t(data_postfilter[i, ]$spc)
     write.table(
       Cells,

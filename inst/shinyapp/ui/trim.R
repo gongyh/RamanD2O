@@ -11,7 +11,7 @@ tabItem(
         column(
           8,
           sliderInput("trim_range", " Selecting Wavelength Ranges:",
-            min = 0, max = 4000, value = c(400, 3400), step = 1, dragRange = F, width = "100%"
+            min = 0, max = 4000, value = c(400, 3400), step = 1, dragRange = FALSE, width = "100%"
           )
         ),
         column(2, numericInput("trim_max", "Max", min = 0, max = 4000, step = 1, value = 3400, width = "100%"))

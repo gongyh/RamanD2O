@@ -44,12 +44,11 @@ findPeaks <- function(spc, size = 9, level = 0.1) {
 #'
 #' @export
 SCRS_toDF <- function(files) {
-  shift <- read.table(files[1], header = F, sep = "\t")$V1
+  shift <- read.table(files[1], header = FALSE, sep = "\t")$V1
   scrs_df <- c("filename", shift)
-  for (filename in files)
-  {
+  for (filename in files) {
     ID_Cell <- sub(".txt", "", basename(filename))
-    dt <- read.table(filename, header = F, sep = "\t")$V2
+    dt <- read.table(filename, header = FALSE, sep = "\t")$V2
     # remove Cosmic Rays
     dt2 <- removeCosmic(dt)
     if (dt2$cosmic) {

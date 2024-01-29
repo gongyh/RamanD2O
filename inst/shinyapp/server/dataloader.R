@@ -28,11 +28,11 @@ observeEvent(input$unzip, {
         scrs_df <- matrix(nrow = length(scrs_colnames), ncol = total)
         for (filename in txtfiles) {
           ID_Cell <- sub(".txt", "", basename(filename))
-          content <- read.table(filename, header = F, sep = "\t")
+          content <- read.table(filename, header = FALSE, sep = "\t")
           shift_cur <- content$V1
           dt <- removeCosmic(content$V2)
           hs_data <- new("hyperSpec", wavelength = shift_cur, spc = dt$spc)
-          hs_align <- spc_loess(hs_data, shift, normalize = F)
+          hs_align <- spc_loess(hs_data, shift, normalize = FALSE)
           data <- c(ID_Cell, hs_align$spc)
           scrs_df[, i] <- data
           update_modal_progress(i / total, paste0("Reading ", i, " spectrum (", floor(100 * i / total), "%)"))
@@ -40,13 +40,12 @@ observeEvent(input$unzip, {
         }
       } else {
         # same shift
-        shift <- read.table(txtfiles[1], header = F, sep = "\t")$V1
+        shift <- read.table(txtfiles[1], header = FALSE, sep = "\t")$V1
         scrs_colnames <- c("ID_Cell", shift)
         scrs_df <- matrix(nrow = length(scrs_colnames), ncol = total)
-        for (filename in txtfiles)
-        {
+        for (filename in txtfiles) {
           ID_Cell <- sub(".txt", "", basename(filename))
-          content <- read.table(filename, header = F, sep = "\t")
+          content <- read.table(filename, header = FALSE, sep = "\t")
           cur_shift <- content$V1
           # compare shift with cur_shift, should be same, error if not same
           if (!identical(shift, cur_shift)) {
@@ -67,7 +66,7 @@ observeEvent(input$unzip, {
         }
       }
 
-      sc <- data.frame(t(scrs_df), stringsAsFactors = T)
+      sc <- data.frame(t(scrs_df), stringsAsFactors = TRUE)
       colnames(sc) <- scrs_colnames
       rownames(sc) <- NULL
       scrs$spc <- sc
@@ -84,7 +83,7 @@ observeEvent(input$unzip, {
 observeEvent(input$load_meta, {
   withBusyIndicatorServer("load_meta", {
     if (!is.null(isolate(input$meta_file$datapath))) {
-      df <- read.table(isolate(input$meta_file$datapath), header = T, sep = "\t", stringsAsFactors = T)
+      df <- read.table(isolate(input$meta_file$datapath), header = TRUE, sep = "\t", stringsAsFactors = TRUE)
       # check whether all spectra file have metadata lines
       if (is.null(scrs$spc)) {
         toastr_error("Please load spectrum files first!", position = "top-center")
@@ -121,7 +120,7 @@ observeEvent(meta$tbl,
     output$meta_table <- renderDataTable({
       DT::datatable(meta$tbl,
         escape = FALSE, selection = "single", extensions = list("Responsive", "Scroller"),
-        options = list(deferRender = T, searchHighlight = T, scrollX = T)
+        options = list(deferRender = TRUE, searchHighlight = TRUE, scrollX = TRUE)
       )
     })
   },

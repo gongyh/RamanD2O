@@ -24,7 +24,7 @@ observeEvent(input$smooth, {
         maxWl <- round(max(wavelength)) - 1
         wavelength <- minWl:maxWl
       }
-      hs_sm <- spc.loess(hs_cur, wavelength, normalize = F)
+      hs_sm <- spc.loess(hs_cur, wavelength, normalize = FALSE)
       colnames(hs_sm$spc) <- hs_sm@wavelength
       hs$val[["smoothed"]] <- hs_sm
       remove_modal_spinner()

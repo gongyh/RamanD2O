@@ -50,7 +50,7 @@ theme_set(theme_bw())
 
 set.seed(2023)
 
-unlink(paste0(tempdir(), "/*"), recursive = T, force = T)
+unlink(paste0(tempdir(), "/*"), recursive = TRUE, force = TRUE)
 
 options(encoding = "UTF-8")
 options(shiny.maxRequestSize = 8 * 1024^3) # 8 GB

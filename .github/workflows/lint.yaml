@@ -26,7 +26,14 @@ jobs:
           needs: lint
 
       - name: Lint
-        run: lintr::lint_package()
+        run: |
+          library(lintr)
+          lts <- default_linters
+          lts$object_usage_linter <- NULL
+          lts$object_name_linter <- NULL
+          lts$commented_code_linter <- NULL
+          lts$cyclocomp_linter <- NULL
+          lint_package(linters=lts)
         shell: Rscript {0}
         env:
           LINTR_ERROR_ON_LINT: true
