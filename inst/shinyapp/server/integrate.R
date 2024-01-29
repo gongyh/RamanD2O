@@ -112,7 +112,6 @@ observeEvent(input$integrate2d, {
     ig$upload_X <- scale(ig$upload_X_raw, scale=F)
     # O2PLS
     ig$result2 <- o2m(ig$upload_X2, ig$upload_Y, isolate(input$pars_N), isolate(input$pars_Nx), isolate(input$pars_Ny))
-    browser()
     ig$vip2 <- O2PLSvip(ig$upload_X2, ig$upload_Y, ig$result2)
   })
 })

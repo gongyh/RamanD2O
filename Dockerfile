@@ -70,15 +70,15 @@ RUN R -e "library(pak); pkg_install(c('shiny', 'shinydashboard', 'shinyjs', 'shi
   'DT', 'fresh', 'devtools', 'plotly', 'fs', 'ggpubr', 'ggplot2', 'stringr', \
   'RColorBrewer', 'dplyr', 'compiler', 'mongolite', 'zip', 'fawda123/ggord', \
   'baseline', 'permute', 'Rtsne', 'markdown', 'caret', 'randomForest', \
-  'YuLab-SMU/MMINP', 'OmicsPLS', 'mdatools', 'foreach', 'parallel', 'doParallel', \
+  'OmicsPLS', 'mdatools', 'foreach', 'parallel', 'doParallel', \
   'r-hyperspec/hyperSpec', 'r-hyperspec/hySpc.ggplot2', \
   'RinteRface/shinydashboardPlus')); cache_clean()" && rm -rf /tmp/*
 
-# copy the app to the image
-RUN mkdir /root/RamanD2O
-COPY inst/shinyapp /root/RamanD2O
+ADD "https://www.random.org/cgi-bin/randbyte?nbytes=10&format=h" skipcache
+RUN R -e "library(pak); pkg_install('gongyh/RamanD2O',dependencies=T); cache_clean()" && rm -rf /tmp/*
 
+# shiny
 COPY Rprofile.site /usr/lib/R/etc/
 EXPOSE 3838
 
-CMD ["R", "-e", "shiny::runApp('/root/RamanD2O')"]
+CMD ["R", "-e", "RamanD2O::runRamanD2O()"]
