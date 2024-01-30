@@ -32,7 +32,7 @@ observeEvent(input$hs_selector_for_integrate,
 # upload X/Y dataset
 observeEvent(input$confirm_X, {
   hs_cur <- NULL
-  if (!is.null(input$hs_selector_for_integrate)) {
+  if (input$hs_selector_for_integrate != "") {
     hs_cur <- hs$val[[input$hs_selector_for_integrate]]
     ig$upload_X_raw <- hs_cur$spc
     ig$upload_X <- scale(ig$upload_X_raw, scale = F)
@@ -102,6 +102,7 @@ observeEvent(input$integrate, {
 
 observeEvent(input$integrate2d, {
   withBusyIndicatorServer("integrate2d", {
+    show_modal_progress_line(value = 1 / 4, text = "Build matrix ...")
     ig$upload_X <- as.matrix(ig$upload_X_raw)
     X2 <- matrix(nrow = nrow(ig$upload_X), ncol = ncol(ig$upload_X) * (ncol(ig$upload_X) + 1))
     X2[, seq_len(ncol(ig$upload_X))] <- as.matrix(ig$upload_X)
@@ -118,8 +119,11 @@ observeEvent(input$integrate2d, {
     ig$upload_X2 <- X2
     ig$upload_X <- scale(ig$upload_X_raw, scale = F)
     # O2PLS
+    update_modal_progress(value = 2 / 4, text = "Integration analysis ...")
     ig$result2 <- o2m(ig$upload_X2, ig$upload_Y, isolate(input$pars_N), isolate(input$pars_Nx), isolate(input$pars_Ny))
+    update_modal_progress(value = 3 / 4, text = "Evaluate importance ...")
     ig$vip2 <- O2PLSvip(ig$upload_X2, ig$upload_Y, ig$result2)
+    remove_modal_progress()
   })
 })
 
@@ -222,8 +226,11 @@ observeEvent(ig$result2,
     output$Yjoint <- renderPlot({
       validate(need(ig$result2, ""))
       py <- list()
+      Xcols <- rep("black",length(ig$result2$C.[, 1]))
       py <- lapply(1:isolate(input$pars_N), function(i) {
-        plot(ig$result2, loading_name = "Yjoint", i = i, j = NULL, col = "black")
+        Xcols1 <- Xcols
+        Xcols1[which(abs(scale(ig$result2$C.[, i])) > 3.29)] <- "red"
+        plot(ig$result2, loading_name = "Yjoint", i = i, j = NULL, col = Xcols1)
       })
       ggarrange(plotlist = py, ncol = 1)
     })
