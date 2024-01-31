@@ -11,25 +11,28 @@ NULL
 #' @export
 SCRS_preprocess <- function(input_dir, output, meta_fp, txt_filename) {
   filepath <- file_path_as_absolute(input_dir) # directory containing SCRS txts
-  meta_fp <- file_path_as_absolute(meta_fp) # meta TSV file, ID_Cell	Timepoint	Label	CellBg	Cell
+  # meta TSV file, ID_Cell	Timepoint	Label	CellBg	Cell
+  meta_fp <- file_path_as_absolute(meta_fp)
 
   dir.create(output)
   output <- file_path_as_absolute(output)
 
   # Read meta data
-  meta_data <- read.table(meta_fp, header = T, sep = "\t", stringsAsFactors = F) # metadata table
+  meta_data <- read.table(
+    meta_fp, header = TRUE, sep = "\t", stringsAsFactors = FALSE
+  ) # metadata table
   ID_Cells <- meta_data$ID_Cell # Cells
   meta_colnames <- colnames(meta_data)
 
   # Combine txts to one txt
   setwd(filepath)
   files <- list.files(pattern = "*.txt") # at least 1 file
-  shift <- read.table(files[1], header = F, sep = "\t")$V1
+  shift <- read.table(files[1], header = FALSE, sep = "\t")$V1
   final_data <- c(meta_colnames, shift)
   for (filename in files) {
     ID_Cell <- sub(".txt", "", filename)
     if (ID_Cell %in% ID_Cells) {
-      dt <- read.table(filename, header = F, sep = "\t")$V2
+      dt <- read.table(filename, header = FALSE, sep = "\t")$V2
       data <- c(unlist(meta_data[meta_data$ID_Cell == ID_Cell, ]), dt)
       final_data <- cbind(final_data, data)
     }
@@ -37,11 +40,13 @@ SCRS_preprocess <- function(input_dir, output, meta_fp, txt_filename) {
   setwd(output)
   write.table(
     file = paste0(txt_filename, "_rawdata.txt"), t(final_data), sep = "\t",
-    quote = F, row.names = F, col.names = F
+    quote = FALSE, row.names = FALSE, col.names = FALSE
   )
 
   # transform to data frame
-  raw.data <- read.table(paste0(txt_filename, "_rawdata.txt"), header = T, sep = "\t")
+  raw.data <- read.table(
+    paste0(txt_filename, "_rawdata.txt"), header = TRUE, sep = "\t"
+  )
 
   # wholespectra data
   Group <- paste(raw.data$Timepoint, sep = "")
@@ -58,7 +63,7 @@ SCRS_preprocess <- function(input_dir, output, meta_fp, txt_filename) {
   # remove background
   Cells_bgsub <- raw.data[which(raw.data$CellBg == "Cell"), ]
   # Cells_bgsub<-raw.data_bgsub[which(raw.data_bgsub$CellBg=="Cell"),]
-  # write.csv(Cells_bgsub,paste(output,"Cells_bg.csv",sep=""),quote = F,row.names = F)
+  # write.csv(Cells_bgsub,paste(output,"Cells_bg.csv",sep=""),quote = FALSE,row.names = FALSE)
 
   ## baseline##
   wavelength <- shift
@@ -66,9 +71,12 @@ SCRS_preprocess <- function(input_dir, output, meta_fp, txt_filename) {
     data = data.frame(Cells_bgsub[, 1:ncol_meta]),
     spc = Cells_bgsub[, (ncol_meta + 1):ncol_raw.data], wavelength = wavelength
   )
-  data_baseline <- data_hyperSpec - spc.fit.poly.below(data_hyperSpec, data_hyperSpec, poly.order = 7)
+  data_baseline <- data_hyperSpec -
+    spc.fit.poly.below(data_hyperSpec, data_hyperSpec, poly.order = 7)
   # data_baseline <- data_hyperSpec - spc.rubberband(data_hyperSpec, noise=300, df=20)
-  write.csv(data_baseline, "Cells_bg_baseline.csv", quote = F, row.names = F)
+  write.csv(
+    data_baseline, "Cells_bg_baseline.csv", quote = FALSE, row.names = FALSE
+  )
 
   ## Replace negative intensities to zero ##
   data_baseline_zero <- data_baseline$spc
@@ -77,15 +85,19 @@ SCRS_preprocess <- function(input_dir, output, meta_fp, txt_filename) {
     data = data.frame(Cells_bgsub[, 1:ncol_meta]),
     spc = data_baseline_zero, wavelength = wavelength
   )
-  write.csv(data_baseline_zero_hyperSpec, "Cells_bg_baseline_zero.csv", quote = F, row.names = F)
+  write.csv(data_baseline_zero_hyperSpec,
+    "Cells_bg_baseline_zero.csv", quote = FALSE, row.names = FALSE)
 
   # output txts
   Cells_bg_baseline_zero <- "Cells_bg_baseline_zero/"
   dir.create(Cells_bg_baseline_zero)
   for (i in seq_len(nrow(data_baseline_zero_hyperSpec))) {
-    Cells <- data.frame(shift = shift, intensity = t(data_baseline_zero_hyperSpec[i]$spc))
-    write.table(Cells, paste0(Cells_bg_baseline_zero, data_baseline_zero_hyperSpec$ID_Cell[i], ".txt"),
-      row.names = F, col.names = F, quote = F, sep = "\t"
+    Cells <- data.frame(
+      shift = shift, intensity = t(data_baseline_zero_hyperSpec[i]$spc)
+    )
+    write.table(Cells, paste0(Cells_bg_baseline_zero,
+      data_baseline_zero_hyperSpec$ID_Cell[i], ".txt"),
+      row.names = FALSE, col.names = FALSE, quote = FALSE, sep = "\t"
     )
   }
 
@@ -93,16 +105,19 @@ SCRS_preprocess <- function(input_dir, output, meta_fp, txt_filename) {
   baseline_zero_scale_hyperSpec <- data_baseline_zero_hyperSpec / rowMeans(data_baseline_zero_hyperSpec)
   # baseline_zero_scale_hyperSpec <- data_baseline_zero_hyperSpec / rowSums (data_baseline_zero_hyperSpec)
   write.csv(baseline_zero_scale_hyperSpec, "Cells_bg_baseline_zero_scale.csv",
-    quote = F, row.names = F
+    quote = FALSE, row.names = FALSE
   )
 
   # output txts
   Cells_bg_baseline_zero_scale <- "Cells_bg_baseline_zero_scale/"
   dir.create(Cells_bg_baseline_zero_scale)
   for (i in seq_len(nrow(baseline_zero_scale_hyperSpec))) {
-    Cells <- data.frame(shift = shift, intensity = t(baseline_zero_scale_hyperSpec[i]$spc))
-    write.table(Cells, paste0(Cells_bg_baseline_zero_scale, baseline_zero_scale_hyperSpec$ID_Cell[i], ".txt"),
-      row.names = F, col.names = F, quote = F, sep = "\t"
+    Cells <- data.frame(
+      shift = shift, intensity = t(baseline_zero_scale_hyperSpec[i]$spc)
+    )
+    write.table(Cells, paste0(Cells_bg_baseline_zero_scale,
+      baseline_zero_scale_hyperSpec$ID_Cell[i], ".txt"),
+      row.names = FALSE, col.names = FALSE, quote = FALSE, sep = "\t"
     )
   }
 }

@@ -114,9 +114,11 @@ ui <- dashboardPage(
           a("Yanhai Gong", href = "mailto:gongyh@qibebt.ac.cn"),
           br(),
           a("@ SCC, QIBEBT, CAS",
-            href = "http://singlecellcenter.org/en/index.aspx", target = "_blank"
+            href = "http://singlecellcenter.org/en/index.aspx",
+            target = "_blank"
           ),
-          style = "padding-left:1em; padding-right:1em;position:absolute; bottom:1em; "
+          style = "padding-left:1em; padding-right:1em;
+            position:absolute; bottom:1em; "
         )
       )
     )
@@ -156,7 +158,10 @@ ui <- dashboardPage(
   ),
   # END dashboardBody
 
-  footer = dashboardFooter(left = "Citation: https://github.com/gongyh/RamanD2O", right = "SCC, QIBEBT, CAS")
+  footer = dashboardFooter(
+    left = "Citation: https://github.com/gongyh/RamanD2O",
+    right = "SCC, QIBEBT, CAS"
+  )
 )
 
 server <- function(input, output, session) {

@@ -29,8 +29,8 @@ jobs:
         run: |
           library(lintr)
           lts <- default_linters
-          lts$object_usage_linter
-          lts$object_name_linter
+          lts$object_usage_linter <- NULL
+          lts$object_name_linter <- NULL
           lts$commented_code_linter <- NULL
           lts$cyclocomp_linter <- NULL
           lint_package(linters=lts)

@@ -3,7 +3,7 @@ SCRS_cdr_rarefy <- function(input, outpath) {
   setwd("./")
 
   ######################################
-  raw.data <- read.table(input, sep = "\t", header = T)
+  raw.data <- read.table(input, sep = "\t", header = TRUE)
   stdev_mean <- NULL
   Time <- levels(raw.data$Time)
   for (Time in Time) {
@@ -22,7 +22,7 @@ SCRS_cdr_rarefy <- function(input, outpath) {
   for (Time in Time) {
     hline.data_tem <- hline.data[which(hline.data$Time == Time), ]
     hline.data_tem <-
-      hline.data_tem[order(hline.data_tem$cells, decreasing = T), ]
+      hline.data_tem[order(hline.data_tem$cells, decreasing = TRUE), ]
     n_location <- hline.data_tem[1, "cells"] + 1
     hline.data_tem <-
       raw.data_new[which(raw.data_new$Time == Time &
@@ -36,7 +36,7 @@ SCRS_cdr_rarefy <- function(input, outpath) {
 
   raw.data_new <- within(raw.data_new, {
     Time <-
-      factor(Time, levels = str_sort(levels(raw.data_new$Time), numeric = T))
+      factor(Time, levels = str_sort(levels(raw.data_new$Time), numeric = TRUE))
   })
   p1 <- ggplot(raw.data_new, aes(x = cells, y = stdev_mean)) +
     geom_point(size = 0.05) +

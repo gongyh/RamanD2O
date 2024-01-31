@@ -147,7 +147,8 @@ StatAccumCurve <-
         geom_line() +
         xlab("Number of cells pooled") +
         ylab(stat) +
-        # geom_ribbon(data = ra_df, aes(ymin=Qnt.0.025,ymax=Qnt.0.975), alpha=0.2)+
+        # geom_ribbon(
+        # data = ra_df, aes(ymin=Qnt.0.025,ymax=Qnt.0.975), alpha=0.2)+
         geom_ribbon(
           data = ra_df,
           aes(ymin = mean - stdev, ymax = mean + stdev),
@@ -206,7 +207,8 @@ StatAccumCurve <-
           data.frame(do.call(rbind, strsplit(as.character(ra_df$group), "\\.")))
         names(groups) <- Group_name
         ra_df <- data.frame(groups, ra_df)
-        sink(paste(outdir, stat, "_accum_df_by_", Group_names, ".txt", sep = ""))
+        sink(paste(outdir, stat, "_accum_df_by_",
+          Group_names, ".txt", sep = ""))
         write.table(ra_df,
           quote = FALSE,
           sep = "\t",
@@ -221,7 +223,8 @@ StatAccumCurve <-
         geom_line() +
         xlab("Number of cells pooled") +
         ylab(stat) +
-        # geom_ribbon(data = ra_df, aes(ymin=Qnt.0.025,ymax=Qnt.0.975), alpha=0.2)+
+        # geom_ribbon(
+        #   data = ra_df, aes(ymin=Qnt.0.025,ymax=Qnt.0.975), alpha=0.2)+
         geom_ribbon(
           data = ra_df,
           aes(ymin = mean - stdev, ymax = mean + stdev),
@@ -258,8 +261,8 @@ StatAccumCurve <-
           height = height
         )
       } else {
-        p <-
-          p + facet_grid(get(Group_name[1]) ~ get(Group_name[2]), scales = scales)
+        p <- p +
+          facet_grid(get(Group_name[1]) ~ get(Group_name[2]), scales = scales)
         Group_names <- paste(Group_name, collapse = "__")
         ggsave(
           filename = paste(

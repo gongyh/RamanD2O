@@ -10,7 +10,8 @@ output$hs_select_for_ml_explore <- renderUI({
   } else if ("smoothed" %in% hs_all) {
     selected <- "smoothed"
   }
-  selectInput("hs_selector_for_ml_explore", "Choose target", choices = hs_all, selected = selected)
+  selectInput("hs_selector_for_ml_explore","Choose target",
+    choices = hs_all, selected = selected)
 })
 
 observeEvent(input$hs_selector_for_ml_explore,
@@ -25,7 +26,8 @@ observeEvent(input$hs_selector_for_ml_explore,
         metacols <- colnames(hs_cur)
         metacols <- metacols[metacols != "spc"]
       }
-      selectInput("select_tsneColBy", "Color by", choices = metacols, selected = FALSE)
+      selectInput("select_tsneColBy", "Color by",
+        choices = metacols, selected = FALSE)
     })
   },
   ignoreNULL = FALSE
@@ -41,12 +43,20 @@ observeEvent(input$tsne,
         hs_cur <- hs$val[[isolate(input$hs_selector_for_ml_explore)]]
         hs_cur_meta <- hs_cur@data
         hs_cur_meta$spc <- NULL
-        tsne_out <- Rtsne(hs_cur$spc, perplexity = isolate(input$perplexity), max_iter = isolate(input$max_iter))
+        tsne_out <- Rtsne(
+          hs_cur$spc, perplexity = isolate(input$perplexity),
+          max_iter = isolate(input$max_iter)
+        )
         df <- data.frame(dim1 = tsne_out$Y[, 1], dim2 = tsne_out$Y[, 2])
         df <- cbind(df, hs_cur_meta)
         df$text <- rownames(hs_cur$spc)
         p <- ggplot(df, aes_string(x = "dim1", y = "dim2"))
-        suppressWarnings(p <- p + geom_point(aes_string(color = isolate(input$select_tsneColBy), text = "text")))
+        suppressWarnings(
+          p <- p +
+            geom_point(
+              aes_string(color = isolate(input$select_tsneColBy), text = "text")
+            )
+        )
         ggplotly(p)
       })
     })

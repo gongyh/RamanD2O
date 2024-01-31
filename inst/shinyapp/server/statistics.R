@@ -118,7 +118,7 @@ observeEvent(input$perform_lda,
         }
 
         ggplotly(p +
-                   labs(title = sprintf("training accuracy is %.2f, testing accuracy is %.2f", acc_train, acc_test)))
+          labs(title = sprintf("training accuracy is %.2f, testing accuracy is %.2f", acc_train, acc_test)))
       })
     })
   },

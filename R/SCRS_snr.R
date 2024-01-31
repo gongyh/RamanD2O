@@ -8,16 +8,17 @@ SCRS_snr <- function(input_csv, output_dir) {
 
   SNR1 <- read.table(input_csv, header = TRUE, sep = ",")
   SNR2 <- SNR1[, 12:length(SNR1[1, ]) - 1]
-  colnames(SNR2) <-
-    formatC(as.numeric(gsub("spc.", "", colnames(SNR2))), digits = 1, format = "f")
+  colnames(SNR2) <- formatC(
+    as.numeric(gsub("spc.", "", colnames(SNR2))), digits = 1, format = "f")
   wave_nums <- as.numeric(gsub("[A-Z]", "", colnames(SNR2)))
   SNR_All <- NULL
   for (i in seq_len(nrow(SNR2))) {
     Baseline_start <- which.min(abs(wave_nums - 1730)) # 1760
     Baseline_end <- which.min(abs(wave_nums - 1800)) # 1960
     Baseline <- SNR2[i, Baseline_start:Baseline_end]
-    marker <-
-      max(SNR2[i, which.min(abs(wave_nums - 3050)):which.min(abs(wave_nums - 2800))]) # C-H peak
+    marker <- max(
+      SNR2[i, which.min(abs(wave_nums - 3050)):which.min(abs(wave_nums - 2800))]
+    ) # C-H peak
     SNR <-
       (marker - sum(Baseline) / length(Baseline)) / sqrt(marker)
     SNR_All <- rbind(SNR_All, SNR)

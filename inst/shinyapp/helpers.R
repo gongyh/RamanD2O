@@ -20,9 +20,8 @@ findPeaks <- function(spc, size = 9, level = 0.1) {
   maxI <- max(spc)
   peaks <- c()
   for (i in (half + 1):(length(spc) - half)) {
-    if ((spc[i] >= level * maxI) && (spc[i] >= max(spc[(i - half):(i + half)]))) {
-      peaks <- c(peaks, i)
-    }
+    if ((spc[i] >= level * maxI) && (spc[i] >= max(spc[(i - half):(i + half)])))
+      {peaks <- c(peaks, i)}
   }
   peaks
 }
@@ -94,7 +93,8 @@ withBusyIndicatorUI <- function(button) {
 # Call this function from the server with the button id that is clicked and the
 # expression to run when the button is clicked
 withBusyIndicatorServer <- function(buttonId, expr) {
-  # UX stuff: show the "busy" message, hide the other messages, disable the button
+  # UX stuff: show the "busy" message,
+  # hide the other messages, disable the button
   loadingEl <- sprintf("[data-for-btn=%s] .btn-loading-indicator", buttonId)
   doneEl <- sprintf("[data-for-btn=%s] .btn-done-indicator", buttonId)
   errEl <- sprintf("[data-for-btn=%s] .btn-err", buttonId)

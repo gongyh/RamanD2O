@@ -3,10 +3,11 @@
 SCRS_cdr <- function(input_csv, output_dir) {
   dir.create(output_dir)
 
-  SNR1 <- read.table(input_csv, header = T, sep = ",")
+  SNR1 <- read.table(input_csv, header = TRUE, sep = ",")
   SNR2 <- SNR1[, 12:length(SNR1[1, ]) - 1]
-  colnames(SNR2) <-
-    formatC(as.numeric(gsub("spc.", "", colnames(SNR2))), digits = 1, format = "f")
+  colnames(SNR2) <- formatC(
+    as.numeric(gsub("spc.", "", colnames(SNR2))), digits = 1, format = "f"
+  )
   wave_nums <- as.numeric(gsub("[A-Z]", "", colnames(SNR2)))
   CDR_All <- NULL
   for (i in seq_len(nrow(SNR2))) {
@@ -24,8 +25,8 @@ SCRS_cdr <- function(input_csv, output_dir) {
     CDR_All,
     file = paste0(output_dir, "/", "CDR.txt"),
     sep = "\t",
-    quote = F,
-    row.names = F
+    quote = FALSE,
+    row.names = FALSE
   )
 
   pdf(
@@ -38,7 +39,7 @@ SCRS_cdr <- function(input_csv, output_dir) {
   df <-
     read.table(paste0(output_dir, "/", "CDR.txt"),
       sep = "\t",
-      header = T
+      header = TRUE
     )
 
 

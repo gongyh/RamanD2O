@@ -10,7 +10,7 @@ SCRS_filter <- function(input_dir, output_dir) {
     length(filenames),
     "spectrum files detected!",
     sep = " ",
-    fill = T
+    fill = TRUE
   )
   # Read or SCRS txt files into a dataframe
   raw_dataframe <-
@@ -41,12 +41,14 @@ SCRS_filter <- function(input_dir, output_dir) {
   wls <- wl(data_hyperSpec)
   if (wls[length(wls)] >= 3099) {
     data_baseline <- data_hyperSpec[, , c(1730 ~ 3099)] - # 3151 Horiba
-      spc.fit.poly(data_hyperSpec[, , c(1730 ~ 2065, 2300 ~ 2633, 2783, 3099)], data_hyperSpec[, , c(1730 ~ 3099)], poly.order = 3)
+      spc.fit.poly(data_hyperSpec[, , c(1730 ~ 2065, 2300 ~ 2633, 2783, 3099)],
+        data_hyperSpec[, , c(1730 ~ 3099)], poly.order = 3)
     # spc.fit.poly.below (data_hyperSpec, data_hyperSpec, poly.order = 2)#3151 Horiba
     plot(data_baseline)
 
     factors <-
-      1 / apply(data_baseline[, , 2900 ~ 3050], 1, max) # normalize based on mean value of C-H peak
+      1 / apply(data_baseline[, , 2900 ~ 3050], 1, max)
+    # normalize based on mean value of C-H peak
     data_baseline_normalization <-
       sweep(data_baseline, 1, factors, "*")
     data_baseline_normalization <- data_baseline_normalization
@@ -66,24 +68,24 @@ SCRS_filter <- function(input_dir, output_dir) {
       length(good_data_baseline_normalize$filename),
       "spectra left after C/D filtering!",
       sep = " ",
-      fill = T
+      fill = TRUE
     )
   }
 
   # output high quality SCRS
   data_postfilter <-
-    data_hyperSpec[data_hyperSpec$filename %in% good_data_baseline_normalize$filename] # output raw SCRS
+    data_hyperSpec[data_hyperSpec$filename %in%
+      good_data_baseline_normalize$filename] # output raw SCRS
   for (i in seq_len(nrow(data_postfilter))) {
     Cells <- t(data_postfilter[i, ]$spc)
     write.table(
       Cells,
       paste0(output_dir, "/", basename(data_postfilter[i, ]$filename)),
-      row.names = T,
-      col.names = F,
-      quote = F,
+      row.names = TRUE,
+      col.names = FALSE,
+      quote = FALSE,
       sep = "\t"
     )
   }
-
   # Done!
 }
