@@ -6,34 +6,40 @@ output$hs_select_for_baseline <- renderUI({
   } else if ("filtered" %in% hs_all) {
     selected <- "filtered"
   }
-  selectInput("hs_selector_for_baseline", "Choose target", choices = hs_all, selected = selected)
+  selectInput("hs_selector_for_baseline", "Choose target",
+              choices = hs_all, selected = selected)
 })
 
 # polyfit_custom_multi_parameter
 polyfit_custom_num <- reactiveVal(1)
 for (i in 1:5) {
   assign(paste0("polyfit_custom_order", i), reactiveVal(1))
-  assign(paste0("polyfit_custom_text", i), reactiveVal("1~1798, 1800~2065, 2300~2633, 2783, 3050~4000"))
+  assign(paste0("polyfit_custom_text", i),
+         reactiveVal("1~1798, 1800~2065, 2300~2633, 2783, 3050~4000"))
 }
 
-observeEvent(polyfit_custom_num(),
-  {
-    output$polyfit_custom_multi <- renderUI({
-      inputs <- lapply(1:polyfit_custom_num(), function(i) {
-        fluidRow(
-          column(8, textInput(
-            inputId = paste0("polyfit_custom_text", i), label = paste0("Line ", i),
-            value = isolate(eval(parse(text = paste0("polyfit_custom_text", i, "()"))))
-          )),
-          column(2, numericInput(
-            inputId = paste0("polyfit_custom_order", i), "Order",
-            value = isolate(eval(parse(text = paste0("polyfit_custom_order", i, "()")))), min = 0, max = 15, step = 1
-          ))
-        )
-      })
+observeEvent(polyfit_custom_num(), {
+  output$polyfit_custom_multi <- renderUI({
+    inputs <- lapply(1:polyfit_custom_num(), function(i) {
+      fluidRow(
+        column(8, textInput(
+          inputId = paste0("polyfit_custom_text", i),
+          label = paste0("Line ", i),
+          value = isolate(
+                          eval(parse(text = paste0("polyfit_custom_text",
+                                                   i, "()"))))
+        )),
+        column(2, numericInput(
+          inputId = paste0("polyfit_custom_order", i), "Order",
+          value = isolate(eval(parse(text = paste0("polyfit_custom_order",
+                                                   i, "()")))),
+          min = 0, max = 15, step = 1
+        ))
+      )
     })
-  },
-  ignoreNULL = TRUE
+  })
+},
+ignoreNULL = TRUE
 )
 
 # reactivate polyfit custom range number and limit in 1-5
@@ -51,10 +57,12 @@ observeEvent(input$polyfit_custom_minus, {
 # dynamic convert polyfit_custom_order and polyfit_custom_text
 lapply(1:5, function(i) {
   observeEvent(input[[paste0("polyfit_custom_order", i)]], {
-    eval(parse(text = paste0("polyfit_custom_order", i, "(", input[[paste0("polyfit_custom_order", i)]], ")")))
+    eval(parse(text = paste0("polyfit_custom_order", i, "(",
+                             input[[paste0("polyfit_custom_order", i)]], ")")))
   })
   observeEvent(input[[paste0("polyfit_custom_text", i)]], {
-    eval(parse(text = paste0("polyfit_custom_text", i, "(\"", input[[paste0("polyfit_custom_text", i)]], "\")")))
+    eval(parse(text = paste0("polyfit_custom_text", i, "(\"",
+                             input[[paste0("polyfit_custom_text", i)]], "\")")))
   })
 })
 
@@ -62,10 +70,10 @@ lapply(1:5, function(i) {
 observeEvent(input$baseline, {
   withBusyIndicatorServer("baseline", {
     if (input$hs_selector_for_baseline == "") {
-      shinyalert("Oops!", "Please first load your spectra data.", type = "error")
+      shinyalert("Oops!",
+                 "Please first load your spectra data.", type = "error")
       return()
     } else {
-      # show_modal_spinner(spin = "flower", color = "red", text = "Processing ....")
       hs_cur <- hs$val[[input$hs_selector_for_baseline]]
       wavelength <- wl(hs_cur)
       # baseline
@@ -77,17 +85,20 @@ observeEvent(input$baseline, {
           data = data,
           spc = getCorrected(b_als), wavelength = wavelength
         )
-      } else if (input$select_baseline == "polyfit" & input$polyfit_custom == FALSE) {
+      } else if
+      (input$select_baseline == "polyfit" & input$polyfit_custom == FALSE) {
         if (input$polyfit_order > 15 | input$polyfit_order < 0) {
           shinyalert("Oops!", "Order out of range(0-15).", type = "error")
           remove_modal_spinner()
           return()
         }
         order <- input$polyfit_order
-        hs_bl <- hs_cur - spc_fit_poly_below(hs_cur, poly.order = input$polyfit_order)
+        hs_bl <- hs_cur -
+          spc_fit_poly_below(hs_cur, poly.order = input$polyfit_order)
         hs_bl$spc <- unAsIs(hs_bl$spc)
         dimnames(hs_bl$spc) <- dimnames(hs_cur$spc)
-      } else if (input$select_baseline == "polyfit" & input$polyfit_custom == TRUE) {
+      } else if
+      (input$select_baseline == "polyfit" & input$polyfit_custom == TRUE) {
         order_list <- sapply(1:polyfit_custom_num(), function(i) {
           input[[paste0("polyfit_custom_order", i)]]
         })
@@ -108,7 +119,9 @@ observeEvent(input$baseline, {
           range_max <- max(eval(parse(text = range_value)))
           range_min <- min(eval(parse(text = range_value)))
           if (length(hs_cur[, , range_min ~ range_max]@wavelength) == 0) {
-            shinyalert("Oops!", paste0("Line", line, " does not have a spectrum."), type = "error")
+            shinyalert("Oops!",
+                       paste0("Line", line, " does not have a spectrum."),
+                       type = "error")
             remove_modal_spinner()
             return()
           }
@@ -120,7 +133,11 @@ observeEvent(input$baseline, {
             return()
           }
           assign(paste0("hs_line", line), hs_cur[, , range_min ~ range_max] -
-            spc_fit_poly_below(hs_cur[, , range], hs_cur[, , range_min ~ range_max], poly.order = input[[paste0("polyfit_custom_order", line)]]))
+                   spc_fit_poly_below(hs_cur[, , range],
+                                      hs_cur[, , range_min ~ range_max],
+                                      poly.order =
+                                        input[[paste0("polyfit_custom_order",
+                                                      line)]]))
           # handle negative(multi lines)
           if (input$select_negative == "zero") {
             value_name <- paste0("hs_line", line)
@@ -140,7 +157,8 @@ observeEvent(input$baseline, {
           }
         }
         # avaid range duplication in different lines
-        hs_line_all <- do.call(cbind.hyperSpec, mget(paste0("hs_line", 1:polyfit_custom_num())))
+        hs_line_all <- do.call(cbind.hyperSpec,
+                               mget(paste0("hs_line", 1:polyfit_custom_num())))
         all_wl <- wl(hs_line_all)
         if (any(duplicated(unlist(c(all_wl))))) {
           shinyalert("Oops!", "The range is duplicated.", type = "error")
@@ -151,7 +169,8 @@ observeEvent(input$baseline, {
         unique <- hs_cur[, , as.numeric(diff), drop = FALSE]
         hs_bl <- wl_sort(cbind.hyperSpec(unique, hs_line_all))
       } else {
-        shinyalert("Oops!", "Baseline method not implemented yet.", type = "error")
+        shinyalert("Oops!",
+                   "Baseline method not implemented yet.", type = "error")
         remove_modal_spinner()
         return()
       }
@@ -176,28 +195,30 @@ observeEvent(input$baseline, {
   })
 })
 
-observeEvent(hs$val[["baselined"]],
-  {
-    hs_bl <- hs$val[["baselined"]]
-    output$baselined_table <- renderDataTable({
-      DT::datatable(if (is.null(hs_bl)) NULL else hs_bl@data %>% dplyr::select(!matches("spc")),
-        escape = FALSE, selection = "single", extensions = list("Responsive", "Scroller"),
-        options = list(searchHighlight = TRUE, scrollX = TRUE)
-      )
-    })
-  },
-  ignoreNULL = FALSE
+observeEvent(hs$val[["baselined"]], {
+  hs_bl <- hs$val[["baselined"]]
+  output$baselined_table <- renderDataTable({
+    DT::datatable(
+      if (is.null(hs_bl)) NULL else hs_bl@data %>%
+        dplyr::select(!matches("spc")),
+      escape = FALSE, selection = "single",
+      extensions = list("Responsive", "Scroller"),
+      options = list(searchHighlight = TRUE, scrollX = TRUE)
+    )
+  })
+},
+ignoreNULL = FALSE
 )
 
-observeEvent(input$baselined_table_rows_selected,
-  {
-    output$after_baseline_plot <- renderPlotly({
-      validate(need(input$baselined_table_rows_selected, ""))
-      index <- input$baselined_table_rows_selected
-      item <- hs$val[["baselined"]][index]
-      p <- qplotspc(item) + xlab(TeX("\\Delta \\tilde{\\nu }/c{{m}^{-1}}")) + ylab("I / a.u.")
-      ggplotly(p) %>% config(mathjax = "cdn")
-    })
-  },
-  ignoreNULL = FALSE
+observeEvent(input$baselined_table_rows_selected, {
+  output$after_baseline_plot <- renderPlotly({
+    validate(need(input$baselined_table_rows_selected, ""))
+    index <- input$baselined_table_rows_selected
+    item <- hs$val[["baselined"]][index]
+    p <- qplotspc(item) +
+      xlab(TeX("\\Delta \\tilde{\\nu }/c{{m}^{-1}}")) + ylab("I / a.u.")
+    ggplotly(p) %>% config(mathjax = "cdn")
+  })
+},
+ignoreNULL = FALSE
 )

@@ -23,8 +23,8 @@
 #' 1) Two VIP profiles for the predictive components, which uncover the X- and
 #' Y-variables that are more important for the model interpretation in relation
 #' to the variation correlated to the Y- and X- data matrices respectively;
-#' 2) Two VIP profiles for the orthogonal components for both the X-block and the
-#' Y-block severally, profiles that uncover the X- and Y- variables that are
+#' 2) Two VIP profiles for the orthogonal components for both the X-block and
+#' the Y-block severally, profiles that uncover the X- and Y- variables that are
 #' more relevant in relation to the variation uncorrelated to the Y- and X- data
 #' matrices respectively;
 #' 3) Two VIP profiles for the total model (i.e. including the contributions of
@@ -176,7 +176,8 @@ ssd <- function(x) {
 }
 
 #' Calculation of the orthogonal variable influence on projection
-#' @param SSDAO a value of sum of squares (SSDao in step2) for each deflated matrix
+#' @param SSDAO a value of sum of squares (SSDao in step2)
+#' for each deflated matrix
 #' @param SSD the sum of square values
 #' @param loading the normalized loading matrices
 calOrthVIP <- function(SSDAO, SSD, loading) {
@@ -195,8 +196,10 @@ calOrthVIP <- function(SSDAO, SSD, loading) {
 }
 
 #' Calculation of the predictive variable influence on projection
-#' @param SSXAP the sum of squares values of deflated X matrix for the predictive VIPO2PLS
-#' @param SSYAP the sum of squares values of deflated Y matrix for the predictive VIPO2PLS
+#' @param SSXAP the sum of squares values of deflated X matrix
+#' for the predictive VIPO2PLS
+#' @param SSYAP the sum of squares values of deflated Y matrix
+#' for the predictive VIPO2PLS
 #' @param SSD the sum of square values
 #' @param loading the normalized loading matrices
 calPredVIP <- function(SSXAP, SSYAP, SSD, loading) {
@@ -231,7 +234,8 @@ checkInputdata <- function(x) {
   if (any(apply(x, 2, function(y) {
     !is.numeric(y)
   }))) {
-    stop("'x' must be a numeric matrix or a data frame with all numeric-alike variables")
+    stop(paste0("'x' must be a numeric matrix or a data ",
+                "frame with all numeric-alike variables"))
   }
 
   if (any(is.na(x))) {

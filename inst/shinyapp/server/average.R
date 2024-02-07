@@ -6,7 +6,8 @@ output$hs_select_for_average <- renderUI({
   } else if ("baselined" %in% hs_all) {
     selected <- "baselined"
   }
-  selectInput("hs_selector_for_average", "Choose target", choices = hs_all, selected = selected)
+  selectInput("hs_selector_for_average", "Choose target",
+              choices = hs_all, selected = selected)
 })
 
 observeEvent(input$hs_selector_for_average,
@@ -21,7 +22,8 @@ observeEvent(input$hs_selector_for_average,
         metacols <- colnames(hs_cur)
         metacols <- metacols[metacols != "spc"]
       }
-      selectInput("average_select_label", "Label", choices = metacols, selected = FALSE)
+      selectInput("average_select_label", "Label",
+                  choices = metacols, selected = FALSE)
     })
   },
   ignoreNULL = FALSE
@@ -44,8 +46,10 @@ observeEvent(hs$val[["average"]],
   {
     hs_average <- hs$val[["average"]]
     output$average_table <- renderDataTable({
-      DT::datatable(if (is.null(hs_average)) NULL else hs_average@data %>% dplyr::select(!matches("spc")),
-        escape = FALSE, selection = "single", extensions = list("Responsive", "Scroller"),
+      DT::datatable(if (is.null(hs_average)) NULL else hs_average@data %>%
+          dplyr::select(!matches("spc")),
+        escape = FALSE, selection = "single",
+        extensions = list("Responsive", "Scroller"),
         options = list(searchHighlight = TRUE, scrollX = TRUE)
       )
     })
@@ -59,7 +63,8 @@ observeEvent(input$average_table_rows_selected,
       validate(need(input$average_table_rows_selected, ""))
       index <- input$average_table_rows_selected
       item <- hs$val[["average"]][index]
-      p <- qplotspc(item) + xlab(TeX("\\Delta \\tilde{\\nu }/c{{m}^{-1}}")) + ylab("I / a.u.")
+      p <- qplotspc(item) +
+        xlab(TeX("\\Delta \\tilde{\\nu }/c{{m}^{-1}}")) + ylab("I / a.u.")
       ggplotly(p) %>% config(mathjax = "cdn")
     })
   },

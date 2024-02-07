@@ -5,7 +5,8 @@ tabItem(
   br(),
   fluidRow(
     box(
-      title = "Settings", status = "info", solidHeader = TRUE, collapsible = FALSE,
+      title = "Settings", status = "info",
+      solidHeader = TRUE, collapsible = FALSE,
       column(
         12,
         fluidRow(
@@ -16,38 +17,71 @@ tabItem(
         ),
         h4("Parameters for Random forest classifier:"),
         fluidRow(
-          column(3, numericInput("rf_ntree", "Number of trees", 100, min = 1, step = 1)),
-          column(3, checkboxInput("rf_replace", "Replacement", value = TRUE), class = "top25")
+          column(3,
+                 numericInput("rf_ntree",
+                              "Number of trees",
+                              100, min = 1, step = 1)),
+          column(3,
+                 checkboxInput("rf_replace", "Replacement", value = TRUE),
+                 class = "top25")
         ),
         hr(),
         fluidRow(
-          column(3, withBusyIndicatorUI(actionButton("train", "Train & Eval", class = "btn-success"))),
-          column(3, withBusyIndicatorUI(actionButton("eval", "Eval", class = "btn-success"))),
-          column(3, withBusyIndicatorUI(actionButton("test", "Test", class = "btn-success")))
+          column(3, withBusyIndicatorUI(actionButton("train",
+                                                     "Train & Eval",
+                                                     class = "btn-success"))),
+          column(3, withBusyIndicatorUI(actionButton("eval",
+                                                     "Eval",
+                                                     class = "btn-success"))),
+          column(3, withBusyIndicatorUI(actionButton("test",
+                                                     "Test",
+                                                     class = "btn-success")))
         ),
         hr(),
         fluidRow(
-          column(4, fileInput("upload_model_file", "Select Existing Model", accept = ".rds", placeholder = "model.rds")),
-          column(2, withBusyIndicatorUI(actionButton("upload_model", "Upload Model", class = "btn-success")), class = "top25"),
-          column(3, withBusyIndicatorUI(downloadButton("download_model", "Download Model", class = "btn-success")), class = "top25")
+          column(4,
+                 fileInput("upload_model_file",
+                           "Select Existing Model",
+                           accept = ".rds", placeholder = "model.rds")),
+          column(2,
+                 withBusyIndicatorUI(actionButton("upload_model",
+                                                  "Upload Model",
+                                                  class = "btn-success")),
+                 class = "top25"),
+          column(3,
+                 withBusyIndicatorUI(downloadButton("download_model",
+                                                    "Download Model",
+                                                    class = "btn-success")),
+                 class = "top25")
         )
       )
     ),
     box(
       title = "Notes", status = "info", solidHeader = TRUE, collapsible = FALSE,
-      p("randomForest implements Breiman's random forest algorithm (based on Breiman and Cutler's original Fortran code) for classification and regression.
-        The RandomForestClassifier is trained using bootstrap aggregation, where each new tree is fit from a bootstrap sample of the training observations.
-        The out-of-bag (OOB) error is the average error for each observation calculated using predictions from the trees that do not contain this observation in their respective bootstrap sample.
-        This allows the RandomForestClassifier to be fit and validated whilst being trained."),
-      p("1. If you also want to evaluate your model, please change Evaluation dataset to anything except _ ."),
+      p("randomForest implements Breiman's random forest algorithm (based on
+        Breiman and Cutler's original Fortran code) for classification
+        and regression.
+        The RandomForestClassifier is trained using bootstrap aggregation,
+        where each new tree is fit from a bootstrap sample of
+        the training observations.
+        The out-of-bag (OOB) error is the average error for each observation
+        calculated using predictions from the trees that do not contain this
+        observation in their respective bootstrap sample.
+        This allows the RandomForestClassifier to be fit and validated
+        whilst being trained."),
+      p("1. If you also want to evaluate your model, please change Evaluation
+        dataset to anything except _ ."),
       p("2. Change Label to your categorical variable."),
-      p("3. Number of trees should not be set to too small to ensure that every input row gets predicted at least a few times."),
-      p("4. Sampling of cases (replicate) can be done with or without replacement.")
+      p("3. Number of trees should not be set to too small to ensure that every
+        input row gets predicted at least a few times."),
+      p("4. Sampling of cases (replicate) can be done with or
+        without replacement.")
     )
   ),
   fluidRow(
     box(
-      title = "Results", status = "warning", solidHeader = TRUE, collapsible = TRUE, width = 6,
+      title = "Results", status = "warning",
+      solidHeader = TRUE, collapsible = TRUE, width = 6,
       column(
         12,
         tabsetPanel(
@@ -57,7 +91,9 @@ tabItem(
             plotOutput("rf_mse_plot") %>% withSpinner(),
             tags$div(
               style = "text-align: right; margin-right: 20px;",
-              downloadButton("download_result1", "Download", class = "btn-primary")
+              downloadButton("download_result1",
+                             "Download",
+                             class = "btn-primary")
             )
           ),
           tabPanel(
@@ -66,7 +102,9 @@ tabItem(
             plotOutput("rf_importance_plot") %>% withSpinner(),
             tags$div(
               style = "text-align: right; margin-right: 20px;",
-              downloadButton("download_result2", "Download", class = "btn-primary")
+              downloadButton("download_result2",
+                             "Download",
+                             class = "btn-primary")
             )
           ),
           tabPanel(
@@ -88,7 +126,8 @@ tabItem(
       )
     ),
     box(
-      title = "Raman spectra", status = "warning", solidHeader = TRUE, collapsible = FALSE,
+      title = "Raman spectra", status = "warning",
+      solidHeader = TRUE, collapsible = FALSE,
       plotlyOutput("selected_predicted_plot") %>% withSpinner()
     )
   )

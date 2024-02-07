@@ -4,14 +4,16 @@ output$hs_select_for_normalize <- renderUI({
   if ("baselined" %in% hs_all) {
     selected <- "baselined"
   }
-  selectInput("hs_selector_for_normalize", "Choose target", choices = hs_all, selected = selected)
+  selectInput("hs_selector_for_normalize", "Choose target",
+              choices = hs_all, selected = selected)
 })
 
 # smooth scrs on click of button
 observeEvent(input$normalize, {
   withBusyIndicatorServer("normalize", {
     if (isolate(input$hs_selector_for_normalize) == "") {
-      shinyalert("Oops!", "Please first load your spectra data.", type = "error")
+      shinyalert("Oops!",
+                 "Please first load your spectra data.", type = "error")
       return()
     } else {
       hs_cur <- hs$val[[isolate(input$hs_selector_for_normalize)]]
@@ -31,8 +33,11 @@ observeEvent(hs$val[["normalized"]],
   {
     hs_nl <- hs$val[["normalized"]]
     output$normalized_table <- renderDataTable({
-      DT::datatable(if (is.null(hs_nl)) NULL else hs_nl@data %>% dplyr::select(!matches("spc")),
-        escape = FALSE, selection = "single", extensions = list("Responsive", "Scroller"),
+      DT::datatable(
+        if (is.null(hs_nl)) NULL else hs_nl@data %>%
+          dplyr::select(!matches("spc")),
+        escape = FALSE, selection = "single",
+        extensions = list("Responsive", "Scroller"),
         options = list(searchHighlight = TRUE, scrollX = TRUE)
       )
     })
@@ -47,7 +52,8 @@ observeEvent(input$normalized_table_rows_selected,
       validate(need(input$normalized_table_rows_selected, ""))
       index <- input$normalized_table_rows_selected
       item <- hs$val[["normalized"]][index]
-      p <- qplotspc(item) + xlab(TeX("\\Delta \\tilde{\\nu }/c{{m}^{-1}}")) + ylab("I / a.u.")
+      p <- qplotspc(item) +
+        xlab(TeX("\\Delta \\tilde{\\nu }/c{{m}^{-1}}")) + ylab("I / a.u.")
       ggplotly(p) %>% config(mathjax = "cdn")
     })
   },

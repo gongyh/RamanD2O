@@ -10,8 +10,8 @@ output$hs_select_for_ml_explore <- renderUI({
   } else if ("smoothed" %in% hs_all) {
     selected <- "smoothed"
   }
-  selectInput("hs_selector_for_ml_explore","Choose target",
-    choices = hs_all, selected = selected)
+  selectInput("hs_selector_for_ml_explore", "Choose target",
+              choices = hs_all, selected = selected)
 })
 
 observeEvent(input$hs_selector_for_ml_explore,
@@ -27,7 +27,7 @@ observeEvent(input$hs_selector_for_ml_explore,
         metacols <- metacols[metacols != "spc"]
       }
       selectInput("select_tsneColBy", "Color by",
-        choices = metacols, selected = FALSE)
+                  choices = metacols, selected = FALSE)
     })
   },
   ignoreNULL = FALSE

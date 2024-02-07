@@ -20,8 +20,10 @@ findPeaks <- function(spc, size = 9, level = 0.1) {
   maxI <- max(spc)
   peaks <- c()
   for (i in (half + 1):(length(spc) - half)) {
-    if ((spc[i] >= level * maxI) && (spc[i] >= max(spc[(i - half):(i + half)])))
-      {peaks <- c(peaks, i)}
+    if ((spc[i] >= level * maxI) &&
+          (spc[i] >= max(spc[(i - half):(i + half)]))) {
+      peaks <- c(peaks, i)
+    }
   }
   peaks
 }

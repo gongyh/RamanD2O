@@ -208,7 +208,7 @@ StatAccumCurve <-
         names(groups) <- Group_name
         ra_df <- data.frame(groups, ra_df)
         sink(paste(outdir, stat, "_accum_df_by_",
-          Group_names, ".txt", sep = ""))
+                   Group_names, ".txt", sep = ""))
         write.table(ra_df,
           quote = FALSE,
           sep = "\t",

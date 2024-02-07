@@ -54,7 +54,8 @@ SCRS_preprocess <- function(input_dir, output, meta_fp, txt_filename) {
   raw.data <- cbind(No_Cell = seq_len(nrow(raw.data)), Group = Group, raw.data)
 
   ### delete 1049 peak ####
-  # raw.data<-raw.data[,-(which(colnames(raw.data)=="X1026.09"):which(colnames(raw.data)=="X1075.76"))]
+  # raw.data <- raw.data[, -(which(colnames(raw.data)=="X1026.09") :
+  # which(colnames(raw.data)=="X1075.76"))]
 
   ## -bg##
   ncol_meta <- which(colnames(raw.data) == "Cell") # cols of meta data
@@ -62,8 +63,9 @@ SCRS_preprocess <- function(input_dir, output, meta_fp, txt_filename) {
 
   # remove background
   Cells_bgsub <- raw.data[which(raw.data$CellBg == "Cell"), ]
-  # Cells_bgsub<-raw.data_bgsub[which(raw.data_bgsub$CellBg=="Cell"),]
-  # write.csv(Cells_bgsub,paste(output,"Cells_bg.csv",sep=""),quote = FALSE,row.names = FALSE)
+  # Cells_bgsub <- raw.data_bgsub[which(raw.data_bgsub$CellBg=="Cell"),]
+  # write.csv(Cells_bgsub,paste(output,"Cells_bg.csv",sep=""),
+  # quote = FALSE,row.names = FALSE)
 
   ## baseline##
   wavelength <- shift
@@ -73,7 +75,8 @@ SCRS_preprocess <- function(input_dir, output, meta_fp, txt_filename) {
   )
   data_baseline <- data_hyperSpec -
     spc.fit.poly.below(data_hyperSpec, data_hyperSpec, poly.order = 7)
-  # data_baseline <- data_hyperSpec - spc.rubberband(data_hyperSpec, noise=300, df=20)
+  # data_baseline <- data_hyperSpec -
+  # spc.rubberband(data_hyperSpec, noise=300, df=20)
   write.csv(
     data_baseline, "Cells_bg_baseline.csv", quote = FALSE, row.names = FALSE
   )
@@ -85,25 +88,31 @@ SCRS_preprocess <- function(input_dir, output, meta_fp, txt_filename) {
     data = data.frame(Cells_bgsub[, 1:ncol_meta]),
     spc = data_baseline_zero, wavelength = wavelength
   )
-  write.csv(data_baseline_zero_hyperSpec,
-    "Cells_bg_baseline_zero.csv", quote = FALSE, row.names = FALSE)
+  write.csv(
+    data_baseline_zero_hyperSpec,
+    "Cells_bg_baseline_zero.csv",
+    quote = FALSE,
+    row.names = FALSE
+  )
 
   # output txts
   Cells_bg_baseline_zero <- "Cells_bg_baseline_zero/"
   dir.create(Cells_bg_baseline_zero)
   for (i in seq_len(nrow(data_baseline_zero_hyperSpec))) {
     Cells <- data.frame(
-      shift = shift, intensity = t(data_baseline_zero_hyperSpec[i]$spc)
-    )
+                        shift = shift,
+                        intensity = t(data_baseline_zero_hyperSpec[i]$spc))
     write.table(Cells, paste0(Cells_bg_baseline_zero,
-      data_baseline_zero_hyperSpec$ID_Cell[i], ".txt"),
+                              data_baseline_zero_hyperSpec$ID_Cell[i], ".txt"),
       row.names = FALSE, col.names = FALSE, quote = FALSE, sep = "\t"
     )
   }
 
   ## normalization
-  baseline_zero_scale_hyperSpec <- data_baseline_zero_hyperSpec / rowMeans(data_baseline_zero_hyperSpec)
-  # baseline_zero_scale_hyperSpec <- data_baseline_zero_hyperSpec / rowSums (data_baseline_zero_hyperSpec)
+  baseline_zero_scale_hyperSpec <- data_baseline_zero_hyperSpec /
+    rowMeans(data_baseline_zero_hyperSpec)
+  # baseline_zero_scale_hyperSpec <- data_baseline_zero_hyperSpec /
+  # rowSums (data_baseline_zero_hyperSpec)
   write.csv(baseline_zero_scale_hyperSpec, "Cells_bg_baseline_zero_scale.csv",
     quote = FALSE, row.names = FALSE
   )
@@ -113,10 +122,11 @@ SCRS_preprocess <- function(input_dir, output, meta_fp, txt_filename) {
   dir.create(Cells_bg_baseline_zero_scale)
   for (i in seq_len(nrow(baseline_zero_scale_hyperSpec))) {
     Cells <- data.frame(
-      shift = shift, intensity = t(baseline_zero_scale_hyperSpec[i]$spc)
+      shift = shift,
+      intensity = t(baseline_zero_scale_hyperSpec[i]$spc)
     )
     write.table(Cells, paste0(Cells_bg_baseline_zero_scale,
-      baseline_zero_scale_hyperSpec$ID_Cell[i], ".txt"),
+                              baseline_zero_scale_hyperSpec$ID_Cell[i], ".txt"),
       row.names = FALSE, col.names = FALSE, quote = FALSE, sep = "\t"
     )
   }

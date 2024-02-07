@@ -33,7 +33,7 @@ SCRS_filter <- function(input_dir, output_dir) {
     length(data_hyperSpec$filename),
     "spectra left after minimum intensity filtering!",
     sep = " ",
-    fill = T
+    fill = TRUE
   )
 
   # Filter low quality SCRS
@@ -41,9 +41,12 @@ SCRS_filter <- function(input_dir, output_dir) {
   wls <- wl(data_hyperSpec)
   if (wls[length(wls)] >= 3099) {
     data_baseline <- data_hyperSpec[, , c(1730 ~ 3099)] - # 3151 Horiba
-      spc.fit.poly(data_hyperSpec[, , c(1730 ~ 2065, 2300 ~ 2633, 2783, 3099)],
-        data_hyperSpec[, , c(1730 ~ 3099)], poly.order = 3)
-    # spc.fit.poly.below (data_hyperSpec, data_hyperSpec, poly.order = 2)#3151 Horiba
+      spc.fit.poly(
+        data_hyperSpec[, , c(1730 ~ 2065, 2300 ~ 2633, 2783, 3099)],
+        data_hyperSpec[, , c(1730 ~ 3099)], poly.order = 3
+      )
+    # spc.fit.poly.below (data_hyperSpec, data_hyperSpec, poly.order = 2)
+    # 3151 Horiba
     plot(data_baseline)
 
     factors <-
@@ -75,7 +78,7 @@ SCRS_filter <- function(input_dir, output_dir) {
   # output high quality SCRS
   data_postfilter <-
     data_hyperSpec[data_hyperSpec$filename %in%
-      good_data_baseline_normalize$filename] # output raw SCRS
+                   good_data_baseline_normalize$filename] # output raw SCRS
   for (i in seq_len(nrow(data_postfilter))) {
     Cells <- t(data_postfilter[i, ]$spc)
     write.table(

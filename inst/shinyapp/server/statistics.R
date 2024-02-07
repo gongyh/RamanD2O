@@ -6,7 +6,8 @@ output$hs_select_for_statistics <- renderUI({
   } else if ("baselined" %in% hs_all) {
     selected <- "baselined"
   }
-  selectInput("hs_selector_for_statistics", "Choose target", choices = hs_all, selected = selected)
+  selectInput("hs_selector_for_statistics", "Choose target",
+              choices = hs_all, selected = selected)
 })
 
 
@@ -23,7 +24,8 @@ observeEvent(input$hs_selector_for_statistics,
         metacols <- c(metacols, colnames(hs_cur))
         metacols <- metacols[metacols != "spc"]
       }
-      selectInput("select_pcaColBy", "Color by", choices = metacols, selected = "cluster_name")
+      selectInput("select_pcaColBy", "Color by",
+                  choices = metacols, selected = "cluster_name")
     })
 
     output$statistics_ldaBy <- renderUI({
@@ -32,7 +34,8 @@ observeEvent(input$hs_selector_for_statistics,
         metacols <- c(metacols, colnames(hs_cur))
         metacols <- metacols[metacols != "spc"]
       }
-      selectInput("select_ldaBy", "Group by", choices = metacols, selected = "")
+      selectInput("select_ldaBy", "Group by",
+                  choices = metacols, selected = "")
     })
   },
   ignoreNULL = FALSE
@@ -44,14 +47,15 @@ observeEvent(input$plot_pca,
     withBusyIndicatorServer("plot_pca", {
       output$pca_plot <- renderPlotly({
         validate(need(isolate(input$hs_selector_for_statistics), ""))
-        req(isolate(input$select_pcaColBy), cancelOutput = T)
+        req(isolate(input$select_pcaColBy), cancelOutput = TRUE)
         nclusters <- isolate(input$num_clusters)
         colby <- isolate(input$select_pcaColBy)
         pca_center <- isolate(input$pca_center)
         pca_scale <- isolate(input$pca_scale)
 
         hs_cur <- hs$val[[isolate(input$hs_selector_for_statistics)]]
-        pca <- prcomp(~spc, data = hs_cur@data, center = pca_center, scale = pca_scale)
+        pca <- prcomp(~spc, data = hs_cur@data,
+                      center = pca_center, scale = pca_scale)
         scores <- pca$x
         rownames(scores) <- rownames(hs_cur$spc)
         HC <- hclust(dist(scores), method = "ward.D2")
@@ -61,7 +65,8 @@ observeEvent(input$plot_pca,
         Df <- transform(Df, cluster_name = paste("Cluster", Clusters))
         rownames(Df) <- rownames(scores)
         plot_ly(Df,
-          x = ~PC1, y = ~PC2, text = rownames(Df), type = "scatter", symbol = ~cluster_name,
+          x = ~PC1, y = ~PC2, text = rownames(Df),
+          type = "scatter", symbol = ~cluster_name,
           mode = "markers", color = Df[, colby], marker = list(size = 11)
         )
       })
@@ -77,7 +82,7 @@ observeEvent(input$perform_lda,
     withBusyIndicatorServer("perform_lda", {
       output$lda_plot <- renderPlotly({
         validate(need(isolate(input$hs_selector_for_statistics), ""))
-        req(isolate(input$select_ldaBy), cancelOutput = T)
+        req(isolate(input$select_ldaBy), cancelOutput = TRUE)
         num_pcs <- isolate(input$num_pcs)
         ldaby <- isolate(input$select_ldaBy)
         hs_cur <- hs$val[[isolate(input$hs_selector_for_statistics)]]
@@ -86,7 +91,7 @@ observeEvent(input$perform_lda,
         data <- hs_cur@data[ldaby]
         colnames(data) <- "group"
         if (pca_first) {
-          pca <- prcomp(~spc, data = hs_cur@data, center = T, scale = T)
+          pca <- prcomp(~spc, data = hs_cur@data, center = TRUE, scale = TRUE)
           scores <- pca$x[, c("PC1", "PC2")]
           rownames(scores) <- rownames(hs_cur$spc)
           data <- cbind(data, scores)
@@ -94,7 +99,8 @@ observeEvent(input$perform_lda,
           data <- cbind(data, hs_cur$spc)
         }
 
-        ind <- sample(2, nrow(data), replace = T, prob = c(1 - eval_pct, eval_pct))
+        ind <- sample(2, nrow(data), replace = TRUE,
+                      prob = c(1 - eval_pct, eval_pct))
         training <- data[ind == 1, ]
         testing <- data[ind == 2, ]
 
@@ -118,7 +124,10 @@ observeEvent(input$perform_lda,
         }
 
         ggplotly(p +
-          labs(title = sprintf("training accuracy is %.2f, testing accuracy is %.2f", acc_train, acc_test)))
+          labs(title = sprintf(
+                               "training accuracy is %.2f, testing
+                               accuracy is %.2f",
+                               acc_train, acc_test)))
       })
     })
   },
@@ -148,7 +157,7 @@ observeEvent(input$perform_mcr,
           resspec <- melt(t(m$resspec))
           p2 <- ggline(resspec,
             x = "Var2", y = "value", group = "Var1", color = "Var1",
-            numeric.x.axis = T, shape = NA
+            numeric.x.axis = TRUE, shape = NA
           ) + theme_bw()
           gp2 <- ggplotly(p2)
           subplot(gp2, gp1, nrows = 2)
@@ -163,7 +172,7 @@ observeEvent(input$perform_mcr,
           resspec <- melt(t(m$resspec))
           p2 <- ggline(resspec,
             x = "Var2", y = "value", group = "Var1", color = "Var1",
-            numeric.x.axis = T, shape = NA
+            numeric.x.axis = TRUE, shape = NA
           ) + theme_bw()
           gp2 <- ggplotly(p2)
           subplot(gp2, gp1, nrows = 2)

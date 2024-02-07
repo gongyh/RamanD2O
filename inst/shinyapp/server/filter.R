@@ -7,13 +7,13 @@ output$hs_select_for_filter <- renderUI({
     selected <- "sampled"
   }
   selectInput("hs_selector_for_filter", "Choose target",
-    choices = hs_all, selected = selected)
+              choices = hs_all, selected = selected)
 })
 
 # convert filter_range and filter_min/filter_max
 observeEvent(c(input$filter_min, input$filter_max), {
-  updateSliderInput(session,
-    "filter_range", value = c(input$filter_min, input$filter_max))
+  updateSliderInput(session, "filter_range",
+                    value = c(input$filter_min, input$filter_max))
 })
 observeEvent(c(input$filter_range[1], input$filter_range[2]), {
   updateNumericInput(session, "filter_min", value = input$filter_range[1])
@@ -26,7 +26,7 @@ observeEvent(input$filter, {
   withBusyIndicatorServer("filter", {
     if (isolate(input$hs_selector_for_filter) == "") {
       shinyalert("Oops!",
-        "Please first load your spectra data.", type = "error")
+                 "Please first load your spectra data.", type = "error")
       return()
     } else {
       hs_cur <- hs$val[[isolate(input$hs_selector_for_filter)]]
@@ -46,8 +46,9 @@ observeEvent(input$filter, {
         hs_cur <- hs_cur[apply(OK, 1, all)]
       }
       output$after_filter <- renderDataTable({
-        DT::datatable(if (is.null(hs_cur)) NULL else hs_cur@data %>%
-          dplyr::select(!matches("spc")),
+        DT::datatable(
+          if (is.null(hs_cur)) NULL else hs_cur@data %>%
+            dplyr::select(!matches("spc")),
           escape = FALSE, selection = "multiple",
           extensions = list("Responsive", "Scroller"),
           options = list(searchHighlight = TRUE, scrollX = TRUE)
@@ -79,7 +80,8 @@ observeEvent(input$remove, {
   withBusyIndicatorServer("remove", {
     if (is.null(isolate(input$after_filter_rows_selected))) {
       shinyalert("Oops!",
-        "Please first select one spectrum to visualize.", type = "error")
+                 "Please first select one spectrum to visualize.",
+                 type = "error")
       return()
     } else {
       shinyalert("Caution", "Confirm to delete this spectrum?",
@@ -88,10 +90,10 @@ observeEvent(input$remove, {
           if (x) hs$val[["filtered"]] <-
             hs$val[["filtered"]][-isolate(input$after_filter_rows_selected)]
           replaceData(proxy, data = hs$val[["filtered"]]@data %>%
-            dplyr::select(!matches("spc")))
+                        dplyr::select(!matches("spc")))
           if (length(isolate(input$after_filter_rows_selected)) == 1) {
             selectRows(proxy,
-              as.numeric(isolate(input$after_filter_rows_selected)))
+                       as.numeric(isolate(input$after_filter_rows_selected)))
           }
         }
       )
@@ -102,20 +104,20 @@ observeEvent(input$remove, {
 observeEvent(input$prev_rm, {
   proxy %>%
     selectRows(if (length(isolate(input$after_filter_rows_selected)) == 1 &&
-    isolate(input$after_filter_rows_selected) > 1) {
-    as.numeric(isolate(input$after_filter_rows_selected) - 1)
-  } else {
-    as.numeric(isolate(input$after_filter_rows_selected))
-  })
+                     isolate(input$after_filter_rows_selected) > 1) {
+      as.numeric(isolate(input$after_filter_rows_selected) - 1)
+    } else {
+      as.numeric(isolate(input$after_filter_rows_selected))
+    })
 })
 
 observeEvent(input$next_rm, {
   proxy %>%
     selectRows(if (length(isolate(input$after_filter_rows_selected)) == 1 &&
-    isolate(input$after_filter_rows_selected) <
-      length(input$after_filter_rows_all)) {
-    as.numeric(isolate(input$after_filter_rows_selected) + 1)
-  } else {
-    as.numeric(isolate(input$after_filter_rows_selected))
-  })
+                     isolate(input$after_filter_rows_selected) <
+                       length(input$after_filter_rows_all)) {
+      as.numeric(isolate(input$after_filter_rows_selected) + 1)
+    } else {
+      as.numeric(isolate(input$after_filter_rows_selected))
+    })
 })

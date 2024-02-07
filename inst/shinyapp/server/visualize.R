@@ -6,26 +6,31 @@ output$hs_select_for_export <- renderUI({
   } else if ("baselined" %in% hs_all) {
     selected <- "baselined"
   }
-  selectInput("hs_selector_for_export", "Choose target", choices = hs_all, selected = selected)
+  selectInput("hs_selector_for_export", "Choose target",
+              choices = hs_all, selected = selected)
 })
 
 # prepare file to download on click of button
 observeEvent(input$prepare_file,
   {
-    req(isolate(input$hs_selector_for_export), cancelOutput = T)
+    req(isolate(input$hs_selector_for_export), cancelOutput = TRUE)
     withBusyIndicatorServer("prepare_file", {
       data <- hs$val[[isolate(input$hs_selector_for_export)]]
       setwd(tempdir())
       if (isolate(input$select_type == "csv")) {
-        file <- paste0("spectra-", isolate(input$hs_selector_for_export), ".csv")
-        write.csv(data@data, file, quote = F, row.names = F)
+        file <- paste0("spectra-",
+                       isolate(input$hs_selector_for_export), ".csv")
+        write.csv(data@data, file, quote = FALSE, row.names = FALSE)
         shinyjs::enable("download")
       } else if (isolate(input$select_type == "zip")) {
-        file <- paste0("spectra-", isolate(input$hs_selector_for_export), ".zip")
+        file <- paste0("spectra-",
+                       isolate(input$hs_selector_for_export), ".zip")
         zip_dir <- isolate(input$hs_selector_for_export)
         meta <- data@data
         meta$spc <- NULL
-        write.table(meta, "meta.txt", row.names = F, col.names = T, quote = F, sep = "\t")
+        write.table(meta, "meta.txt",
+                    row.names = FALSE, col.names = TRUE,
+                    quote = FALSE, sep = "\t")
         if (dir.exists(zip_dir)) fs::dir_delete(zip_dir)
         dir.create(zip_dir)
         # print("Preparing Raman Spectra files.")
@@ -33,7 +38,8 @@ observeEvent(input$prepare_file,
           cell <- data[i]
           txtdf <- data.frame(shift = cell@wavelength, intensity = t(cell$spc))
           txtname <- file.path(zip_dir, paste0(cell$ID_Cell, ".txt"))
-          write.table(txtdf, txtname, row.names = F, col.names = F, quote = F, sep = "\t")
+          write.table(txtdf, txtname, row.names = FALSE,
+                      col.names = FALSE, quote = FALSE, sep = "\t")
         }
         # print("Done!")
         zip::zip(zipfile = file, c(zip_dir, "meta.txt"))
@@ -41,12 +47,13 @@ observeEvent(input$prepare_file,
       }
     })
   },
-  ignoreNULL = T
+  ignoreNULL = TRUE
 )
 
 output$download <- downloadHandler(
   filename = function() {
-    name <- paste0("spectra-", isolate(input$hs_selector_for_export), "-", format(Sys.time(), "%Y%m%d%H%M%S"))
+    name <- paste0("spectra-", isolate(input$hs_selector_for_export), "-",
+                   format(Sys.time(), "%Y%m%d%H%M%S"))
     suffix <- ".csv"
     if (isolate(input$select_type) == "csv") {
       suffix <- ".csv"
@@ -92,8 +99,11 @@ observeEvent(input$hs_selector_for_export,
     }
 
     output$visualize_table <- renderDataTable({
-      DT::datatable(if (is.null(hs_cur)) NULL else hs_cur@data %>% dplyr::select(!matches("spc")),
-        escape = FALSE, selection = "single", extensions = list("Responsive", "Scroller"),
+      DT::datatable(
+        if (is.null(hs_cur)) NULL else hs_cur@data %>%
+          dplyr::select(!matches("spc")),
+        escape = FALSE, selection = "single",
+        extensions = list("Responsive", "Scroller"),
         options = list(searchHighlight = TRUE, scrollX = TRUE)
       )
     })
@@ -104,7 +114,8 @@ observeEvent(input$hs_selector_for_export,
         metacols <- colnames(hs_cur)
         metacols <- metacols[metacols != "spc"]
       }
-      selectInput("select_aggBy", "Aggregate by", choices = metacols, selected = F)
+      selectInput("select_aggBy", "Aggregate by",
+                  choices = metacols, selected = FALSE)
     })
 
     output$visualize_x <- renderUI({
@@ -132,7 +143,8 @@ observeEvent(input$hs_selector_for_export,
         metacols <- colnames(hs_cur)
         metacols <- metacols[metacols != "spc"]
       }
-      selectInput("select_sgroup", "Group", choices = metacols, selected = F)
+      selectInput("select_sgroup", "Group",
+                  choices = metacols, selected = FALSE)
     })
 
     output$visualize_scolor <- renderUI({
@@ -141,7 +153,8 @@ observeEvent(input$hs_selector_for_export,
         metacols <- colnames(hs_cur)
         metacols <- metacols[metacols != "spc"]
       }
-      selectInput("select_scolor", "Color", choices = metacols, selected = F)
+      selectInput("select_scolor", "Color",
+                  choices = metacols, selected = FALSE)
     })
 
     output$visualize_facet <- renderUI({
@@ -163,7 +176,8 @@ observeEvent(input$visualize_table_rows_selected,
       validate(need(input$visualize_table_rows_selected, ""))
       index <- input$visualize_table_rows_selected
       item <- hs$val[[isolate(input$hs_selector_for_export)]][index]
-      p <- qplotspc(item) + xlab(TeX("\\Delta \\tilde{\\nu }/c{{m}^{-1}}")) + ylab("I / a.u.")
+      p <- qplotspc(item) +
+        xlab(TeX("\\Delta \\tilde{\\nu }/c{{m}^{-1}}")) + ylab("I / a.u.")
       ggplotly(p) %>% config(mathjax = "cdn")
     })
   },
@@ -192,16 +206,18 @@ observeEvent(input$plot_agg,
     withBusyIndicatorServer("plot_agg", {
       output$agg_plot <- renderPlot({
         validate(need(isolate(input$hs_selector_for_export), ""))
-        req(isolate(input$select_aggBy), cancelOutput = T)
+        req(isolate(input$select_aggBy), cancelOutput = TRUE)
         aggby <- isolate(input$select_aggBy)
         hs_cur <- hs$val[[isolate(input$hs_selector_for_export)]]
         means <- aggregate(hs_cur, by = hs_cur@data[, aggby], mean_pm_sd)
         if (any(is.na(means$spc))) {
-          toastr_error("This data type does not require aggregation!", position = "top-center")
+          toastr_error("This data type does not require aggregation!",
+                       position = "top-center")
           return()
         } else {
           if (length(levels(hs_cur@data[, aggby])) <= 8) {
-            plot(means, stacked = ".aggregate", fill = ".aggregate", axis.args = list(las = 1))
+            plot(means, stacked = ".aggregate",
+                 fill = ".aggregate", axis.args = list(las = 1))
           } else {
             plot(means, stacked = ".aggregate", axis.args = list(las = 1))
           }
@@ -218,13 +234,13 @@ observeEvent(input$plot_compare,
     withBusyIndicatorServer("plot_compare", {
       output$groupCmp_plot <- renderPlotly({
         validate(need(isolate(input$hs_selector_for_export), ""))
-        req(isolate(input$selectx), cancelOutput = T)
-        req(isolate(input$selecty), cancelOutput = T)
+        req(isolate(input$selectx), cancelOutput = TRUE)
+        req(isolate(input$selecty), cancelOutput = TRUE)
         hs_cur <- hs$val[[isolate(input$hs_selector_for_export)]]
         x <- isolate(input$selectx)
         y <- isolate(input$selecty)
-        req(isolate(input$select_sgroup), cancelOutput = T)
-        req(isolate(input$select_scolor), cancelOutput = T)
+        req(isolate(input$select_sgroup), cancelOutput = TRUE)
+        req(isolate(input$select_scolor), cancelOutput = TRUE)
         g <- isolate(input$select_sgroup)
         c <- isolate(input$select_scolor)
         df <- as.long.df(hs_cur)
@@ -234,7 +250,8 @@ observeEvent(input$plot_compare,
         } else if (isolate(input$stype) == "Boxplot") {
           p <- p + geom_boxplot()
         }
-        if (!is.null(isolate(input$select_facet)) && (isolate(input$select_facet) != "_")) {
+        if (!is.null(isolate(input$select_facet)) &&
+              (isolate(input$select_facet) != "_")) {
           p <- p + facet_wrap(isolate(input$select_facet))
         }
         ggplotly(p)

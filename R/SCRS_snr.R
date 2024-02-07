@@ -8,8 +8,8 @@ SCRS_snr <- function(input_csv, output_dir) {
 
   SNR1 <- read.table(input_csv, header = TRUE, sep = ",")
   SNR2 <- SNR1[, 12:length(SNR1[1, ]) - 1]
-  colnames(SNR2) <- formatC(
-    as.numeric(gsub("spc.", "", colnames(SNR2))), digits = 1, format = "f")
+  colnames(SNR2) <- formatC(as.numeric(gsub("spc.", "", colnames(SNR2))),
+                            digits = 1, format = "f")
   wave_nums <- as.numeric(gsub("[A-Z]", "", colnames(SNR2)))
   SNR_All <- NULL
   for (i in seq_len(nrow(SNR2))) {

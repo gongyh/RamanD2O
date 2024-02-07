@@ -123,27 +123,43 @@ observeEvent(input$ml_minusButton, {
 
 # convert ml_trim_range and ml_trim_min/max
 lapply(1:5, function(i) {
-  observeEvent(c(input[[paste0("ml_trim_min", i)]], input[[paste0("ml_trim_max", i)]]), {
-    updateSliderInput(session,
-      paste0("ml_trim_range", i),
-      value = c(input[[paste0("ml_trim_min", i)]], input[[paste0("ml_trim_max", i)]])
-    )
-    eval(parse(text = paste0("ml_trim_min", i, "(", input[[paste0("ml_trim_min", i)]], ")")))
-    eval(parse(text = paste0("ml_trim_max", i, "(", input[[paste0("ml_trim_max", i)]], ")")))
-  })
-  observeEvent(c(input[[paste0("ml_trim_range", i)]][1], input[[paste0("ml_trim_range", i)]][2]), {
-    updateNumericInput(session, paste0("ml_trim_min", i), value = input[[paste0("ml_trim_range", i)]][1])
-    updateNumericInput(session, paste0("ml_trim_max", i), value = input[[paste0("ml_trim_range", i)]][2])
-    eval(parse(text = paste0("ml_trim_min", i, "(", input[[paste0("ml_trim_min", i)]], ")")))
-    eval(parse(text = paste0("ml_trim_max", i, "(", input[[paste0("ml_trim_max", i)]], ")")))
-  })
+  observeEvent(c(input[[paste0("ml_trim_min", i)]],
+                 input[[paste0("ml_trim_max", i)]]), {
+                 updateSliderInput(session,
+                   paste0("ml_trim_range", i),
+                   value = c(input[[paste0("ml_trim_min", i)]],
+                             input[[paste0("ml_trim_max", i)]])
+                 )
+                 eval(parse(text =
+                              paste0("ml_trim_min", i, "(",
+                                     input[[paste0("ml_trim_min", i)]], ")")))
+                 eval(parse(text =
+                              paste0("ml_trim_max", i, "(",
+                                     input[[paste0("ml_trim_max", i)]], ")")))
+               })
+  observeEvent(c(input[[paste0("ml_trim_range", i)]][1],
+                 input[[paste0("ml_trim_range", i)]][2]), {
+                 updateNumericInput(session, paste0("ml_trim_min", i),
+                                    value = input[[paste0("ml_trim_range",
+                                                          i)]][1])
+                 updateNumericInput(session, paste0("ml_trim_max", i),
+                                    value = input[[paste0("ml_trim_range",
+                                                          i)]][2])
+                 eval(parse(text = paste0("ml_trim_min", i, "(",
+                                          input[[paste0("ml_trim_min", i)]],
+                                          ")")))
+                 eval(parse(text = paste0("ml_trim_max", i, "(",
+                                          input[[paste0("ml_trim_max", i)]],
+                                          ")")))
+               })
 })
 
 # prepare training datasets for scrs on click of button
 observeEvent(input$prepare, {
   withBusyIndicatorServer("prepare", {
     if (isolate(input$hs_selector_for_ml_prepare) == "") {
-      shinyalert("Oops!", "Please first load your spectra data.", type = "error")
+      shinyalert("Oops!",
+                 "Please first load your spectra data.", type = "error")
       return()
     } else {
       hs$val[["train"]] <- NULL
@@ -175,13 +191,13 @@ observeEvent(input$prepare, {
         hs$val[["train"]] <- hs_cur[index]
         hs$val[["eval"]] <- hs_cur[-index]
         result$prepare <- hs$val[["train"]]
-      } else if (isolate(input$datatype_for_ml_prepare) == "Train set") { # Train set
+      } else if (isolate(input$datatype_for_ml_prepare) == "Train set") {
         hs$val[["train"]] <- hs_cur[index]
         result$prepare <- hs$val[["train"]]
-      } else if (isolate(input$datatype_for_ml_prepare) == "Eval set") { # Eval set
+      } else if (isolate(input$datatype_for_ml_prepare) == "Eval set") {
         hs$val[["eval"]] <- hs_cur[index]
         result$prepare <- hs$val[["eval"]]
-      } else if (isolate(input$datatype_for_ml_prepare) == "Test set") { # Test set
+      } else if (isolate(input$datatype_for_ml_prepare) == "Test set") {
         hs$val[["test"]] <- hs_cur[index]
         result$prepare <- hs$val[["test"]]
       }
@@ -219,8 +235,9 @@ observeEvent(input$after_prepare_rows_selected,
       validate(need(input$after_prepare_rows_selected, ""))
       index <- input$after_prepare_rows_selected
       item <- hs_prepare_plot[index]
-      p <-
-        qplotspc(item) + xlab(TeX("\\Delta \\tilde{\\nu }/c{{m}^{-1}}")) + ylab("I / a.u.")
+      p <- qplotspc(item) +
+        xlab(TeX("\\Delta \\tilde{\\nu }/c{{m}^{-1}}")) +
+        ylab("I / a.u.")
       ggplotly(p) %>% config(mathjax = "cdn")
     })
   },

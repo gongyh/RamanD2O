@@ -8,7 +8,8 @@ output$hs_select_for_ml_train <- renderUI({
   } else if ("snr" %in% hs_all) {
     selected <- "snr"
   }
-  selectInput("hs_selector_for_ml_train", "Training dataset", choices = hs_all, selected = selected)
+  selectInput("hs_selector_for_ml_train", "Training dataset",
+              choices = hs_all, selected = selected)
 })
 
 output$hs_select_for_ml_eval <- renderUI({
@@ -19,7 +20,8 @@ output$hs_select_for_ml_eval <- renderUI({
   } else {
     selected <- "_"
   }
-  selectInput("hs_selector_for_ml_eval", "Evaluation dataset", choices = hs_all, selected = selected)
+  selectInput("hs_selector_for_ml_eval", "Evaluation dataset",
+              choices = hs_all, selected = selected)
 })
 
 output$hs_select_for_ml_test <- renderUI({
@@ -30,7 +32,8 @@ output$hs_select_for_ml_test <- renderUI({
   } else {
     selected <- "_"
   }
-  selectInput("hs_selector_for_ml_test", "Test dataset", choices = hs_all, selected = selected)
+  selectInput("hs_selector_for_ml_test", "Test dataset",
+              choices = hs_all, selected = selected)
 })
 
 observeEvent(input$hs_selector_for_ml_train,
@@ -45,7 +48,8 @@ observeEvent(input$hs_selector_for_ml_train,
         metacols <- colnames(hs_cur)
         metacols <- metacols[metacols != "spc"]
       }
-      selectInput("ml_select_label", "Label", choices = metacols, selected = F)
+      selectInput("ml_select_label", "Label",
+                  choices = metacols, selected = FALSE)
     })
   },
   ignoreNULL = FALSE
@@ -68,13 +72,17 @@ observeEvent(input$train,
         ytest <- xtest@data[isolate(input$ml_select_label)]
         ytrain <- hs_train@data[isolate(input$ml_select_label)]
         ytrain_factor <- factor(ytrain[, 1])
-        ytest_factor <- factor(as.character(ytest[, 1]), levels = levels(ytrain_factor))
+        ytest_factor <-
+          factor(as.character(ytest[, 1]), levels = levels(ytrain_factor))
       }
       ytrain <- hs_train@data[isolate(input$ml_select_label)]
       ytrain_factor <- factor(ytrain[, 1])
       rf <- randomForest(
-        x = hs_train$spc, y = ytrain_factor, xtest = xtest$spc, ytest = ytest_factor,
-        ntree = isolate(input$rf_ntree), replace = isolate(input$rf_replace), norm.votes = TRUE, keep.forest = TRUE
+        x = hs_train$spc, y = ytrain_factor,
+        xtest = xtest$spc, ytest = ytest_factor,
+        ntree = isolate(input$rf_ntree),
+        replace = isolate(input$rf_replace),
+        norm.votes = TRUE, keep.forest = TRUE
       )
       ml$results <- rf
       output$rf_test_predicted_plot <- renderDataTable({
@@ -85,9 +93,11 @@ observeEvent(input$train,
         df <- cbind(df, rf$test$votes)
         result$predict <- df
         DT::datatable(df,
-          escape = FALSE, selection = "single", extensions = c("Buttons", "Responsive", "Scroller"),
+          escape = FALSE, selection = "single",
+          extensions = c("Buttons", "Responsive", "Scroller"),
           options = list(
-            dom = "Bfrtip", deferRender = T, searchHighlight = T, scrollX = T,
+            dom = "Bfrtip", deferRender = TRUE,
+            searchHighlight = TRUE, scrollX = TRUE,
             buttons = list(
               list(extend = "csv", filename = "Eval_result", text = "Download")
             )
@@ -96,7 +106,7 @@ observeEvent(input$train,
       })
     })
   },
-  ignoreNULL = T
+  ignoreNULL = TRUE
 )
 
 observeEvent(input$eval,
@@ -110,14 +120,18 @@ observeEvent(input$eval,
       eval <- isolate(input$hs_selector_for_ml_eval)
       if (!is.null(eval) && (eval != "_")) {
         hs_eval <- hs$val[[isolate(input$hs_selector_for_ml_eval)]]
-        if (identical(names(ml$results$importance[, ]), colnames(hs_eval$spc))) {
+        if (identical(names(ml$results$importance[, ]),
+                      colnames(hs_eval$spc))) {
           result_predict <- predict(ml$results, hs_eval$spc)
-          result_confusion_raw <- confusionMatrix(hs_eval@data[isolate(input$ml_select_label)][, 1], result_predict)
+          result_confusion_raw <-
+            confusionMatrix(hs_eval@data[isolate(input$ml_select_label)][, 1],
+                            result_predict)
           class.error <- (1 - result_confusion_raw$byClass[, 3])
           result_confusion <- cbind(result_confusion_raw$table, class.error)
           result_confusion <- data.frame(result_confusion)
         } else {
-          toastr_error("Inconsistent spectra of the data set and model.", position = "top-center")
+          toastr_error("Inconsistent spectra of the data set and model.",
+                       position = "top-center")
           return()
         }
       } else {
@@ -126,30 +140,40 @@ observeEvent(input$eval,
       }
       output$rf_confusion_eval_plot <- renderDataTable({
         DT::datatable(result_confusion,
-          escape = FALSE, selection = "single", extensions = c("Buttons", "Responsive", "Scroller"),
+          escape = FALSE, selection = "single",
+          extensions = c("Buttons", "Responsive", "Scroller"),
           options = list(
-            dom = "Bfrtip", deferRender = T, searchHighlight = T, scrollX = T,
+            dom = "Bfrtip", deferRender = TRUE,
+            searchHighlight = TRUE, scrollX = TRUE,
             buttons = list(
               list(
-                extend = "csv", filename = "Confusion_eval_result", text = "Download",
-                exportOptions = list(modifier = list(page = "all", search = "none"))
+                extend = "csv", filename = "Confusion_eval_result",
+                text = "Download",
+                exportOptions = list(modifier = list(page = "all",
+                                                     search = "none"))
               )
             )
           )
         ) %>% formatPercentage(c("class.error"), 4)
       })
       output$rf_test_predicted_plot <- renderDataTable({
-        df <- data.frame(real = hs_eval@data[isolate(input$ml_select_label)][, 1], predicted = result_predict)
+        df <-
+          data.frame(
+                     real = hs_eval@data[isolate(input$ml_select_label)][, 1],
+                     predicted = result_predict)
         rownames(df) <- names(result_predict)
         result$predict <- df
         DT::datatable(df,
-          escape = FALSE, selection = "single", extensions = c("Buttons", "Responsive", "Scroller"),
+          escape = FALSE, selection = "single",
+          extensions = c("Buttons", "Responsive", "Scroller"),
           options = list(
-            dom = "Bfrtip", deferRender = T, searchHighlight = T, scrollX = T,
+            dom = "Bfrtip", deferRender = TRUE,
+            searchHighlight = TRUE, scrollX = TRUE,
             buttons = list(
               list(
                 extend = "csv", filename = "Eval_result", text = "Download",
-                exportOptions = list(modifier = list(page = "all", search = "none"))
+                exportOptions = list(modifier = list(page = "all",
+                                                     search = "none"))
               )
             )
           )
@@ -157,7 +181,7 @@ observeEvent(input$eval,
       })
     })
   },
-  ignoreNULL = T
+  ignoreNULL = TRUE
 )
 
 observeEvent(input$test,
@@ -171,10 +195,12 @@ observeEvent(input$test,
       test <- isolate(input$hs_selector_for_ml_test)
       if (!is.null(test) && (test != "_")) {
         hs_test <- hs$val[[isolate(input$hs_selector_for_ml_test)]]
-        if (identical(names(ml$results$importance[, ]), colnames(hs_test$spc))) {
+        if (identical(names(ml$results$importance[, ]),
+                      colnames(hs_test$spc))) {
           result_predict <- predict(ml$results, hs_test$spc)
         } else {
-          toastr_error("Inconsistent spectra of the data set and model.", position = "top-center")
+          toastr_error("Inconsistent spectra of the data set and model.",
+                       position = "top-center")
           return()
         }
       } else {
@@ -186,13 +212,16 @@ observeEvent(input$test,
         rownames(df) <- names(result_predict)
         result$predict <- df
         DT::datatable(df,
-          escape = FALSE, selection = "single", extensions = c("Buttons", "Responsive", "Scroller"),
+          escape = FALSE, selection = "single",
+          extensions = c("Buttons", "Responsive", "Scroller"),
           options = list(
-            dom = "Bfrtip", deferRender = T, searchHighlight = T, scrollX = T,
+            dom = "Bfrtip", deferRender = TRUE,
+            searchHighlight = TRUE, scrollX = TRUE,
             buttons = list(
               list(
                 extend = "csv", filename = "Test_result", text = "Download",
-                exportOptions = list(modifier = list(page = "all", search = "none"))
+                exportOptions = list(modifier = list(page = "all",
+                                                     search = "none"))
               )
             )
           )
@@ -200,7 +229,7 @@ observeEvent(input$test,
       })
     })
   },
-  ignoreNULL = T
+  ignoreNULL = TRUE
 )
 
 # training model plot
@@ -222,13 +251,17 @@ observeEvent(ml$results,
     output$rf_confusion_oob_plot <- renderDataTable({
       validate(need(rf, ""))
       DT::datatable(rf$confusion,
-        escape = FALSE, selection = "single", extensions = c("Buttons", "Responsive", "Scroller"),
+        escape = FALSE, selection = "single",
+        extensions = c("Buttons", "Responsive", "Scroller"),
         options = list(
-          dom = "Bfrtip", deferRender = T, searchHighlight = T, scrollX = T,
+          dom = "Bfrtip", deferRender = TRUE,
+          searchHighlight = TRUE, scrollX = TRUE,
           buttons = list(
             list(
-              extend = "csv", filename = "Confusion_OOB_result", text = "Download",
-              exportOptions = list(modifier = list(page = "all", search = "none"))
+              extend = "csv", filename = "Confusion_OOB_result",
+              text = "Download",
+              exportOptions = list(modifier = list(page = "all",
+                                                   search = "none"))
             )
           )
         )
@@ -238,13 +271,17 @@ observeEvent(ml$results,
       validate(need(rf, ""))
       validate(need(rf$test, ""))
       DT::datatable(rf$test$confusion,
-        escape = FALSE, selection = "single", extensions = c("Buttons", "Responsive", "Scroller"),
+        escape = FALSE, selection = "single",
+        extensions = c("Buttons", "Responsive", "Scroller"),
         options = list(
-          dom = "Bfrtip", deferRender = T, searchHighlight = T, scrollX = T,
+          dom = "Bfrtip", deferRender = TRUE,
+          searchHighlight = TRUE, scrollX = TRUE,
           buttons = list(
             list(
-              extend = "csv", filename = "Confusion_eval_result", text = "Download",
-              exportOptions = list(modifier = list(page = "all", search = "none"))
+              extend = "csv", filename = "Confusion_eval_result",
+              text = "Download",
+              exportOptions = list(modifier = list(page = "all",
+                                                   search = "none"))
             )
           )
         )
@@ -260,7 +297,8 @@ observeEvent(input$rf_test_predicted_plot_rows_selected,
       validate(need(input$rf_test_predicted_plot_rows_selected, ""))
       index <- input$rf_test_predicted_plot_rows_selected
       item <- hs$val[[isolate(input$hs_selector_for_ml_eval)]][index]
-      p <- qplotspc(item) + xlab(TeX("\\Delta \\tilde{\\nu }/c{{m}^{-1}}")) + ylab("I / a.u.")
+      p <- qplotspc(item) +
+        xlab(TeX("\\Delta \\tilde{\\nu }/c{{m}^{-1}}")) + ylab("I / a.u.")
       ggplotly(p) %>% config(mathjax = "cdn")
     })
   },
@@ -272,7 +310,8 @@ observeEvent(input$upload_model, {
   withBusyIndicatorServer("upload_model", {
     if (!is.null(isolate(input$upload_model_file$datapath))) {
       ml$results <- readRDS(isolate(input$upload_model_file$datapath))
-      if (is.null(ml$results$call) | is.null(ml$results$predicted) | is.null(ml$results$importance)) {
+      if (is.null(ml$results$call) | is.null(ml$results$predicted) |
+            is.null(ml$results$importance)) {
         toastr_error("Please load valid model!", position = "top-center")
         return()
       }
@@ -317,7 +356,8 @@ output$download_result2 <- downloadHandler(
     } else {
       png(file)
       plot(
-        x = rownames(ml$results$importance), y = ml$results$importance, type = "h",
+        x = rownames(ml$results$importance),
+        y = ml$results$importance, type = "h",
         xlab = "Wavelength", ylab = "Importance"
       )
       dev.off()

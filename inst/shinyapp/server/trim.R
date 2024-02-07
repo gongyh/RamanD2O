@@ -4,12 +4,14 @@ output$hs_select_for_trim <- renderUI({
   if ("sampled" %in% hs_all) {
     selected <- "sampled"
   }
-  selectInput("hs_selector_for_trim", "Choose target", choices = hs_all, selected = selected)
+  selectInput("hs_selector_for_trim", "Choose target",
+              choices = hs_all, selected = selected)
 })
 
 # convert trim_range and trim_min/trim_max
 observeEvent(c(input$trim_min, input$trim_max), {
-  updateSliderInput(session, "trim_range", value = c(input$trim_min, input$trim_max))
+  updateSliderInput(session, "trim_range",
+                    value = c(input$trim_min, input$trim_max))
 })
 observeEvent(c(input$trim_range[1], input$trim_range[2]), {
   updateNumericInput(session, "trim_min", value = input$trim_range[1])
@@ -20,7 +22,8 @@ observeEvent(c(input$trim_range[1], input$trim_range[2]), {
 observeEvent(input$trim, {
   withBusyIndicatorServer("trim", {
     if (isolate(input$hs_selector_for_trim) == "") {
-      shinyalert("Oops!", "Please first load your spectra data.", type = "error")
+      shinyalert("Oops!",
+                 "Please first load your spectra data.", type = "error")
       return()
     } else {
       hs_cur <- hs$val[[isolate(input$hs_selector_for_trim)]]
@@ -36,7 +39,9 @@ observeEvent(hs$val[["trimmed"]],
   {
     hs_tm <- hs$val[["trimmed"]]
     output$after_trim <- renderDataTable({
-      DT::datatable(if (is.null(hs_tm)) NULL else hs_tm@data %>% dplyr::select(!matches("spc")),
+      DT::datatable(
+        if (is.null(hs_tm)) NULL else hs_tm@data %>%
+          dplyr::select(!matches("spc")),
         escape = FALSE, selection = "single",
         extensions = list("Responsive", "Scroller"),
         options = list(searchHighlight = TRUE, scrollX = TRUE)
@@ -52,7 +57,8 @@ observeEvent(input$after_trim_rows_selected,
       validate(need(input$after_trim_rows_selected, ""))
       index <- input$after_trim_rows_selected
       item <- hs$val[["trimmed"]][index]
-      p <- qplotspc(item) + xlab(TeX("\\Delta \\tilde{\\nu }/c{{m}^{-1}}")) + ylab("I / a.u.")
+      p <- qplotspc(item) +
+        xlab(TeX("\\Delta \\tilde{\\nu }/c{{m}^{-1}}")) + ylab("I / a.u.")
       ggplotly(p) %>% config(mathjax = "cdn")
     })
   },
