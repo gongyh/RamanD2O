@@ -57,7 +57,7 @@ Suggests:
     Rtsne
 RoxygenNote: 7.2.3
 Collate: 
-    'O2PLS_VIP.R'
+    'O2PLS_FastVIP.R'
     'SCRS_cdr.R'
     'SCRS_cdr_rarefy.R'
     'SCRS_cdr_stats.R'
