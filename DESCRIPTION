@@ -30,6 +30,7 @@ Imports:
     fresh,
     randomForest,
     caret,
+    vivo,
     baseline,
     markdown,
     OmicsPLS,
