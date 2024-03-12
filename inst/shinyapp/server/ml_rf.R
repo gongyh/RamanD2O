@@ -123,9 +123,13 @@ observeEvent(input$eval,
         if (identical(names(ml$results$importance[, ]),
                       colnames(hs_eval$spc))) {
           result_predict <- predict(ml$results, hs_eval$spc)
+          #vip analysis
+          evaly <- hs_eval@data[isolate(input$ml_select_label)][, 1]
+          erf <- explain(ml$results, data=hs_eval$spc, y=evaly)
+          profiles <- model_profile(erf)
+          vip <- global_variable_importance(profiles)
           result_confusion_raw <-
-            confusionMatrix(hs_eval@data[isolate(input$ml_select_label)][, 1],
-                            result_predict)
+            confusionMatrix(evaly, result_predict)
           class.error <- (1 - result_confusion_raw$byClass[, 3])
           result_confusion <- cbind(result_confusion_raw$table, class.error)
           result_confusion <- data.frame(result_confusion)
