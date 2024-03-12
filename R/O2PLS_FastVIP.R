@@ -10,8 +10,7 @@
 #' Must have the exact same rows (subjects/samples) as \code{y}.
 #' @param y Training data of metabolite relative abundances.
 #' Must have the exact same rows (subjects/samples) as \code{x}.
-#' @param model List of class \code{"mminp"} or \code{"o2m"}, produced by
-#'  \code{\link[MMINP]{MMINP.train}} or \code{\link[OmicsPLS]{o2m}}. \code{x}
+#' @param model List of class \code{"o2m"}. \code{x}
 #'  and \code{y} must be the corresponding training data.
 #' @return A list containing
 #'     \item{xvip}{For the X-block, the VIP profiles for the predictive part of
@@ -33,14 +32,11 @@
 #' significant for the whole model.
 #' @references Galindo-Prieto B, Trygg J, Geladi P. A new approach for variable
 #' influence on projection (VIP) in O2PLS models. Chemometrics and Intelligent
-#' Laboratory Systems 2017; 160: 110–124.
+#' Laboratory Systems 2017; 160: 110-124.
 #' @export
 O2PLSvip <- function(x, y, model) {
-  if (!inherits(model, "mminp") && !inherits(model, "o2m")) {
-    stop("The model must be class 'mminp' or 'o2m'")
-  }
-  if (inherits(model, "mminp")) {
-    model <- model$model
+  if (!inherits(model, "o2m")) {
+    stop("The model must be class 'o2m'")
   }
 
   checkInputdata(x)
