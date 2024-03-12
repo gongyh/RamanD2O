@@ -30,6 +30,7 @@ Imports:
     fresh,
     randomForest,
     caret,
+    DALEX,
     vivo,
     baseline,
     markdown,
