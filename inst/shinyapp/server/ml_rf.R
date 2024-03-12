@@ -125,7 +125,7 @@ observeEvent(input$eval,
           result_predict <- predict(ml$results, hs_eval$spc)
           #vip analysis
           evaly <- hs_eval@data[isolate(input$ml_select_label)][, 1]
-          erf <- explain(ml$results, data=hs_eval$spc, y=evaly)
+          erf <- explain(ml$results, data = hs_eval$spc, y = evaly)
           profiles <- model_profile(erf)
           vip <- global_variable_importance(profiles)
           result_confusion_raw <-
