@@ -71,7 +71,7 @@ observeEvent(input$unzip, {
         }
       }
 
-      sc <- data.frame(t(scrs_df), stringsAsFactors = TRUE)
+      sc <- data.frame(t(scrs_df), stringsAsFactors = FALSE)
       colnames(sc) <- scrs_colnames
       rownames(sc) <- NULL
       scrs$spc <- sc
