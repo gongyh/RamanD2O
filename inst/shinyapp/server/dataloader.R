@@ -32,7 +32,7 @@ observeEvent(input$unzip, {
           shift_cur <- content$V1
           dt <- removeCosmic(content$V2)
           hs_data <- new("hyperSpec", wavelength = shift_cur, spc = dt$spc)
-          hs_align <- spc_loess(hs_data, shift, span=5, normalize = FALSE)
+          hs_align <- spc_loess(hs_data, shift, span = 5, normalize = FALSE)
           data <- c(ID_Cell, hs_align$spc)
           scrs_df[, i] <- data
           update_modal_progress(i / total,
