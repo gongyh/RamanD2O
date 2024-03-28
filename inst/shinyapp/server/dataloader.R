@@ -15,7 +15,7 @@ observeEvent(input$unzip, {
       }
       if (isolate(input$align)) {
         # different shift
-        max_min_values <- lapply(files, function(f) {
+        max_min_values <- lapply(txtfiles, function(f) {
           data <- read.table(f, header = FALSE)$V1
           max_value <- max(data, na.rm = TRUE)
           min_value <- min(data, na.rm = TRUE)
