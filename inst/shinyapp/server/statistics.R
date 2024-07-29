@@ -162,7 +162,13 @@ observeEvent(input$perform_mcr,
           gp2 <- ggplotly(p2)
           subplot(gp2, gp1, nrows = 2)
         } else if (mcr_method == "MCR-ALS") {
-          m <- mcrals(data, ncomp = num_mcr_pcs)
+          m <- mcrals(data, ncomp = num_mcr_pcs,
+            cont.constraints = list(constraint("nonneg")),
+            spec.constraints = list(
+              constraint("nonneg"), 
+              constraint("unimod", params = list(tol = 0)),
+              constraint("norm", params = list(type = "area"))
+            ))
           summary(m)
           cumexpvar <- m$variance[2, ]
           df <- data.frame(x = names(cumexpvar), y = cumexpvar)
