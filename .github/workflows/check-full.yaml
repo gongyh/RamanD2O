@@ -24,6 +24,7 @@ jobs:
         config:
           - {os: ubuntu-20.04,   r: '4.2'}
           - {os: ubuntu-22.04,   r: '4.3'}
+          - {os: ubuntu-24.04,   r: '4.4'}
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
