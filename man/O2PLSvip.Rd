@@ -46,5 +46,5 @@ significant for the whole model.
 \references{
 Galindo-Prieto B, Trygg J, Geladi P. A new approach for variable
 influence on projection (VIP) in O2PLS models. Chemometrics and Intelligent
-Laboratory Systems 2017; 160: 110–124.
+Laboratory Systems 2017; 160: 110-124.
 }

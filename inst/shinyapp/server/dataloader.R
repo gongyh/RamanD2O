@@ -126,6 +126,15 @@ observeEvent(input$load_meta, {
   })
 })
 
+# load RamEx dataset
+observeEvent(input$load_ramex, {
+  withBusyIndicatorServer("load_ramex", {
+    if (!is.null(isolate(input$ramex_file$datapath))) {
+      ramanome <- loadRDS(isolate(input$ramex_file$datapath))
+    }
+  })
+})
+
 observeEvent(meta$tbl,
   {
     # req(meta$tbl)
