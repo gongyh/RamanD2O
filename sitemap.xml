@@ -6,6 +6,7 @@
 <url><loc>/authors.html</loc></url>
 <url><loc>/index.html</loc></url>
 <url><loc>/reference/O2PLSvip.html</loc></url>
+<url><loc>/reference/Ramanome-class.html</loc></url>
 <url><loc>/reference/SCRS_preprocess.html</loc></url>
 <url><loc>/reference/SCRS_toDF.html</loc></url>
 <url><loc>/reference/calOrthVIP.html</loc></url>
@@ -13,8 +14,12 @@
 <url><loc>/reference/checkInputdata.html</loc></url>
 <url><loc>/reference/findPeaks.html</loc></url>
 <url><loc>/reference/index.html</loc></url>
+<url><loc>/reference/length-Ramanome-method.html</loc></url>
+<url><loc>/reference/rbind2-Ramanome-Ramanome-method.html</loc></url>
 <url><loc>/reference/removeCosmic.html</loc></url>
 <url><loc>/reference/runRamanD2O.html</loc></url>
+<url><loc>/reference/show-Ramanome-method.html</loc></url>
 <url><loc>/reference/ssd.html</loc></url>
+<url><loc>/reference/sub-Ramanome-ANY-ANY-ANY-method.html</loc></url>
 </urlset>
 
