@@ -1,10 +1,11 @@
 #' Ramanome class
 #'
-#' This class represents a Ramanome object, which contains Raman data and associated metadata.
+#' This class represents a Ramanome object, which contains Raman data
+#' and associated metadata.
 #'
-#' @slot wavenumber Numeric vector indicating the wavenumbers of the Raman spectra
+#' @slot wavenumber Numeric vector indicating the wavenumbers
 #' @slot datasets A list of Raman datasets
-#' @slot meta.data A data frame containing metadata associated with the Raman datasets
+#' @slot meta.data A data frame containing metadata
 #' @slot reductions A list of data reduction results
 #' @slot interested.bands A list of interested Raman bands
 #'
@@ -15,13 +16,13 @@
 #' @export
 
 Ramanome <- setClass(
-  Class = 'Ramanome',
+  Class = "Ramanome",
   slots = c(
     wavenumber = "numeric",
-    datasets = 'list',
-    meta.data = 'data.frame',
-    reductions = 'list',
-    interested.bands = 'list'
+    datasets = "list",
+    meta.data = "data.frame",
+    reductions = "list",
+    interested.bands = "list"
   )
 )
 
@@ -41,14 +42,14 @@ setMethod(
     cat(class(x = object), "Object", "\n")
     cat(
       num.wave,
-      'Raman features across',
+      "Raman features across",
       num.spec,
-      'samples within',
+      "samples within",
       num.group,
-      ifelse(test = num.group == 1, yes = 'group', no = 'groups'),
+      ifelse(test = num.group == 1, yes = "group", no = "groups"),
       "\n"
     )
-    cat('\n')
+    cat("\n")
   }
 )
 
@@ -62,13 +63,15 @@ setMethod(
 #' @export
 
 setMethod("[", "Ramanome", function(x, i, j, ..., drop = TRUE) {
-  new.wavenumber = x@wavenumber
-  new.datasets = lapply(x@datasets,'[',i,)
-  new.meta.data = x@meta.data[i,]
-  new.reductions = lapply(x@reductions,'[',i,)
-  new.interested.bands = lapply(x@interested.bands,'[',i,)
-  new_obj <- new("Ramanome", wavenumber = new.wavenumber, datasets = new.datasets, meta.data=new.meta.data,
-                 reductions=new.reductions, interested.bands=new.interested.bands )
+  new.wavenumber <- x@wavenumber
+  new.datasets <- lapply(x@datasets, "[", i, )
+  new.meta.data <- x@meta.data[i, ]
+  new.reductions <- lapply(x@reductions, "[", i, )
+  new.interested.bands <- lapply(x@interested.bands, "[", i, )
+  new_obj <- new("Ramanome", wavenumber = new.wavenumber,
+                 datasets = new.datasets, meta.data = new.meta.data,
+                 reductions = new.reductions,
+                 interested.bands = new.interested.bands)
   return(new_obj)
 })
 
@@ -109,8 +112,8 @@ setMethod("length", "Ramanome", function(x) {
 
 setMethod("rbind2", signature(x = "Ramanome", y = "Ramanome"),
           function(x, y) {
-            Ramanome(wavenumber = x@wavenumber ,datasets = list(data = rbind(get.nearest.dataset(x),
-                                                                             get.nearest.dataset(y))), meta.data = rbind(x@meta.data, y@meta.data))
+            Ramanome(wavenumber = x@wavenumber,
+                     datasets = list(data = rbind(get.nearest.dataset(x),
+                                                  get.nearest.dataset(y))),
+                     meta.data = rbind(x@meta.data, y@meta.data))
           })
-
-

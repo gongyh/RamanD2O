@@ -6,16 +6,17 @@
 \alias{Ramanome}
 \title{Ramanome class}
 \description{
-This class represents a Ramanome object, which contains Raman data and associated metadata.
+This class represents a Ramanome object, which contains Raman data
+and associated metadata.
 }
 \section{Slots}{
 
 \describe{
-\item{\code{wavenumber}}{Numeric vector indicating the wavenumbers of the Raman spectra}
+\item{\code{wavenumber}}{Numeric vector indicating the wavenumbers}
 
 \item{\code{datasets}}{A list of Raman datasets}
 
-\item{\code{meta.data}}{A data frame containing metadata associated with the Raman datasets}
+\item{\code{meta.data}}{A data frame containing metadata}
 
 \item{\code{reductions}}{A list of data reduction results}
 
