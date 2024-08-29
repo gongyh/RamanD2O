@@ -48,24 +48,29 @@ observeEvent(input$prepare_file,
         meta2 <- data@data
         meta2$spc <- NULL
         colnames(meta2)[colnames(meta2) == "ID_Cell"] <- "filenames"
-        which.data <- isolate(input$hs_selector_for_export)
-        data_name <- "normalized.data"
-        if (which.data == "baselined") {
-          data_name <- "baseline.data"
-        } else if (which.data == "smoothed") {
-          data_name <- "smooth.data"
-        } else if (which.data == "trimmed") {
-          data_name <- "cut.data"
-        } else if (which.data == "raw") {
-          data_name <- "raw.data"
-        } else if (which.data == "normalized") {
-          data_name <- "normalized.data"
-        }
         datasets <- list()
-        datasets[[data_name]] <- data$spc
+        hs_all <- names(hs$val)
+        for (ha in hs_all) {
+          data_name <- "normalized.data"
+          if (ha == "baselined") {
+            data_name <- "baseline.data"
+          } else if (ha == "smoothed") {
+            data_name <- "smooth.data"
+          } else if (ha == "trimmed") {
+            data_name <- "cut.data"
+          } else if (ha == "raw") {
+            data_name <- "raw.data"
+          } else if (ha == "normalized") {
+            data_name <- "normalized.data"
+          }
+          datasets[[data_name]] <- hs$val[[ha]]$spc
+        }
         Ramanome <- new("Ramanome", datasets = datasets,
                         wavenumber = wl(data), meta.data = meta2)
-        saveRDS(Ramanome, file = paste0("spectra-", which.data, "-RamEx.rds"))
+        saveRDS(Ramanome,
+                file = paste0("spectra-",
+                              isolate(input$hs_selector_for_export),
+                              "-RamEx.rds"))
         shinyjs::enable("download")
       }
     })
