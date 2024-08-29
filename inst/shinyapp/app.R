@@ -31,9 +31,9 @@ ui <- dashboardPage(
         icon = icon("dashboard")
       ),
       menuItem("Load Data", tabName = "settings", icon = icon("cogs")),
+      menuItem("Visualize", tabName = "visualize", icon = icon("poll")),
       menuItem(
         "Tools",
-        menuItem("Visualize", tabName = "visualize", icon = icon("poll")),
         menuItem(
           "Statistics",
           tabName = "statistics",

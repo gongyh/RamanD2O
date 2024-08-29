@@ -26,9 +26,9 @@ observeEvent(input$prepare_file,
         file <- paste0("spectra-",
                        isolate(input$hs_selector_for_export), ".zip")
         zip_dir <- isolate(input$hs_selector_for_export)
-        meta <- data@data
-        meta$spc <- NULL
-        write.table(meta, "meta.txt",
+        meta1 <- data@data
+        meta1$spc <- NULL
+        write.table(meta1, "meta.txt",
                     row.names = FALSE, col.names = TRUE,
                     quote = FALSE, sep = "\t")
         if (dir.exists(zip_dir)) fs::dir_delete(zip_dir)
@@ -43,6 +43,29 @@ observeEvent(input$prepare_file,
         }
         # print("Done!")
         zip::zip(zipfile = file, c(zip_dir, "meta.txt"))
+        shinyjs::enable("download")
+      } else if (isolate(input$select_type == "RamEx")) {
+        meta2 <- data@data
+        meta2$spc <- NULL
+        colnames(meta2)[colnames(meta2) == "ID_Cell"] <- "filenames"
+        which.data <- isolate(input$hs_selector_for_export)
+        data_name <- "normalized.data"
+        if (which.data == "baselined") {
+          data_name <- "baseline.data"
+        } else if (which.data == "smoothed") {
+          data_name <- "smooth.data"
+        } else if (which.data == "trimmed") {
+          data_name <- "cut.data"
+        } else if (which.data == "raw") {
+          data_name <- "raw.data"
+        } else if (which.data == "normalized") {
+          data_name <- "normalized.data"
+        }
+        datasets <- list()
+        datasets[[data_name]] <- data$spc
+        Ramanome <- new("Ramanome", datasets = datasets,
+                        wavenumber = wl(data), meta.data = meta2)
+        saveRDS(Ramanome, file = paste0("spectra-", which.data, "-RamEx.rds"))
         shinyjs::enable("download")
       }
     })
@@ -59,6 +82,8 @@ output$download <- downloadHandler(
       suffix <- ".csv"
     } else if (isolate(input$select_type) == "zip") {
       suffix <- ".zip"
+    } else if (isolate(input$select_type) == "RamEx") {
+      suffix <- "-RamEx.rds"
     }
     paste0(name, suffix)
   },
@@ -69,6 +94,8 @@ output$download <- downloadHandler(
       suffix <- ".csv"
     } else if (isolate(input$select_type) == "zip") {
       suffix <- ".zip"
+    } else if (isolate(input$select_type) == "RamEx") {
+      suffix <- "-RamEx.rds"
     }
     prepared_file <- paste0(name, suffix)
     file.copy(prepared_file, file)

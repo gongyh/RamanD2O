@@ -12,7 +12,7 @@ tabItem(
         fluidRow(
           column(2, uiOutput("hs_select_for_export")),
           column(2, selectInput("select_type", "Choose format",
-            choices = c("csv", "zip"), selected = "csv"
+            choices = c("csv", "zip", "RamEx"), selected = "csv"
           )),
           column(2,
                  withBusyIndicatorUI(actionButton(

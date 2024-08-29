@@ -117,3 +117,17 @@ setMethod("rbind2", signature(x = "Ramanome", y = "Ramanome"),
                                                   get.nearest.dataset(y))),
                      meta.data = rbind(x@meta.data, y@meta.data))
           })
+
+#' Get the nearest dataset from a Ramanome object
+#'
+#' This function retrieves the nearest dataset from a Ramanome object.
+#'
+#' @param object A Ramanome object.
+#'
+#' @return The nearest dataset.
+#' @export
+get.nearest.dataset <- function(object) {
+  dataset <- tail(names(object@datasets), 1)
+  dataset <- object@datasets[dataset][[1]]
+  return(dataset)
+}
