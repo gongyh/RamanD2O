@@ -133,12 +133,12 @@ observeEvent(input$load_ramex, {
       ramanome <- readRDS(isolate(input$ramex_file$datapath))
       if (class(ramanome) == "Ramanome") {
         datasets_name <- names(ramanome@datasets)
-        wl <- ramanome@wavenumber
         metadata <- ramanome@meta.data
-        metadata$ID_Cell <- metadata$filenames
+        colnames(metadata)[colnames(metadata) == "filenames"] <- "ID_Cell"
         meta$tbl <- metadata
         for (name in datasets_name) {
           spcs <- ramanome@datasets[[name]]
+          wl <- str(colnames(spcs))
           spc2hs <- new("hyperSpec", spc = spcs, wavelength = wl,
                         data = metadata)
           if (name == "raw.data") {
@@ -154,6 +154,8 @@ observeEvent(input$load_ramex, {
           }
         }
       }
+    } else {
+      toastr_error("No file selected!", position = "top-center")
     }
   })
 })
