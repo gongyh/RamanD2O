@@ -74,8 +74,9 @@ RUN R -e "library(pak); pkg_install(c('shiny', 'shinydashboard', 'shinyjs', 'shi
   'r-hyperspec/hyperSpec', 'r-hyperspec/hySpc.ggplot2', \
   'RinteRface/shinydashboardPlus')); cache_clean()" && rm -rf /tmp/*
 
-ADD "https://www.random.org/cgi-bin/randbyte?nbytes=10&format=h" skipcache
-RUN R -e "library(pak); pkg_install('gongyh/RamanD2O',dependencies=T); cache_clean()" && rm -rf /tmp/*
+#ADD "https://www.random.org/cgi-bin/randbyte?nbytes=10&format=h" skipcache
+ADD . /RamanD2O
+RUN R -e "library(pak); pkg_install('/RamanD2O',dependencies=T); cache_clean()" && rm -rf /tmp/*
 
 # shiny
 COPY Rprofile.site /usr/lib/R/etc/
