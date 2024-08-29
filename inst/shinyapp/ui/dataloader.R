@@ -42,6 +42,16 @@ tabItem(
       fluidRow(
         column(3, actionLink("tips1", "About Filenames")),
         column(3, actionLink("tips2", "About TSV File"))
+      ),
+      hr(),
+      fluidRow(
+        column(5, fileInput("ramex_file", "Upload RamEx dataset",
+                            accept = ".rds", placeholder = "ramex.rds")),
+        column(7,
+               withBusyIndicatorUI(actionButton("load_ramex",
+                                                "Load RamExData",
+                                                class = "btn-success")),
+               class = "top25")
       )
     ),
     box(
