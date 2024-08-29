@@ -130,7 +130,30 @@ observeEvent(input$load_meta, {
 observeEvent(input$load_ramex, {
   withBusyIndicatorServer("load_ramex", {
     if (!is.null(isolate(input$ramex_file$datapath))) {
-      ramanome <- loadRDS(isolate(input$ramex_file$datapath))
+      ramanome <- readRDS(isolate(input$ramex_file$datapath))
+      if (class(ramanome) == "Ramanome") {
+        datasets_name <- names(ramanome@datasets)
+        wl <- ramanome@wavenumber
+        metadata <- ramanome@meta.data
+        metadata$ID_Cell <- metadata$filenames
+        meta$tbl <- metadata
+        for (name in datasets_name) {
+          spcs <- ramanome@datasets[[name]]
+          spc2hs <- new("hyperSpec", spc = spcs, wavelength = wl,
+                        data = metadata)
+          if (name == "raw.data") {
+            hs$val[["raw"]] <- spc2hs
+          } else if (name == "smooth.data") {
+            hs$val[["smoothed"]] <- spc2hs
+          } else if (name == "cut.data") {
+            hs$val[["trimmed"]] <- spc2hs
+          } else if (name == "baseline.data") {
+            hs$val[["baselined"]] <- spc2hs
+          } else if (name == "normalized.data") {
+            hs$val[["normalized"]] <- spc2hs
+          }
+        }
+      }
     }
   })
 })
