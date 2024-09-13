@@ -39,8 +39,8 @@ observeEvent(input$smooth, {
         })
         hs_sm$spc <- t(spc_sg)
       } else if (smooth_method == "EMD") {
-        cv.level <- isolate(input$cv_level)
-        cv.kfold <- isolate(input$cv_kfold)
+        cv.level <- isolate(input$emd_cv_level)
+        cv.kfold <- isolate(input$emd_cv_kfold)
         spc_emd <- apply(hs_cur$spc, 1, function(x) {
           cv.index <- cvtype(n = length(x),
                              cv.kfold = cv.kfold,
