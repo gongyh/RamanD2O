@@ -1,4 +1,4 @@
-FROM ubuntu:24.04
+FROM ubuntu:22.04
 
 LABEL maintainer "Yanhai Gong <gongyh@qibebt.ac.cn>"
 
@@ -24,7 +24,7 @@ RUN echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen \
 ENV LC_ALL en_US.UTF-8
 ENV LANG en_US.UTF-8
 
-RUN echo "deb https://cloud.r-project.org/bin/linux/ubuntu focal-cran40/" > /etc/apt/sources.list.d/cran.list
+RUN echo "deb https://cloud.r-project.org/bin/linux/ubuntu jammy-cran40/" > /etc/apt/sources.list.d/cran.list
 
 # note the proxy for gpg
 RUN wget -qO- https://cloud.r-project.org/bin/linux/ubuntu/marutter_pubkey.asc | tee -a /etc/apt/trusted.gpg.d/cran_ubuntu_key.asc
@@ -36,7 +36,7 @@ RUN apt-get update && apt-get install -y \
   libcurl4-gnutls-dev \
   libcairo2-dev \
   libxt-dev \
-  libssl-dev libssh2-1-dev libssl1.1 \
+  libssl-dev libssh2-1-dev libssl3 \
   file cmake \
   libxml2 libxml2-dev \
   libsasl2-dev \

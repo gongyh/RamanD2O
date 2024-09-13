@@ -41,7 +41,9 @@ observeEvent(input$smooth, {
       } else if (smooth_method == "EMD") {
         cv.level <- isolate(input$emd_cv_level)
         cv.kfold <- isolate(input$emd_cv_kfold)
+        spc_i <- 1
         spc_emd <- apply(hs_cur$spc, 1, function(x) {
+          update_modal_spinner(paste0("Processing ", spc_i, "/", nrow(hs_cur)))
           cv.index <- cvtype(n = length(x),
                              cv.kfold = cv.kfold,
                              cv.random = FALSE)$cv.index
@@ -49,6 +51,7 @@ observeEvent(input$smooth, {
                             cv.index = cv.index,
                             cv.level = cv.level,
                             by.imf = TRUE)
+          spc_i <- spc_i + 1
           res$dxt
         })
         hs_sm$spc <- t(spc_emd)
