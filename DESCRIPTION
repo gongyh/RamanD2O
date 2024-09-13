@@ -40,7 +40,8 @@ Imports:
     parallel,
     doParallel,
     magrittr,
-    signal
+    signal,
+    EMD
 Suggests:
     shiny,
     shinydashboard,

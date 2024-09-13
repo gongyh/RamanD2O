@@ -45,6 +45,7 @@ library(foreach)
 library(parallel)
 library(doParallel)
 library(signal)
+library(EMD)
 
 user_name <- Sys.getenv("SHINYPROXY_USERNAME")
 if (user_name == "") user_name <- "Anonymous"
