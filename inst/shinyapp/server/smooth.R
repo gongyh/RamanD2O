@@ -41,12 +41,12 @@ observeEvent(input$smooth, {
       } else if (smooth_method == "EMD") {
         cv.level <- isolate(input$emd_cv_level)
         cv.kfold <- isolate(input$emd_cv_kfold)
+        cv.index <- cvtype(n = length(wavelength),
+                           cv.kfold = cv.kfold,
+                           cv.random = FALSE)$cv.index
         spc_i <- 1
         spc_emd <- apply(hs_cur$spc, 1, function(x) {
           update_modal_spinner(paste0("Processing ", spc_i, "/", nrow(hs_cur)))
-          cv.index <- cvtype(n = length(x),
-                             cv.kfold = cv.kfold,
-                             cv.random = FALSE)$cv.index
           res <- emddenoise(x,
                             cv.index = cv.index,
                             cv.level = cv.level,
