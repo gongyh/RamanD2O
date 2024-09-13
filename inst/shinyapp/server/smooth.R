@@ -42,8 +42,13 @@ observeEvent(input$smooth, {
         cv.level <- isolate(input$cv_level)
         cv.kfold <- isolate(input$cv_kfold)
         spc_emd <- apply(hs_cur$spc, 1, function(x) {
-          cv.index <- cvtype(n=length(x), cv.kfold=cv.kfold, cv.random=FALSE)$cv.index
-          res <- emddenoise(x, cv.index=cv.index, cv.level=cv.level, by.imf=TRUE)
+          cv.index <- cvtype(n = length(x),
+                             cv.kfold = cv.kfold,
+                             cv.random = FALSE)$cv.index
+          res <- emddenoise(x,
+                            cv.index = cv.index,
+                            cv.level = cv.level,
+                            by.imf = TRUE)
           res$dxt
         })
         hs_sm$spc <- t(spc_emd)

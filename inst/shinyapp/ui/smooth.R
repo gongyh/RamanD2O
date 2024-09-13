@@ -32,8 +32,14 @@ tabItem(
           ),
           conditionalPanel(
             condition = "input.select_smooth == 'EMD'",
-            column(3, numericInput("cv_kfold", "cv.kfold", 2, min = 2, step = 1)),
-            column(3, numericInput("cv_level", "cv.level", 2, min = 2, step = 1))
+            column(
+              3,
+              numericInput("emd_cv_kfold", "cv.kfold", 2, min = 2, step = 1)
+            ),
+            column(
+              3,
+              numericInput("emd_cv_level", "cv.level", 2, min = 2, step = 1)
+            )
           )
         )
       )
