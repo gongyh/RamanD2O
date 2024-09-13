@@ -70,7 +70,7 @@ RUN R -e "library(pak); pkg_install(c('shiny', 'shinydashboard', 'shinyjs', 'shi
   'DT', 'fresh', 'devtools', 'plotly', 'fs', 'ggpubr', 'ggplot2', 'stringr', \
   'RColorBrewer', 'dplyr', 'compiler', 'mongolite', 'zip', 'fawda123/ggord', \
   'baseline', 'permute', 'Rtsne', 'markdown', 'caret', 'randomForest', 'DALEX', 'vivo', \
-  'OmicsPLS', 'mdatools', 'foreach', 'parallel', 'doParallel', \
+  'OmicsPLS', 'mdatools', 'foreach', 'parallel', 'doParallel', 'signal', 'EMD', \
   'r-hyperspec/hyperSpec', 'r-hyperspec/hySpc.ggplot2', \
   'RinteRface/shinydashboardPlus')); cache_clean()" && rm -rf /tmp/*
 
