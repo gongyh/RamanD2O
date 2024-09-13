@@ -35,7 +35,9 @@ observeEvent(input$smooth, {
       } else if (smooth_method == "SG") {
         p <- isolate(input$sg_order)
         n <- isolate(input$sg_length)
-        spc_sg <- apply(hs_cur$spc, 1, function(x) {signal::sgolayfilt(x,p=p,n=n)})
+        spc_sg <- apply(hs_cur$spc, 1, function(x) {
+          signal::sgolayfilt(x, p = p, n = n)
+        })
         hs_sm <- hs_cur
         hs_sm$spc <- t(spc_sg)
         colnames(hs_sm$spc) <- hs_sm@wavelength
