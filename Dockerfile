@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM ubuntu:24.04
 
 LABEL maintainer "Yanhai Gong <gongyh@qibebt.ac.cn>"
 
@@ -45,7 +45,7 @@ RUN apt-get update && apt-get install -y \
   libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev \
   && rm -rf /var/lib/apt/lists/*
 
-ENV R_BASE_VERSION 4.2.3
+ENV R_BASE_VERSION 4.4.1
 # Now install R and littler, and create a link for littler in /usr/local/bin
 # Also set a default CRAN repo, and make sure littler knows about it too
 RUN apt-get update \
