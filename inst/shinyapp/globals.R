@@ -44,6 +44,7 @@ library(reshape2)
 library(foreach)
 library(parallel)
 library(doParallel)
+library(signal)
 
 user_name <- Sys.getenv("SHINYPROXY_USERNAME")
 if (user_name == "") user_name <- "Anonymous"

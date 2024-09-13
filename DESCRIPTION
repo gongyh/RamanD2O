@@ -39,7 +39,8 @@ Imports:
     foreach,
     parallel,
     doParallel,
-    magrittr
+    magrittr,
+    signal
 Suggests:
     shiny,
     shinydashboard,

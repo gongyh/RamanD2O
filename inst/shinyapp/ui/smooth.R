@@ -11,12 +11,28 @@ tabItem(
         12,
         fluidRow(
           column(4, uiOutput("hs_select_for_smooth")),
-          column(4, checkboxInput("interp", "Interpolation"), class = "top25"),
           column(4,
                  withBusyIndicatorUI(actionButton("smooth",
                                                   "Smooth",
                                                   class = "btn-success")),
                  class = "top25")
+        ),
+        fluidRow(
+          column(6, selectInput("select_smooth", "Smooth method",
+            choices = c("LOESS", "SG", "HVD"), selected = "LOESS"
+          )),
+          conditionalPanel(
+            condition = "input.select_smooth == 'LOESS'",
+            column(4, checkboxInput("interp", "Interpolation"), class = "top25")
+          ),
+          conditionalPanel(
+            condition = "input.select_smooth == 'SG'",
+            column(3, numericInput("sg_order", "p", 2, min = 2, step = 1)),
+            column(3, numericInput("sg_length", "n", 21, min = 5, step = 2))
+          ),
+          conditionalPanel(
+            condition = "input.select_smooth == 'HVD'"
+          )
         )
       )
     ),

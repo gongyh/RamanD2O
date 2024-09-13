@@ -22,14 +22,27 @@ observeEvent(input$smooth, {
                          color = "red", text = "Processing ....")
       hs_cur <- hs$val[[isolate(input$hs_selector_for_smooth)]]
       wavelength <- wl(hs_cur)
-      if (isolate(input$interp)) {
-        minWl <- round(min(wavelength)) + 1
-        maxWl <- round(max(wavelength)) - 1
-        wavelength <- minWl:maxWl
+      smooth_method <- isolate(input$select_smooth)
+      if (smooth_method == "LOESS") {
+        if (isolate(input$interp)) {
+          minWl <- round(min(wavelength)) + 1
+          maxWl <- round(max(wavelength)) - 1
+          wavelength <- minWl:maxWl
+        }
+        hs_sm <- spc.loess(hs_cur, wavelength, normalize = FALSE)
+        colnames(hs_sm$spc) <- hs_sm@wavelength
+        hs$val[["smoothed"]] <- hs_sm
+      } else if (smooth_method == "SG") {
+        p <- isolate(input$sg_order)
+        n <- isolate(input$sg_length)
+        spc_sg <- apply(hs_cur$spc, 1, function(x) {signal::sgolayfilt(x,p=p,n=n)})
+        hs_sm <- hs_cur
+        hs_sm$spc <- t(spc_sg)
+        colnames(hs_sm$spc) <- hs_sm@wavelength
+        hs$val[["smoothed"]] <- hs_sm
+      } else if (smooth_method == "HVD") {
+        shinyalert("Oops!", "Not implemented yet.", type = "warning")
       }
-      hs_sm <- spc.loess(hs_cur, wavelength, normalize = FALSE)
-      colnames(hs_sm$spc) <- hs_sm@wavelength
-      hs$val[["smoothed"]] <- hs_sm
       remove_modal_spinner()
     }
   })
