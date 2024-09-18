@@ -18,6 +18,8 @@ knitr::opts_chunk$set(
 library(RamanD2O)
 ```
 
-# Introduction
+# Run the shiny app
 
-Demonstrate various steps of Raman Spectra data analysis.
+```{r}
+runRamanD2O()
+```

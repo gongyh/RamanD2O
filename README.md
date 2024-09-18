@@ -31,8 +31,8 @@ RamanD2O::runRamanD2O()
 
 ## Documentation
 
-1. [Function description](inst/functions.md)
-2. [Usage tutorial](inst/usage.md)
+1. [Function description](inst/docs/functions.md)
+2. [Usage tutorial](inst/docs/usage.md)
 
 ## Contact
 
