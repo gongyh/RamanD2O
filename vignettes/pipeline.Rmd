@@ -20,6 +20,6 @@ library(RamanD2O)
 
 # Run the shiny app
 
-```{r shiny}
+```{r shiny, eval=FALSE}
 runRamanD2O()
 ```
