@@ -8,11 +8,9 @@
 RamanD2O is an R Shiny application that allows biologists to perform Raman spectra analysis.
 
 # 1. Download and Install R
-https://www.r-project.org/
+https://www.r-project.org
 
-**Notes:**
-
-This app was tested in **R versions 4.2 and 4.3**.
+**Notes:** This app was tested in **R versions 4.2 and 4.3**.
 
 # 2. Install RamanD2O package
 ```r
@@ -22,9 +20,9 @@ pak::pkg_install('gongyh/RamanD2O')
 
 # 3. Run the R shiny app
 ```r
-RamanD2O::runRamanD2o()
+RamanD2O::runRamanD2O()
 ```
 
-# 4. Usage instructions in the app UI
+# 4. Usage instructions in the user interface
 ![User interface of RamanD2O](RamanD2O.png)
 
