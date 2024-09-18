@@ -1,8 +1,8 @@
 # RamanD2O
 
 <!-- badges: start -->
-[![CircleCI](https://dl.circleci.com/status-badge/img/gh/gongyh/RamanD2O/tree/master.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/gongyh/RamanD2O/tree/master)
-[![Docker Repository on Quay](https://quay.io/repository/gongyh/ramand2o/status "Docker Repository on Quay")](https://quay.io/repository/gongyh/ramand2o)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/gongyh/RamanD2O/check-full.yaml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 <!-- badges: end -->
 
 ## Introduction
@@ -39,8 +39,6 @@ RamanD2O::runRamanD2O()
 gongyh/RamanD2O is developed by [Yanhai Gong](mailto:gongyh@qibebt.ac.cn). We look forward to receive your feedback, bug reports, or suggestions for the further development of this package.
 
 ## License
-
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 This pipeline is open source under the MIT license, and integrates wonderful third-party softwares, which remain owned and copyrighted by their respective developers. Authors cannot be held legally or morally responsible for any consequences that may arise from using or misusing it.
 
