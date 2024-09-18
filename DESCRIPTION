@@ -28,7 +28,7 @@ Imports:
     DT,
     hySpc.ggplot2 (>= 0.0.0.9000),
     fresh,
-    randomForest,
+    randomForest (< 4.7),
     caret,
     DALEX,
     vivo,
@@ -42,7 +42,8 @@ Imports:
     magrittr,
     signal,
     EMD,
-    zip
+    zip,
+    Matrix (< 1.7)
 Suggests:
     shiny,
     shinydashboard,
