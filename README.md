@@ -1,7 +1,7 @@
 # RamanD2O
 
 <!-- badges: start -->
-![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/gongyh/RamanD2O/check-full.yaml)
+[![R-CMD-check](https://github.com/gongyh/RamanD2O/actions/workflows/check-full.yaml/badge.svg)](https://github.com/gongyh/RamanD2O/actions/workflows/check-full.yaml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 <!-- badges: end -->
 
@@ -14,6 +14,7 @@ RamanD2O is an R Shiny application that allows biologists to perform Raman spect
 ## Quick start
 
 1. Download and Install R
+
 https://www.r-project.org
 
 **Notes:** This app was tested in **R versions 4.2 and 4.3**.
