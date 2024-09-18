@@ -17,7 +17,7 @@ RamanD2O is an R Shiny application that allows biologists to perform Raman spect
 
 https://www.r-project.org
 
-**Notes:** This app was tested in **R 4.x**. If you are still using R 4.0-4.2, you may need to install specifc version of dependency packages (e.g., randomForest<4.7, Matrix<1.7).
+**Notes:** This app was tested in **R 4.x**. If you are still using R 4.0-4.2, you may need to manually install specifc versions of a few dependency packages (e.g., randomForest<4.7, Matrix<1.7).
 
 2. Install RamanD2O package
 ```r
