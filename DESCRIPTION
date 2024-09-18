@@ -41,7 +41,8 @@ Imports:
     doParallel,
     magrittr,
     signal,
-    EMD
+    EMD,
+    zip
 Suggests:
     shiny,
     shinydashboard,
