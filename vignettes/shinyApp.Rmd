@@ -1,5 +1,5 @@
 ---
-title: "RamanD2O shiny app"
+title: "Run shiny app"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{pipeline}

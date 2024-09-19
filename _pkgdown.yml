@@ -1,2 +1,15 @@
+navbar:
+  structure:
+    left:  [reference, articles, tutorials, news]
+    right: [search, github, lightswitch]
 template:
   light-switch: true
+navbar:
+ components:
+   tutorials:
+    text: Manuals
+    menu:
+    - text: Function modules
+      href: functions.html
+    - text: Usage example
+      href: usage.html
