@@ -1,3 +1,7 @@
+---
+resource_files:
+  - RamanD2O.png
+---
 # RamanD2O
 
 <!-- badges: start -->
