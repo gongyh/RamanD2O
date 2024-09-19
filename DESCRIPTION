@@ -1,10 +1,10 @@
 Package: RamanD2O
 Type: Package
-Title: Compare metabolic activity of microbiome based on Raman D2O-SIP data
+Title: RamanD2O: a R/Shiny app designed for the analysis of cellular Ramanome data
 Version: 0.1.0
 Author: Yanhai Gong
 Maintainer: Yanhai Gong <gongyh@qibebt.ac.cn>
-Description: Quality control and analyze SCRS data based on C-D ratio.
+Description: Quality control and analyze single-cell Raman spectra.
 License: MIT + file LICENSE
 URL: https://github.com/gongyh/RamanD2O
 Encoding: UTF-8
