@@ -1,6 +1,6 @@
 Package: RamanD2O
 Type: Package
-Title: RamanD2O: a R/Shiny app designed for the analysis of cellular Ramanome data
+Title: RamanD2O: an R/Shiny app designed for the analysis of cellular Ramanome data
 Version: 0.1.0
 Author: Yanhai Gong
 Maintainer: Yanhai Gong <gongyh@qibebt.ac.cn>
@@ -10,7 +10,7 @@ URL: https://github.com/gongyh/RamanD2O
 Encoding: UTF-8
 LazyData: true
 Depends: 
-    R (>= 3.5.0),
+    R (>= 4.0),
     hyperSpec (>= 0.200.0.9000)
 Imports:
     ggplot2,

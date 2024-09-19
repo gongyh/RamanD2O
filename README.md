@@ -7,7 +7,7 @@
 
 ## Introduction
 
-RamanD2O is an R Shiny application that allows biologists to perform Raman spectra analysis.
+RamanD2O is an R/Shiny application that allows biologists to perform Raman spectra analysis.
 
 ![User interface of RamanD2O](RamanD2O.png)
 
