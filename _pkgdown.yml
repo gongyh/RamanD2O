@@ -3,8 +3,8 @@ template:
   light-switch: true
 navbar:
   structure:
-    left:  [reference, articles, tutorials, news]
-    right: [search, github, lightswitch]
+    left:  [articles, tutorials]
+    right: [github, lightswitch]
   components:
     tutorials:
       text: Manuals

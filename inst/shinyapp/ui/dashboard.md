@@ -42,6 +42,6 @@ To try RamanD2O, you can load a small demo using the link in `Load data` tab.
 3. `MultiOmics Integration`: Integrate Ramanome with multiple omics datasets, TBD.
 
 ### More documents
-1. [Main documentation site](https://gongyh.github.io/RamanD2O/index.html)
-2. [Function modules description](https://gongyh.github.io/RamanD2O/functions.html)
-3. [Step-by-step use case](https://gongyh.github.io/RamanD2O/usage.html)
+1. <a href="https://gongyh.github.io/RamanD2O/index.html" target="_blank">Main documentation site</a>
+2. <a href="https://gongyh.github.io/RamanD2O/functions.html" target="_blank">Function modules description</a>
+3. <a href="https://gongyh.github.io/RamanD2O/usage.html" target="_blank">Step-by-step use case</a>
