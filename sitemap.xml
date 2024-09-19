@@ -4,6 +4,7 @@
 <url><loc>/articles/index.html</loc></url>
 <url><loc>/articles/shinyApp.html</loc></url>
 <url><loc>/authors.html</loc></url>
+<url><loc>/functions.html</loc></url>
 <url><loc>/index.html</loc></url>
 <url><loc>/reference/O2PLSvip.html</loc></url>
 <url><loc>/reference/Ramanome-class.html</loc></url>
@@ -22,5 +23,6 @@
 <url><loc>/reference/show-Ramanome-method.html</loc></url>
 <url><loc>/reference/ssd.html</loc></url>
 <url><loc>/reference/sub-Ramanome-ANY-ANY-ANY-method.html</loc></url>
+<url><loc>/usage.html</loc></url>
 </urlset>
 
