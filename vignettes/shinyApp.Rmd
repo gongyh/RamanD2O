@@ -1,5 +1,5 @@
 ---
-title: "pipeline"
+title: "RamanD2O shiny app"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{pipeline}
@@ -22,4 +22,5 @@ library(RamanD2O)
 
 ```{r shiny, eval=FALSE}
 runRamanD2O()
+# Open the outputted URL in your web browser
 ```

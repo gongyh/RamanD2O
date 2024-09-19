@@ -1,0 +1,4 @@
+template:
+  light-switch: true
+  theme: gruvbox-light
+  theme-dark: gruvbox-dark
