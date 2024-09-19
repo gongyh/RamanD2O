@@ -47,50 +47,50 @@
 
 <div class="section level2">
 <h2 id="load-data">Load data<a class="anchor" aria-label="anchor" href="#load-data"></a></h2>
-<ol style="list-style-type: decimal"><li>Data format</li>
+<ol style="list-style-type: decimal"><li><strong>Data format</strong></li>
 </ol><p><strong>SCRS zip file</strong>: Each Raman spectrum dataset is stored in a .txt file with two columns: the first column indicates Raman shift frequency points, and the second column indicates Raman intensity. Prior to uploading, all Raman spectrum data should be compressed into a zip archive, which may include subdirectories. It is imperative to avoid duplicate file names for .txt files, and the compressed package should exclusively contain Raman spectrum data without any unrelated .txt files.</p>
 <p><strong>Metadata tsv file</strong>: It should be in TSV file format, the header of the first column should be “ID_Cell” to store the filenames of the Raman spectroscopy files without the .txt extension.</p>
 <p><strong>Options</strong>: Interpolation: Raman spectra will be interpolated at integer frequencies.</p>
 <p><strong>Notes</strong>: Cosmic rays are eliminated during spectral uploading and immediately before interpolation (when the interpolation option is chosen). Interpolation becomes essential when the spectral files do not align in Raman shift frequencies.</p>
-<ol start="2" style="list-style-type: decimal"><li>Load RamEx data</li>
+<ol start="2" style="list-style-type: decimal"><li><strong>Load RamEx data</strong></li>
 </ol><p>RamanD2O and RamEx are interoperable; users can choose to import RamEx’s Ramanome object (stored in RDS format) into RamanD2O.</p>
 </div>
 <div class="section level2">
 <h2 id="pipeline">Pipeline<a class="anchor" aria-label="anchor" href="#pipeline"></a></h2>
-<ol style="list-style-type: decimal"><li>Sample</li>
+<ol style="list-style-type: decimal"><li><strong>Sample</strong></li>
 </ol><p>Raman spectra are subsampled randomly to retain a specific percentage.</p>
-<ol start="2" style="list-style-type: decimal"><li>Trim</li>
+<ol start="2" style="list-style-type: decimal"><li><strong>Trim</strong></li>
 </ol><p>All Raman spectra will be trimmed to retain specific wavelength ranges only.</p>
-<ol start="3" style="list-style-type: decimal"><li>Smooth</li>
+<ol start="3" style="list-style-type: decimal"><li><strong>Smooth</strong></li>
 </ol><p>For enhanced signal-to-noise ratio (SNR), each Raman spectrum should undergo a smoothing process. RamanD2O incorporates three smoothing methods:</p>
 <p><strong>LOESS</strong>: LOESS (locally weighted smoothing), are non-parametric strategies for fitting a smooth curve to data points.</p>
 <p><strong>SG</strong>: Savitzky–Golay (SG) filtering, a widely used method, involves local least-squares fitting of data using polynomials. It is commonly employed for smoothing data and calculating derivatives from noisy datasets.</p>
 <p><strong>EMD</strong>: Denoising by empirical mode decomposition (EMD) and thresholding. Please refer to <a href="https://www.rdocumentation.org/packages/EMD/versions/1.5.9/topics/emddenoise" target="_blank" class="external-link">emddenoise</a> for detailed descriptions. <strong>Caution: time-consuming!!!</strong></p>
-<ol start="4" style="list-style-type: decimal"><li>Baseline</li>
+<ol start="4" style="list-style-type: decimal"><li><strong>Baseline</strong></li>
 </ol><p>Two methods of baseline removal are implemented in RamanD2O.</p>
 <p><strong>polyfit</strong>: Polynomial baseline fitting. please refer to <a href="https://r-hyperspec.github.io/hyperSpec/reference/baselines.html" target="_blank" class="external-link">spc_fit_poly or spc_fit_poly</a> for detailed descriptions.</p>
 <p><strong>als</strong>: Asymmetric Least Squares. please refer to <a href="https://www.rdocumentation.org/packages/baseline/versions/1.3-5/topics/baseline.als" target="_blank" class="external-link">baseline.als</a> for detailed descriptions.</p>
 <p><strong>Notes</strong>: Following baseline removal, some Raman intensities may exhibit negative values. These negative values can be reset to zero by selecting “Set to zero”, or the entire Raman spectra can be vertically adjusted by choosing “Pull up”.</p>
-<ol start="5" style="list-style-type: decimal"><li>Normalize</li>
+<ol start="5" style="list-style-type: decimal"><li><strong>Normalize</strong></li>
 </ol><p>Raman spectra can be normalized based on the area within a specific wavelength range. When the “Fingerprint” checkbox is chosen, normalization is conducted within the wavelength range of 500 to 2000 cm<sup>-1</sup>; otherwise, the entire spectrum is utilized.</p>
-<ol start="6" style="list-style-type: decimal"><li>Average</li>
+<ol start="6" style="list-style-type: decimal"><li><strong>Average</strong></li>
 </ol><p>The average Raman spectra are computed based on selected metadata categories.</p>
-<ol start="7" style="list-style-type: decimal"><li>SNR</li>
+<ol start="7" style="list-style-type: decimal"><li><strong>SNR</strong></li>
 </ol><p>There are two calculation methods for signal-to-noise ratio (SNR).</p>
-<p><strong>new</strong>: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi><mi>N</mi><mi>R</mi><mo>=</mo><mfrac><mfrac><mrow><mi>m</mi><mi>a</mi><mi>x</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>I</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>2800</mn><mspace width="0.222em"></mspace><mn>3050</mn><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mo>−</mo><mi>s</mi><mi>u</mi><mi>m</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>I</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>1730</mn><mspace width="0.222em"></mspace><mn>1800</mn><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow></mrow><mrow><mi>l</mi><mi>e</mi><mi>n</mi><mi>g</mi><mi>t</mi><mi>h</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>1730</mn><mspace width="0.222em"></mspace><mn>1800</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow></mfrac><mrow><mi>s</mi><mi>d</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>I</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>1730</mn><mspace width="0.222em"></mspace><mn>1800</mn><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow></mrow></mfrac></mrow><annotation encoding="application/x-tex">SNR=\frac{\frac{max(I(2800~3050))-sum(I(1730~1800))}{length(1730~1800)}}{sd(I(1730~1800))}</annotation></semantics></math></p>
-<p><strong>old</strong>: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi><mi>N</mi><mi>R</mi><mo>=</mo><mfrac><mfrac><mrow><mi>m</mi><mi>a</mi><mi>x</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>I</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>1400</mn><mspace width="0.222em"></mspace><mn>1460</mn><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mo>−</mo><mi>s</mi><mi>u</mi><mi>m</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>I</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>1760</mn><mspace width="0.222em"></mspace><mn>1790</mn><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow></mrow><mrow><mi>l</mi><mi>e</mi><mi>n</mi><mi>g</mi><mi>t</mi><mi>h</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>1760</mn><mspace width="0.222em"></mspace><mn>1790</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow></mfrac><mrow><mi>s</mi><mi>d</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>I</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>1760</mn><mspace width="0.222em"></mspace><mn>1790</mn><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow></mrow></mfrac></mrow><annotation encoding="application/x-tex">SNR=\frac{\frac{max(I(1400~1460))-sum(I(1760~1790))}{length(1760~1790)}}{sd(I(1760~1790))}</annotation></semantics></math></p>
+<p><strong>new</strong>: <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi><mi>N</mi><mi>R</mi><mo>=</mo><mfrac><mfrac><mrow><mi>m</mi><mi>a</mi><mi>x</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>I</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>2800</mn><mo>−</mo><mn>3050</mn><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mo>−</mo><mi>s</mi><mi>u</mi><mi>m</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>I</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>1730</mn><mo>−</mo><mn>1800</mn><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow></mrow><mrow><mi>l</mi><mi>e</mi><mi>n</mi><mi>g</mi><mi>t</mi><mi>h</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>1730</mn><mo>−</mo><mn>1800</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow></mfrac><mrow><mi>s</mi><mi>d</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>I</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>1730</mn><mo>−</mo><mn>1800</mn><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow></mrow></mfrac></mrow><annotation encoding="application/x-tex">SNR=\frac{\frac{max(I(2800-3050))-sum(I(1730-1800))}{length(1730-1800)}}{sd(I(1730-1800))}</annotation></semantics></math></p>
+<p><strong>old</strong>: <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi><mi>N</mi><mi>R</mi><mo>=</mo><mfrac><mfrac><mrow><mi>m</mi><mi>a</mi><mi>x</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>I</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>1400</mn><mo>−</mo><mn>1460</mn><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mo>−</mo><mi>s</mi><mi>u</mi><mi>m</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>I</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>1760</mn><mo>−</mo><mn>1790</mn><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow></mrow><mrow><mi>l</mi><mi>e</mi><mi>n</mi><mi>g</mi><mi>t</mi><mi>h</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>1760</mn><mo>−</mo><mn>1790</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow></mfrac><mrow><mi>s</mi><mi>d</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>I</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>1760</mn><mo>−</mo><mn>1790</mn><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow></mrow></mfrac></mrow><annotation encoding="application/x-tex">SNR=\frac{\frac{max(I(1400-1460))-sum(I(1760-1790))}{length(1760-1790)}}{sd(I(1760-1790))}</annotation></semantics></math></p>
 <p><strong>Quality controlled using SNR</strong>: Low-quality spectra will be removed according to SNR if “Remove Low-SNR Spectra” is selected.</p>
-<ol start="8" style="list-style-type: decimal"><li>CDR</li>
+<ol start="8" style="list-style-type: decimal"><li><strong>CDR</strong></li>
 </ol><p>CDR refers to the ratio of the Raman spectrum area in the C-D region to the sum of the C-D and C-H regions, i.e., <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>C</mi><mi>D</mi><mi>R</mi><mo>=</mo><mfrac><mrow><mi>a</mi><mi>r</mi><mi>e</mi><mi>a</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>C</mi><mo>−</mo><mi>D</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><mrow><mi>a</mi><mi>r</mi><mi>e</mi><mi>a</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>C</mi><mo>−</mo><mi>D</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><mi>a</mi><mi>r</mi><mi>e</mi><mi>a</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>C</mi><mo>−</mo><mi>H</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow></mfrac></mrow><annotation encoding="application/x-tex">CDR=\frac{area(C-D)}{area(C-D) + area(C-H)}</annotation></semantics></math>.</p>
-<p>C-D intensity region: 2050 ~ 2300 cm<sup>-1</sup></p>
-<p>C-H intensity region: 2800 ~ 3050 cm<sup>-1</sup></p>
+<p>C-D intensity region: 2050~2300 cm<sup>-1</sup></p>
+<p>C-H intensity region: 2800~3050 cm<sup>-1</sup></p>
 <p>Two metadata columns (CDR and D2O) will be appended after calculation. The “CDR” column stores CDR values for each spectrum; the “D2O” column store whether C-D peak is exist (1) or not (0).</p>
 </div>
 <div class="section level2">
 <h2 id="visualize">Visualize<a class="anchor" aria-label="anchor" href="#visualize"></a></h2>
-<ol style="list-style-type: decimal"><li>Export data</li>
+<ol style="list-style-type: decimal"><li><strong>Export data</strong></li>
 </ol><p>The generated Raman spectra and metadata can be exported in CSV, ZIP, or RamEx format for subsequent analysis.</p>
-<ol start="2" style="list-style-type: decimal"><li>Visualization</li>
+<ol start="2" style="list-style-type: decimal"><li><strong>Visualization</strong></li>
 </ol><p>The Raman spectra after various processing steps can be visualized and compared interactively.</p>
 </div>
 <div class="section level2">
@@ -100,19 +100,19 @@
 <div class="section level2">
 <h2 id="machine-learning">Machine learning<a class="anchor" aria-label="anchor" href="#machine-learning"></a></h2>
 <p>Raman spectra can be used for various classification tasks. RamanD2O supply functions to build and test random forest models.</p>
-<ol style="list-style-type: decimal"><li>Prepare</li>
+<ol style="list-style-type: decimal"><li><strong>Prepare</strong></li>
 </ol><p>The Raman spectra can be splitted to train/eval/test datasets. Specific wavelength region can be used as features.</p>
-<ol start="2" style="list-style-type: decimal"><li>Explore</li>
+<ol start="2" style="list-style-type: decimal"><li><strong>Explore</strong></li>
 </ol><p>Before modeling, the splitted datasets can be visualized using t-SNE.</p>
-<ol start="3" style="list-style-type: decimal"><li>Random forest</li>
+<ol start="3" style="list-style-type: decimal"><li><strong>Random forest</strong></li>
 </ol><p>randomForest implements Breiman’s random forest algorithm (based on Breiman and Cutler’s original Fortran code) for classification and regression. The RandomForestClassifier is trained using bootstrap aggregation, where each new tree is fit from a bootstrap sample of the training observations. The out-of-bag (OOB) error is the average error for each observation calculated using predictions from the trees that do not contain this observation in their respective bootstrap sample. This allows the RandomForestClassifier to be fit and validated whilst being trained.</p>
 </div>
 <div class="section level2">
 <h2 id="integration-analysis">Integration analysis<a class="anchor" aria-label="anchor" href="#integration-analysis"></a></h2>
-<ol style="list-style-type: decimal"><li>Ramanome &amp; Transcriptome</li>
+<ol style="list-style-type: decimal"><li><strong>Ramanome &amp; Transcriptome</strong></li>
 </ol><p>An O2PLS algorithm is implemented to integrate Ramanome datasets and transcriptome datasets.</p>
-<ol start="2" style="list-style-type: decimal"><li><p>Ramanome &amp; Metabolome TBD.</p></li>
-<li><p>Multi-omics integration TBD.</p></li>
+<ol start="2" style="list-style-type: decimal"><li><p><strong>Ramanome &amp; Metabolome</strong> TBD.</p></li>
+<li><p><strong>Multi-omics integration</strong> TBD.</p></li>
 </ol></div>
 </div>
 
