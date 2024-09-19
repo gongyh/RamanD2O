@@ -1,7 +1,3 @@
-<!---
-resource_files:
-  - RamanD2O.png
---->
 # RamanD2O
 
 <!-- badges: start -->
@@ -36,8 +32,8 @@ RamanD2O::runRamanD2O()
 
 ## Documentation
 
-1. [Function description](inst/docs/functions.md)
-2. [Usage tutorial](inst/docs/usage.md)
+1. [Function description](functions.md)
+2. [Usage tutorial](usage.md)
 
 ## Contact
 
