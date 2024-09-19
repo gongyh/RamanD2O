@@ -2,5 +2,5 @@ pandoc: 3.1.11
 pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
-  pipeline: pipeline.html
-last_built: 2024-09-19T00:30Z
+  shinyApp: shinyApp.html
+last_built: 2024-09-19T00:42Z
