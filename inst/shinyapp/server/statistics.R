@@ -123,11 +123,9 @@ observeEvent(input$perform_lda,
           p <- ggord(linear, training$group)
         }
 
-        ggplotly(p +
-          labs(title = sprintf(
-                               "training accuracy is %.2f, testing
-                               accuracy is %.2f",
-                               acc_train, acc_test)))
+        tt <- sprintf("training accuracy is %.2f, testing accuracy is %.2f",
+                      acc_train, acc_test)
+        ggplotly(p + labs(title = tt))
       })
     })
   },
