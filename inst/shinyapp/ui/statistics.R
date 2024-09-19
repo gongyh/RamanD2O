@@ -42,7 +42,7 @@ tabItem(
                                                       class = "btn-success")),
                      class = "top25")
             ),
-            plotlyOutput("pca_plot", width = "600px", height = "600px") %>%
+            plotlyOutput("pca_plot", width = "800px", height = "600px") %>%
               withSpinner()
           ),
           tabPanel(
@@ -65,7 +65,7 @@ tabItem(
                                                       class = "btn-success")),
                      class = "top25")
             ),
-            plotlyOutput("lda_plot", width = "600px", height = "600px") %>%
+            plotlyOutput("lda_plot", width = "800px", height = "600px") %>%
               withSpinner()
           ),
           tabPanel(

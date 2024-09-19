@@ -8,7 +8,7 @@ Just click "Quick start, click here to load a small demo dataset.", a small data
 
 ## 2. Trim wavelength
 
-Raman shift of 400~3100 cm<sup>-1</sup> are kept for subsequent analysis.
+Raman shift of 450~3100 cm<sup>-1</sup> are kept for subsequent analysis.
 
 ## 3. Spectra smoothing
 
