@@ -1,5 +1,6 @@
 template:
   bootstrap: 5
+  light-switch: true
 navbar:
   structure:
     left:  [reference, articles, tutorials, news]

@@ -6,6 +6,7 @@ Author: Yanhai Gong
 Maintainer: Yanhai Gong <gongyh@qibebt.ac.cn>
 Description: Quality control and analyze SCRS data based on C-D ratio.
 License: MIT + file LICENSE
+URL: https://github.com/gongyh/RamanD2O
 Encoding: UTF-8
 LazyData: true
 Depends: 
