@@ -49,34 +49,81 @@
 <div class="section level2">
 <h2 id="id_1-load-data">1. Load data<a class="anchor" aria-label="anchor" href="#id_1-load-data"></a></h2>
 <p>Just click “Quick start, click here to load a small demo dataset.”, a small dataset with 25 spectra will be loaded. This dataset can be grouped using metadata columns “Timepoint” or “Label”. There are three groups: I245_0mM, I245_0.5mM, and I245_1mM.</p>
+<div class="float">
+<img src="Load_data.png" alt="User interface of Data Loader"><div class="figcaption">User interface of Data Loader</div>
+</div>
 </div>
 <div class="section level2">
 <h2 id="id_2-trim-wavelength">2. Trim wavelength<a class="anchor" aria-label="anchor" href="#id_2-trim-wavelength"></a></h2>
 <p>Raman shift of 450~3100 cm<sup>-1</sup> are kept for subsequent analysis.</p>
+<div class="float">
+<img src="Trim_wavelength.png" alt="User interface of Trim"><div class="figcaption">User interface of Trim</div>
+</div>
 </div>
 <div class="section level2">
 <h2 id="id_3-spectra-smoothing">3. Spectra smoothing<a class="anchor" aria-label="anchor" href="#id_3-spectra-smoothing"></a></h2>
 <p>Raman spectra are smoothed using SG method to increase SNR.</p>
+<div class="float">
+<img src="Smooth_SG.png" alt="User interface of Smoothing"><div class="figcaption">User interface of Smoothing</div>
+</div>
 </div>
 <div class="section level2">
 <h2 id="id_4-baseline-removal">4. Baseline removal<a class="anchor" aria-label="anchor" href="#id_4-baseline-removal"></a></h2>
 <p>Baselines are removed using als method.</p>
+<div class="float">
+<img src="Baseline_als.png" alt="User interface of Baseline removal"><div class="figcaption">User interface of Baseline removal</div>
+</div>
 </div>
 <div class="section level2">
 <h2 id="id_5-normalization">5. Normalization<a class="anchor" aria-label="anchor" href="#id_5-normalization"></a></h2>
 <p>Raman spectra are normalized according the area of “Fingerprint” region.</p>
+<div class="float">
+<img src="Normalize.png" alt="User interface of Normalization"><div class="figcaption">User interface of Normalization</div>
+</div>
 </div>
 <div class="section level2">
 <h2 id="id_6-snr-calculation">6. SNR calculation<a class="anchor" aria-label="anchor" href="#id_6-snr-calculation"></a></h2>
 <p>SNR of each Raman spectra is calculated using the “new” method. Low-SNR spectra with SNR&lt;2.5 are removed.</p>
+<div class="float">
+<img src="SNR_new.png" alt="User interface of SNR calculation"><div class="figcaption">User interface of SNR calculation</div>
+</div>
 </div>
 <div class="section level2">
 <h2 id="id_7-cdr-calculation">7. CDR calculation<a class="anchor" aria-label="anchor" href="#id_7-cdr-calculation"></a></h2>
 <p>CDR of each spectra are calculated. As expected, all the spectra have D2O Raman peaks.</p>
+<div class="float">
+<img src="CDR.png" alt="User interface of CDR calculation"><div class="figcaption">User interface of CDR calculation</div>
+</div>
 </div>
 <div class="section level2">
 <h2 id="id_8-visualization">8. Visualization<a class="anchor" aria-label="anchor" href="#id_8-visualization"></a></h2>
 <p>The average spectra and CDR can be visualized and compared.</p>
+<div class="float">
+<img src="Visualize_agg.png" alt="User interface of Visualize"><div class="figcaption">User interface of Visualize</div>
+</div>
+<div class="float">
+<img src="Visualize_CDR.png" alt="User interface of Visualize"><div class="figcaption">User interface of Visualize</div>
+</div>
+</div>
+<div class="section level2">
+<h2 id="id_9-multivariable-statistics">9. Multivariable statistics<a class="anchor" aria-label="anchor" href="#id_9-multivariable-statistics"></a></h2>
+<p>This Raman spectra dataset can be further mined using multivariable statistics, e.g., PCA, LDA and MCR.</p>
+<div class="float">
+<img src="PCA_LDA.png" alt="User interface of PCA-LDA"><div class="figcaption">User interface of PCA-LDA</div>
+</div>
+</div>
+<div class="section level2">
+<h2 id="id_10-machine-learning">10. Machine learning<a class="anchor" aria-label="anchor" href="#id_10-machine-learning"></a></h2>
+<p>To test whether Fingerprint region can be used to separate these three groups, a random forest model is trained and evaluated.</p>
+<div class="float">
+<img src="ML_prepare.png" alt="User interface of Machine learning"><div class="figcaption">User interface of Machine learning</div>
+</div>
+<div class="float">
+<img src="ML_tSNE.png" alt="User interface of Machine learning"><div class="figcaption">User interface of Machine learning</div>
+</div>
+<div class="float">
+<img src="ML_rf.png" alt="User interface of Machine learning"><div class="figcaption">User interface of Machine learning</div>
+</div>
 </div>
 </div>
 
