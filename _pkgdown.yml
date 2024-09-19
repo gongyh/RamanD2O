@@ -1,3 +1,5 @@
+template:
+  bootstrap: 5
 navbar:
   structure:
     left:  [reference, articles, tutorials, news]
