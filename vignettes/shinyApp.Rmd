@@ -15,7 +15,7 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup}
-library(RamanD2O, quietly = TRUE)
+library(RamanD2O)
 ```
 
 # Run the shiny app

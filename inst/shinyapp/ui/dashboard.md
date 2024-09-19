@@ -8,7 +8,7 @@ runtime: shiny
 
 ### Overview
 
-`RamanD2O` is a web application developed using R Shiny to interactively analyze single cell Raman spectra data especially from different cells with different metabolic activities and incorporated heavy water.
+`RamanD2O` is a web application developed using R/Shiny to interactively analyze single cell Raman spectra data especially from cells with different metabolic activities and incorporated heavy water.
 
 ### Load data
 
@@ -40,3 +40,8 @@ To try RamanD2O, you can load a small demo using the link in `Load data` tab.
 1. `Ramanome & Transcriptome`: Integrate Ramanome and Transcriptome using O2PLS.
 2. `Ramanome & Metabolome`: Integrate Ramanome and Metabolome, TBD.
 3. `MultiOmics Integration`: Integrate Ramanome with multiple omics datasets, TBD.
+
+### More documents
+1. [Main documentation site](https://gongyh.github.io/RamanD2O/index.html)
+2. [Function modules description](https://gongyh.github.io/RamanD2O/functions.html)
+3. [Step-by-step use case](https://gongyh.github.io/RamanD2O/usage.html)
