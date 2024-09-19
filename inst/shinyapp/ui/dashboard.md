@@ -26,9 +26,8 @@ To try RamanD2O, you can load a small demo using the link in `Load data` tab.
 5. `Baseline`: remove baseline for each spectrum, recommended.
 6. `Normalize`: normalize to allow equal comparison between spectrum, recommended.
 7. `Average`: Calculate average spectra in each selected group.
-8. `Carotenoid`: detect cells with carotenoid peaks, recommended if you need to calculate C-D ratio.
-9. `SNR`: calculate signal noise ratio (SNR) and optionally filter dataset based on SNR values (recommended).
-10. `CDR`: calculate C-D ratio for cells incorporated heavy water.
+8. `SNR`: calculate signal noise ratio (SNR) and optionally filter dataset based on SNR values (recommended).
+9. `CDR`: calculate C-D ratio for cells incorporated heavy water.
 
 ### Machine learning
 
