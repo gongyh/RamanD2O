@@ -2,11 +2,11 @@ navbar:
   structure:
     left:  [reference, articles, tutorials, news]
     right: [search, github, lightswitch]
- components:
-   tutorials:
-    text: Manuals
-    menu:
-    - text: Function modules
-      href: functions.html
-    - text: Usage example
-      href: usage.html
+  components:
+    tutorials:
+      text: Manuals
+      menu:
+      - text: Function modules
+        href: functions.html
+      - text: Usage example
+        href: usage.html
