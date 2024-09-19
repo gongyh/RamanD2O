@@ -30,9 +30,7 @@ tabItem(
           set the slider to 100."),
         p("2. Choose the target spectra collection
           from the dropdown selector."),
-        p("3. Check shuffle checkbox if you want to
-          shuffle your spectra collection."),
-        p("4. Row of the spectra table (bottom left) can be
+        p("3. Row of the spectra table (bottom left) can be
           selected to visual the spectrum (bottom right).")
       )
     )
