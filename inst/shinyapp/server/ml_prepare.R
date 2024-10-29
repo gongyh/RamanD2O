@@ -54,6 +54,25 @@ observeEvent(input$datatype_for_ml_prepare, {
   }
 })
 
+observeEvent(input$hs_selector_for_ml_prepare,
+  {
+    hs_cur <- NULL
+    if (!is.null(input$hs_selector_for_ml_prepare)) {
+      hs_cur <- hs$val[[input$hs_selector_for_ml_prepare]]
+    }
+    output$hs_select_for_ml_Boruta <- renderUI({
+      metacols <- c("")
+      if (!is.null(hs_cur)) {
+        metacols <- colnames(hs_cur)
+        metacols <- metacols[metacols != "spc"]
+      }
+      selectInput("ml_Boruta_label", "Label",
+                  choices = metacols, selected = FALSE)
+    })
+  },
+  ignoreNULL = FALSE
+)
+
 observeEvent(ml_trim_num(), {
   output$ml_trim_multi <- renderUI({
     inputs <- lapply(1:ml_trim_num(), function(i) {
@@ -181,6 +200,7 @@ observeEvent(input$prepare, {
         text_range <- paste0("c(", text_range, ")")
         hs_cur <- hs_cur[, , eval(parse(text = text_range))]
       }
+      # feature selection
       # randomly split
       total <- nrow(hs_cur)
       size <- floor(isolate(input$train_pct) / 100.0 * total)

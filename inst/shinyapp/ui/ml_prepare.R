@@ -40,7 +40,14 @@ tabItem(
                  p("Select the wavelength region to keep, use \"+\" and \"-\"
                    buttons to select multiple ranges."))
         ),
-        uiOutput("ml_trim_multi")
+        uiOutput("ml_trim_multi"),
+        hr(),
+        fluidRow(
+          column(3,
+                 checkboxInput("ml_Boruta", "Feature selection", value = TRUE),
+                 class = "top25"),
+          column(3, uiOutput("hs_select_for_ml_Boruta"))
+        )
       )
     ),
     box(
