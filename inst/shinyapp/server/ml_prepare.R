@@ -203,9 +203,12 @@ observeEvent(input$prepare, {
       hs_cur2 <- hs_cur
       if (isolate(input$ml_Boruta)) { # feature selection
         response <- isolate(input$ml_Boruta_label)
-        bresult <- Boruta(hs_cur$spc, hs_cur[response], holdHistory = FALSE)
-        selected_indices <- which(bresult$finalDecision == "Confirmed")
-        hs_cur2 <- hs_cur[, , selected_indices, wl.index = TRUE]
+        bresult <- Boruta(hs_cur$spc, hs_cur@data[, response],
+                          holdHistory = FALSE)
+        sid <- which(bresult$finalDecision == "Confirmed")
+        toastr_success(paste0("Select ", length(sid), " features."),
+                       position = "top-center")
+        hs_cur2 <- hs_cur[, , sid, wl.index = TRUE]
       }
       # randomly split
       total <- nrow(hs_cur2)
