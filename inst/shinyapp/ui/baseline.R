@@ -19,7 +19,7 @@ tabItem(
         ),
         fluidRow(
           column(6, selectInput("select_baseline", "Baseline method",
-            choices = c("polyfit", "als"), selected = "polyfit"
+            choices = c("polyfit", "als"), selected = "als"
           )),
           # two baseline method
           conditionalPanel(
