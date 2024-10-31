@@ -200,25 +200,31 @@ observeEvent(input$prepare, {
         text_range <- paste0("c(", text_range, ")")
         hs_cur <- hs_cur[, , eval(parse(text = text_range))]
       }
-      # feature selection
+      hs_cur2 <- hs_cur
+      if (isolate(input$ml_Boruta)) { # feature selection
+        response <- isolate(input$ml_Boruta_label)
+        bresult <- Boruta(hs_cur$spc, hs_cur[response], holdHistory = FALSE)
+        selected_indices <- which(bresult$finalDecision == "Confirmed")
+        hs_cur2 <- hs_cur[, , selected_indices, wl.index = TRUE]
+      }
       # randomly split
-      total <- nrow(hs_cur)
+      total <- nrow(hs_cur2)
       size <- floor(isolate(input$train_pct) / 100.0 * total)
-      tindex <- hyperSpec::isample(hs_cur)
+      tindex <- hyperSpec::isample(hs_cur2)
       index <- tindex[1:max(size, 2)]
       # Train&Eval set
       if (isolate(input$datatype_for_ml_prepare) == "Train&Eval") {
-        hs$val[["train"]] <- hs_cur[index]
-        hs$val[["eval"]] <- hs_cur[-index]
+        hs$val[["train"]] <- hs_cur2[index]
+        hs$val[["eval"]] <- hs_cur2[-index]
         result$prepare <- hs$val[["train"]]
       } else if (isolate(input$datatype_for_ml_prepare) == "Train set") {
-        hs$val[["train"]] <- hs_cur[index]
+        hs$val[["train"]] <- hs_cur2[index]
         result$prepare <- hs$val[["train"]]
       } else if (isolate(input$datatype_for_ml_prepare) == "Eval set") {
-        hs$val[["eval"]] <- hs_cur[index]
+        hs$val[["eval"]] <- hs_cur2[index]
         result$prepare <- hs$val[["eval"]]
       } else if (isolate(input$datatype_for_ml_prepare) == "Test set") {
-        hs$val[["test"]] <- hs_cur[index]
+        hs$val[["test"]] <- hs_cur2[index]
         result$prepare <- hs$val[["test"]]
       }
     }
