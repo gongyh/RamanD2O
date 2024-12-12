@@ -9,7 +9,7 @@
 eemddenoise <- function(
     xt, tt = NULL,
     cv.index, cv.level, cv.tol = 0.1 ^ 3, cv.maxiter = 20, by.imf = FALSE,
-    trials.dir = "EEMD", noise.amp = sd(xt) * 0.1 , trials = 5, nimf = 5,
+    trials.dir = "EEMD", noise.amp = sd(xt) * 0.1, trials = 5, nimf = 5,
     tol = sd(xt) * 0.1 ^ 2, max.sift = 20, stop.rule = "type1",
     boundary = "periodic", max.imf = 10) {
 
@@ -22,7 +22,7 @@ eemddenoise <- function(
   ndata <- length(xt)
   cv.kfold <- nrow(cv.index)
 
-  EEMD(xt, tt, noise.amp , trials, nimf, tol = tol, max.sift = max.sift,
+  EEMD(xt, tt, noise.amp, trials, nimf, tol = tol, max.sift = max.sift,
        stop.rule = stop.rule, boundary = boundary,
        trials.dir = trials.dir, max.imf = max.imf)
   tmpemd <- EEMDCompile(trials.dir, trials, nimf)
@@ -57,7 +57,7 @@ eemddenoise <- function(
         predxt <- tmpxt <- xt
         for (k in 1:cv.kfold) {
           EEMD(xt[-cv.index[k, ]], tt[-cv.index[k, ]],
-               noise.amp , trials, nimf, tol = tol, max.sift = max.sift,
+               noise.amp, trials, nimf, tol = tol, max.sift = max.sift,
                stop.rule = stop.rule, boundary = boundary,
                trials.dir = trials.dir, max.imf = max.imf)
           cvemd <- EEMDCompile(trials.dir, trials, nimf)
@@ -86,7 +86,7 @@ eemddenoise <- function(
         predxt <- tmpxt <- xt
         for (k in 1:cv.kfold) {
           EEMD(xt[-cv.index[k, ]], tt[-cv.index[k, ]],
-               noise.amp , trials, nimf, tol = tol, max.sift = max.sift,
+               noise.amp, trials, nimf, tol = tol, max.sift = max.sift,
                stop.rule = stop.rule, boundary = boundary,
                trials.dir = trials.dir, max.imf = max.imf)
           cvemd <- EEMDCompile(trials.dir, trials, nimf)
@@ -161,7 +161,7 @@ eemddenoise <- function(
       predxt <- tmpxt <- xt
       for (k in 1:cv.kfold) {
         EEMD(xt[-cv.index[k, ]], tt[-cv.index[k, ]],
-             noise.amp , trials, nimf, tol = tol, max.sift = max.sift,
+             noise.amp, trials, nimf, tol = tol, max.sift = max.sift,
              stop.rule = stop.rule, boundary = boundary,
              trials.dir = trials.dir, max.imf = max.imf)
         cvemd <- EEMDCompile(trials.dir, trials, nimf)
@@ -190,7 +190,7 @@ eemddenoise <- function(
       predxt <- tmpxt <- xt
       for (k in 1:cv.kfold) {
         EEMD(xt[-cv.index[k, ]], tt[-cv.index[k, ]],
-             noise.amp , trials, nimf, tol = tol, max.sift = max.sift,
+             noise.amp, trials, nimf, tol = tol, max.sift = max.sift,
              stop.rule = stop.rule, boundary = boundary,
              trials.dir = trials.dir, max.imf = max.imf)
         cvemd <- EEMDCompile(trials.dir, trials, nimf)

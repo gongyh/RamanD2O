@@ -55,9 +55,9 @@ observeEvent(input$smooth, {
         spc_emd <- apply(hs_cur$spc, 1, function(x) {
           update_modal_spinner(paste0("Processing ", spc_i, "/", nrow(hs_cur)))
           res <- eemddenoise(x,
-                            cv.index = cv.index,
-                            cv.level = cv.level,
-                            by.imf = TRUE)
+                             cv.index = cv.index,
+                             cv.level = cv.level,
+                             by.imf = TRUE)
           spc_i <- spc_i + 1
           res$dxt
         })
