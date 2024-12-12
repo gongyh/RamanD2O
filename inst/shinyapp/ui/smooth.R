@@ -31,6 +31,11 @@ tabItem(
             column(3, numericInput("sg_length", "n", 21, min = 5, step = 2))
           ),
           conditionalPanel(
+            condition = "input.select_smooth == 'HVD'",
+            column(3, numericInput("hvd_cutf", "fp", 0.05,
+                                   min = 0.001, max = 0.499))
+          ),
+          conditionalPanel(
             condition = "input.select_smooth == 'EMD'",
             column(
               3,

@@ -39,8 +39,9 @@ observeEvent(input$smooth, {
         })
         hs_sm$spc <- t(spc_sg)
       } else if (smooth_method == "HVD") {
+        fp <- isolate(input$hvd_cutf)
         spc_hvd <- apply(hs_cur$spc, 1, function(x) {
-          hvd_x <- hvd(x, 1, 0.05)
+          hvd_x <- hvd(x, 1, fp)
           hvd_x$Y[, 1]
         })
         hs_sm$spc <- t(spc_hvd)
