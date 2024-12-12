@@ -43,6 +43,8 @@ Imports:
     magrittr,
     signal,
     EMD,
+    hht,
+    pracma,
     zip,
     Matrix,
     Boruta

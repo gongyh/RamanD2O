@@ -71,7 +71,7 @@ RUN R -e "library(pak); pkg_install(c('shiny', 'shinydashboard', 'shinyjs', 'shi
   'RColorBrewer', 'dplyr', 'compiler', 'mongolite', 'zip', 'fawda123/ggord', \
   'baseline', 'permute', 'Rtsne', 'markdown', 'caret', 'randomForest', 'DALEX', 'vivo', \
   'OmicsPLS', 'mdatools', 'foreach', 'parallel', 'doParallel', 'signal', 'EMD', \
-  'r-hyperspec/hyperSpec', 'r-hyperspec/hySpc.ggplot2', \
+  'hht', 'pracma', 'r-hyperspec/hyperSpec', 'r-hyperspec/hySpc.ggplot2', \
   'RinteRface/shinydashboardPlus')); cache_clean()" && rm -rf /tmp/*
 
 #ADD "https://www.random.org/cgi-bin/randbyte?nbytes=10&format=h" skipcache

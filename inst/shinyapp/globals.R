@@ -47,6 +47,8 @@ library(parallel)
 library(doParallel)
 library(signal)
 library(EMD)
+library(hht)
+library(pracma)
 
 user_name <- Sys.getenv("SHINYPROXY_USERNAME")
 if (user_name == "") user_name <- "Anonymous"
