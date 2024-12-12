@@ -76,6 +76,7 @@ Collate:
     'utils.R'
     'SCRS_preprocess.R'
     'SCRS_snr.R'
+    'eemddenoise.R'
     'hvd.R'
     'rammanome-class.R'
     'runRamanD2O.R'
