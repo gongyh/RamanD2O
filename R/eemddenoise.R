@@ -17,7 +17,7 @@ eemddenoise <- function(
     xt <- as.numeric(xt)
   }
 
-  if (is.null(tt)) tt <- seq_along(length(xt))
+  if (is.null(tt)) tt <- seq_along(xt)
 
   ndata <- length(xt)
   cv.kfold <- nrow(cv.index)
