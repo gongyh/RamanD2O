@@ -105,6 +105,7 @@ synchdem <- function(x, omega_i, fp) {
 #' @param fp Lowpass filter cutoff frequency.
 #' @return A list containing the decomposed components, amplitudes,
 #' angular frequencies, and relative standard deviations.
+#' @export
 hvd <- function(x, n, fp) {
   x <- as.vector(x)
   s <- numeric(n + 1)

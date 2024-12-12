@@ -5,6 +5,7 @@
 #' @importFrom hht EEMD
 #' @param xt The input signal.
 #' @return The smoothed signal.
+#' @export
 eemddenoise <- function(
     xt, tt = NULL,
     cv.index, cv.level, cv.tol = 0.1 ^ 3, cv.maxiter = 20, by.imf = FALSE,
