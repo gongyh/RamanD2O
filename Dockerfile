@@ -43,6 +43,7 @@ RUN apt-get update && apt-get install -y \
   libharfbuzz-dev libfribidi-dev \
   libgtk-3-dev \
   libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev \
+  git libcurl4-openssl-dev libgit2-dev \
   && rm -rf /var/lib/apt/lists/*
 
 ENV R_BASE_VERSION 4.4.1
