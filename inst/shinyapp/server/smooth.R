@@ -45,7 +45,7 @@ observeEvent(input$smooth, {
           hvd_x$Y[, 1]
         })
         hs_sm$spc <- t(spc_hvd)
-      } else if (smooth_method == "EMD") {
+      } else if (smooth_method == "EEMD") {
         cv.level <- isolate(input$emd_cv_level)
         cv.kfold <- isolate(input$emd_cv_kfold)
         cv.index <- cvtype(n = length(wavelength),
@@ -54,7 +54,7 @@ observeEvent(input$smooth, {
         spc_i <- 1
         spc_emd <- apply(hs_cur$spc, 1, function(x) {
           update_modal_spinner(paste0("Processing ", spc_i, "/", nrow(hs_cur)))
-          res <- emddenoise(x,
+          res <- eemddenoise(x,
                             cv.index = cv.index,
                             cv.level = cv.level,
                             by.imf = TRUE)

@@ -19,7 +19,7 @@ tabItem(
         ),
         fluidRow(
           column(6, selectInput("select_smooth", "Smooth method",
-            choices = c("SG", "HVD", "EMD", "LOESS"), selected = "SG"
+            choices = c("SG", "HVD", "EEMD", "LOESS"), selected = "SG"
           )),
           conditionalPanel(
             condition = "input.select_smooth == 'LOESS'",
@@ -33,10 +33,10 @@ tabItem(
           conditionalPanel(
             condition = "input.select_smooth == 'HVD'",
             column(3, numericInput("hvd_cutf", "fp", 0.05,
-                                   min = 0.001, max = 0.499))
+                                   min = 0.001, max = 0.499, step=0.01))
           ),
           conditionalPanel(
-            condition = "input.select_smooth == 'EMD'",
+            condition = "input.select_smooth == 'EEMD'",
             column(
               3,
               numericInput("emd_cv_kfold", "cv.kfold", 2, min = 2, step = 1)

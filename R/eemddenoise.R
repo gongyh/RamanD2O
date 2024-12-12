@@ -2,16 +2,16 @@
 #'
 #' This function smooths the input signal using the EEMD method.
 #'
-#' @importFrom hht EEMD
+#' @importFrom hht EEMD EEMDCompile
 #' @param xt The input signal.
 #' @return The smoothed signal.
 #' @export
 eemddenoise <- function(
     xt, tt = NULL,
     cv.index, cv.level, cv.tol = 0.1 ^ 3, cv.maxiter = 20, by.imf = FALSE,
-    emd.tol = sd(xt) * 0.1 ^ 2, max.sift = 20, stoprule = "type1",
+    trials.dir = "EEMD", noise.amp = sd(xt) * 0.1 , trials = 5, nimf = 5,
+    tol = sd(xt) * 0.1 ^ 2, max.sift = 20, stop.rule = "type1",
     boundary = "periodic", max.imf = 10) {
-  ### Golden section search.
 
   if (is.ts(xt)) {
     xt <- as.numeric(xt)
@@ -22,8 +22,12 @@ eemddenoise <- function(
   ndata <- length(xt)
   cv.kfold <- nrow(cv.index)
 
-  tmpemd <- emd(xt, tt, emd.tol, max.sift, stoprule, boundary, sm = "none",
-                check = FALSE, max.imf = max.imf, plot.imf = FALSE)
+  EEMD(xt, tt, noise.amp , trials, nimf, tol = tol, max.sift = max.sift,
+       stop.rule = stop.rule, boundary = boundary,
+       trials.dir = trials.dir, max.imf = max.imf)
+  tmpemd <- EEMDCompile(trials.dir, trials, nimf)
+  tmpemd$imf <- tmpemd$averaged.imfs
+  tmpemd$residue <- tmpemd$averaged.residue[, 1]
   tmpnimf <- tmpemd$nimf
 
   cv.ndim <- min(cv.level, tmpnimf)
@@ -52,13 +56,13 @@ eemddenoise <- function(
         optlambda[i] <- lambda[2, i]
         predxt <- tmpxt <- xt
         for (k in 1:cv.kfold) {
-          cvemd <- emd(xt[-cv.index[k, ]], tt[-cv.index[k, ]],
-            emd.tol, max.sift,
-            stoprule, boundary,
-            sm = "none", check = FALSE,
-            max.imf = max.imf,
-            plot.imf = FALSE
-          )
+          EEMD(xt[-cv.index[k, ]], tt[-cv.index[k, ]],
+               noise.amp , trials, nimf, tol = tol, max.sift = max.sift,
+               stop.rule = stop.rule, boundary = boundary,
+               trials.dir = trials.dir, max.imf = max.imf)
+          cvemd <- EEMDCompile(trials.dir, trials, nimf)
+          cvemd$imf <- cvemd$averaged.imfs
+          cvemd$residue <- cvemd$averaged.residue[, 1]
           for (m in 1:cv.ndim) {
             cvemd$imf[, m] <- cvemd$imf[, m] *
               (abs(cvemd$imf[, m]) > optlambda[m])
@@ -81,12 +85,13 @@ eemddenoise <- function(
         optlambda[i] <- lambda[3, i]
         predxt <- tmpxt <- xt
         for (k in 1:cv.kfold) {
-          cvemd <- emd(xt[-cv.index[k, ]], tt[-cv.index[k, ]],
-            emd.tol, max.sift,
-            stoprule, boundary,
-            sm = "none", check = FALSE,
-            max.imf = max.imf, plot.imf = FALSE
-          )
+          EEMD(xt[-cv.index[k, ]], tt[-cv.index[k, ]],
+               noise.amp , trials, nimf, tol = tol, max.sift = max.sift,
+               stop.rule = stop.rule, boundary = boundary,
+               trials.dir = trials.dir, max.imf = max.imf)
+          cvemd <- EEMDCompile(trials.dir, trials, nimf)
+          cvemd$imf <- cvemd$averaged.imfs
+          cvemd$residue <- cvemd$averaged.residue[, 1]
           for (m in 1:cv.ndim) {
             cvemd$imf[, m] <- cvemd$imf[, m] *
               (abs(cvemd$imf[, m]) > optlambda[m])
@@ -155,12 +160,13 @@ eemddenoise <- function(
       optlambda[1] <- lambda[2, 1]
       predxt <- tmpxt <- xt
       for (k in 1:cv.kfold) {
-        cvemd <- emd(xt[-cv.index[k, ]], tt[-cv.index[k, ]],
-          emd.tol, max.sift,
-          stoprule, boundary,
-          sm = "none", check = FALSE,
-          max.imf = max.imf, plot.imf = FALSE
-        )
+        EEMD(xt[-cv.index[k, ]], tt[-cv.index[k, ]],
+             noise.amp , trials, nimf, tol = tol, max.sift = max.sift,
+             stop.rule = stop.rule, boundary = boundary,
+             trials.dir = trials.dir, max.imf = max.imf)
+        cvemd <- EEMDCompile(trials.dir, trials, nimf)
+        cvemd$imf <- cvemd$averaged.imfs
+        cvemd$residue <- cvemd$averaged.residue[, 1]
         for (m in 1:cv.ndim) {
           cvemd$imf[, m] <- cvemd$imf[, m] *
             (abs(cvemd$imf[, m]) > optlambda[1])
@@ -183,12 +189,13 @@ eemddenoise <- function(
       optlambda[1] <- lambda[3, 1]
       predxt <- tmpxt <- xt
       for (k in 1:cv.kfold) {
-        cvemd <- emd(xt[-cv.index[k, ]], tt[-cv.index[k, ]],
-          emd.tol, max.sift,
-          stoprule, boundary,
-          sm = "none", check = FALSE,
-          max.imf = max.imf, plot.imf = FALSE
-        )
+        EEMD(xt[-cv.index[k, ]], tt[-cv.index[k, ]],
+             noise.amp , trials, nimf, tol = tol, max.sift = max.sift,
+             stop.rule = stop.rule, boundary = boundary,
+             trials.dir = trials.dir, max.imf = max.imf)
+        cvemd <- EEMDCompile(trials.dir, trials, nimf)
+        cvemd$imf <- cvemd$averaged.imfs
+        cvemd$residue <- cvemd$averaged.residue[, 1]
         for (m in 1:cv.ndim) {
           cvemd$imf[, m] <- cvemd$imf[, m] *
             (abs(cvemd$imf[, m]) > optlambda[1])
