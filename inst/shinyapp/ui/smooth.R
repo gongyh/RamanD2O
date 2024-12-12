@@ -19,7 +19,7 @@ tabItem(
         ),
         fluidRow(
           column(6, selectInput("select_smooth", "Smooth method",
-            choices = c("LOESS", "SG", "EMD"), selected = "SG"
+            choices = c("SG", "HVD", "EMD", "LOESS"), selected = "SG"
           )),
           conditionalPanel(
             condition = "input.select_smooth == 'LOESS'",

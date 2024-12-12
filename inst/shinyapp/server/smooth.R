@@ -38,6 +38,12 @@ observeEvent(input$smooth, {
           signal::sgolayfilt(x, p = p, n = n)
         })
         hs_sm$spc <- t(spc_sg)
+      } else if (smooth_method == "HVD") {
+        spc_hvd <- apply(hs_cur$spc, 1, function(x) {
+          hvd_x <- hvd(x, 1, 0.05)
+          hvd_x$Y[, 1]
+        })
+        hs_sm$spc <- t(spc_hvd)
       } else if (smooth_method == "EMD") {
         cv.level <- isolate(input$emd_cv_level)
         cv.kfold <- isolate(input$emd_cv_kfold)
