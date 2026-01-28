@@ -23,7 +23,7 @@ https://www.r-project.org
 2. Install RamanD2O package
 ```r
 #install.packages('pak')
-pak::pkg_install('gongyh/RamanD2O')
+pak::pkg_install('gongyh/RamanD2O', dependencies = TRUE)
 ```
 
 3. Run the R shiny app

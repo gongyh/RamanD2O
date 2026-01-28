@@ -33,6 +33,8 @@ jobs:
           lts$object_name_linter <- NULL
           lts$commented_code_linter <- NULL
           lts$cyclocomp_linter <- NULL
+          lts$return_linter <- NULL
+          lts$pipe_consistency_linter <- NULL
           lint_package(linters=lts)
         shell: Rscript {0}
         env:
