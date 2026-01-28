@@ -1,0 +1,100 @@
+# RamanD2O
+
+## Introduction
+
+RamanD2O is an R/Shiny application that allows biologists to perform
+Raman spectra analysis.
+
+![User interface of RamanD2O](RamanD2O.png)
+
+User interface of RamanD2O
+
+## Quick start
+
+1.  Download and Install R
+
+<https://www.r-project.org>
+
+**Notes:** This app was tested in **R 4.x**. If you are still using R
+4.0-4.2, you may need to manually install specifc versions of a few
+dependency packages (e.g., randomForest\<4.7, Matrix\<1.7).
+
+2.  Install RamanD2O package
+
+``` r
+#install.packages('pak')
+pak::pkg_install('gongyh/RamanD2O')
+```
+
+3.  Run the R shiny app
+
+``` r
+RamanD2O::runRamanD2O()
+```
+
+## Documentation
+
+1.  [Function description](functions.md)
+2.  [Usage tutorial](usage.md)
+
+## Contact
+
+gongyh/RamanD2O is developed by [Yanhai
+Gong](mailto:gongyh@qibebt.ac.cn). We look forward to receive your
+feedback, bug reports, or suggestions for the further development of
+this package.
+
+## License
+
+This pipeline is open source under the MIT license, and integrates
+wonderful third-party softwares, which remain owned and copyrighted by
+their respective developers. Authors cannot be held legally or morally
+responsible for any consequences that may arise from using or misusing
+it.
+
+# Package index
+
+## All functions
+
+- [`O2PLSvip()`](O2PLSvip.md) : Evaluate the importance of variables in
+  O2PLS models
+- [`Ramanome-class`](Ramanome-class.md) [`Ramanome`](Ramanome-class.md)
+  : Ramanome class
+- [`SCRS_preprocess()`](SCRS_preprocess.md) : Preprocess SCRS data
+- [`SCRS_toDF()`](SCRS_toDF.md) : load SCRS txt files to dataframe
+- [`calOrthVIP()`](calOrthVIP.md) : Calculation of the orthogonal
+  variable influence on projection
+- [`calPredVIP()`](calPredVIP.md) : Calculation of the predictive
+  variable influence on projection
+- [`checkInputdata()`](checkInputdata.md) : Check if input data
+  satisfies input conditions
+- [`eemddenoise()`](eemddenoise.md) : Denosing using EEMD method
+- [`findPeaks()`](findPeaks.md) : search peaks for each spectrum
+- [`get.nearest.dataset()`](get.nearest.dataset.md) : Get the nearest
+  dataset from a Ramanome object
+- [`hvd()`](hvd.md) : Hilbert Vibration Decomposition
+- [`ilpf()`](ilpf.md) : Ideal Lowpass Filter
+- [`inst()`](inst.md) : Instantaneous Properties
+- [`length(`*`<Ramanome>`*`)`](length-Ramanome-method.md) : Length
+  method for Ramanome objects
+- [`rbind2(`*`<Ramanome>`*`,`*`<Ramanome>`*`)`](rbind2-Ramanome-Ramanome-method.md)
+  : \#' Plot method for Ramanome objects \#' \#' @param x The Ramanome
+  object \#' @param y Character specifying the plot type \#' @importFrom
+  hyperSpec plot \#' @importFrom hyperSpec print \#' @importFrom methods
+  setMethod
+- [`removeCosmic()`](removeCosmic.md) : remove cosmic rays for each
+  spectrum
+- [`runRamanD2O()`](runRamanD2O.md) : Run RamanD2O Shiny App
+- [`show(`*`<Ramanome>`*`)`](show-Ramanome-method.md) : Show method for
+  Ramanome objects This method will give brief information about the
+  Ramanome object
+- [`ssd()`](ssd.md) : estimation of the sum of squares of deviations
+- [`` `[`( ``*`<Ramanome>`*`,`*`<ANY>`*`,`*`<ANY>`*`,`*`<ANY>`*`)`](sub-Ramanome-ANY-ANY-ANY-method.md)
+  : Subset method for Ramanome objects
+- [`synchdem()`](synchdem.md) : Synchronous Demodulation
+
+# Articles
+
+### All vignettes
+
+- [Run shiny app](shinyApp.md):
