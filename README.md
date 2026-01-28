@@ -3,6 +3,7 @@
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/gongyh/RamanD2O/actions/workflows/check-full.yaml/badge.svg)](https://github.com/gongyh/RamanD2O/actions/workflows/check-full.yaml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/gongyh/RamanD2O)
 <!-- badges: end -->
 
 ## Introduction
