@@ -23,7 +23,7 @@ dependency packages (e.g., randomForest\<4.7, Matrix\<1.7).
 
 ``` r
 #install.packages('pak')
-pak::pkg_install('gongyh/RamanD2O')
+pak::pkg_install('gongyh/RamanD2O', dependencies = TRUE)
 ```
 
 3.  Run the R shiny app
